@@ -1,4 +1,5 @@
 import {
+  AmbientLight,
   BoxGeometry,
   DoubleSide,
   MeshBasicMaterial,
@@ -7,6 +8,7 @@ import Experience from './Experience.js';
 import { Mesh } from 'three';
 import { PlaneGeometry } from 'three';
 import { Vector2 } from 'three';
+import Terminal from './Components/Terminal.js';
 
 export default class World {
   constructor(_options) {
@@ -14,27 +16,20 @@ export default class World {
     this.config = this.experience.config;
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
-    this.cursor = new Vector2();
 
     this.resources.on('groupEnd', (_group) => {
       if (_group.name === 'base') {
-        this.setupScene();
+        this.init();
       }
     });
   }
 
-  setupScene() {
-    this.box = new Mesh(
-      new BoxGeometry(.2, .2, .2),
-      new MeshBasicMaterial({
-        color: 0xff0000,
-        side: DoubleSide,
-      })
-    );
+  init() {
+    this.light = new AmbientLight(0xaaffaa, 1);
+    this.scene.add(this.light)
 
-    this.box.position.set(0, 0, 0);
+    this.terminal = new Terminal();
 
-    this.scene.add(this.box);
     this.elapsedTime = 0;
   }
 

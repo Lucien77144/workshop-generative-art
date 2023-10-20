@@ -3,7 +3,7 @@ export default [
     name: 'base',
     data: {},
     items: [
-      { name: 'carapuce', source: '/assets/carapuce.png', type: 'texture' },
+      { name: 'terminal', source: '/assets/terminal.glb' }, // Modified model, original from Chris Sweetwood (found on sketchfab)
     ],
   },
 ];
