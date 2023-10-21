@@ -26,10 +26,9 @@ export default class World {
 
   init() {
     this.light = new AmbientLight(0xaaffaa, 1);
-    this.scene.add(this.light)
+    this.scene.add(this.light);
 
     this.terminal = new Terminal();
-
     this.elapsedTime = 0;
   }
 
