@@ -192,7 +192,7 @@ export default class Renderer {
 
             // Animate halftone
             if (this.postProcess.halftonePass.uniforms.radius.value > 10) {
-                this.postProcess.halftonePass.uniforms.radius.value -= 0.5
+                this.postProcess.halftonePass.uniforms.radius.value -= 1
             }
         } else {
             this.instance.render(this.scene, this.camera.instance)
