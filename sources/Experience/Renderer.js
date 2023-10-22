@@ -17,7 +17,8 @@ export default class Renderer {
 
         // Debug
         if (this.debug) {
-            this.debugFolder = this.debug.addFolder('renderer')
+            this.debugRendererFolder = this.debug.addFolder('Renderer')
+            this.debugHalftoneFolder = this.debug.addFolder('Halftone')
         }
 
         this.usePostprocess = true
@@ -61,11 +62,11 @@ export default class Renderer {
 
         // Debug
         if (this.debug) {
-            this.debugFolder.addColor(this, 'clearColor').onChange(() => {
+            this.debugRendererFolder.addColor(this, 'clearColor').onChange(() => {
                 this.instance.setClearColor(this.clearColor)
             })
 
-            this.debugFolder
+            this.debugRendererFolder
                 .add(this.instance, 'toneMapping', {
                     NoToneMapping: THREE.NoToneMapping,
                     LinearToneMapping: THREE.LinearToneMapping,
@@ -79,7 +80,7 @@ export default class Renderer {
                     })
                 })
 
-            this.debugFolder.add(this.instance, 'toneMappingExposure').min(0).max(10)
+            this.debugRendererFolder.add(this.instance, 'toneMappingExposure').min(0).max(10)
         }
     }
 
@@ -92,7 +93,7 @@ export default class Renderer {
         this.postProcess.renderPass = new RenderPass(this.scene, this.camera.instance)
         this.postProcess.halftonePass = new HalftonePass()
 
-        // TODO - Try to pass params to the instance directly + add debug
+        // TODO - Try to pass params to the instance directly
         this.postProcess.halftonePass.uniforms.shape.value = 3
         this.postProcess.halftonePass.uniforms.radius.value = 100
         this.postProcess.halftonePass.uniforms.rotateR.value = 90
@@ -101,6 +102,56 @@ export default class Renderer {
         this.postProcess.halftonePass.uniforms.scatter.value = 0
         this.postProcess.halftonePass.uniforms.blendingMode.value = 1
         this.postProcess.halftonePass.uniforms.blending.value = 1
+
+        // Debug
+        this.debugHalftoneFolder
+            .add(this.postProcess.halftonePass.uniforms.shape, 'value')
+            .min(1)
+            .max(5)
+            .step(1)
+            .name('shape')
+        this.debugHalftoneFolder
+            .add(this.postProcess.halftonePass.uniforms.radius, 'value')
+            .min(0)
+            .max(100)
+            .step(1)
+            .name('radius')
+        this.debugHalftoneFolder
+            .add(this.postProcess.halftonePass.uniforms.rotateR, 'value')
+            .min(0)
+            .max(180)
+            .step(1)
+            .name('rotateR')
+        this.debugHalftoneFolder
+            .add(this.postProcess.halftonePass.uniforms.rotateB, 'value')
+            .min(0)
+            .max(180)
+            .step(1)
+            .name('rotateB')
+        this.debugHalftoneFolder
+            .add(this.postProcess.halftonePass.uniforms.rotateG, 'value')
+            .min(0)
+            .max(180)
+            .step(1)
+            .name('rotateG')
+        this.debugHalftoneFolder
+            .add(this.postProcess.halftonePass.uniforms.scatter, 'value')
+            .min(0)
+            .max(1)
+            .step(0.01)
+            .name('scatter')
+        this.debugHalftoneFolder
+            .add(this.postProcess.halftonePass.uniforms.blendingMode, 'value')
+            .min(0)
+            .max(1)
+            .step(1)
+            .name('blendingMode')
+        this.debugHalftoneFolder
+            .add(this.postProcess.halftonePass.uniforms.blending, 'value')
+            .min(0)
+            .max(1)
+            .step(1)
+            .name('blending')
 
         /**
          * Effect composer
@@ -138,17 +189,17 @@ export default class Renderer {
 
         if (this.usePostprocess) {
             this.postProcess.composer.render()
+
+            // Animate halftone
+            if (this.postProcess.halftonePass.uniforms.radius.value > 10) {
+                this.postProcess.halftonePass.uniforms.radius.value -= 0.5
+            }
         } else {
             this.instance.render(this.scene, this.camera.instance)
         }
 
         if (this.stats) {
             this.stats.afterRender()
-        }
-
-        // Animate halftone
-        if (this.postProcess.halftonePass.uniforms.radius.value > 10) {
-            this.postProcess.halftonePass.uniforms.radius.value -= 0.5
         }
     }
 

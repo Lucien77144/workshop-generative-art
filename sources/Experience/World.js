@@ -24,10 +24,6 @@ export default class World {
     this.directionalLight = new DirectionalLight(0xffffff, 5);
     this.directionalLight.position.set(0, 5, 5);
 
-    // add a helper for dir light
-    const helper = new DirectionalLightHelper(this.directionalLight, 5);
-    this.scene.add(helper);
-
     this.scene.add(this.directionalLight);
     
     // this.terminal = new Terminal();
