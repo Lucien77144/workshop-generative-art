@@ -1,14 +1,7 @@
-import {
-  AmbientLight,
-  BoxGeometry,
-  DoubleSide,
-  MeshBasicMaterial,
-} from 'three';
+import { AmbientLight, DirectionalLight, DirectionalLightHelper } from 'three';
 import Experience from './Experience.js';
-import { Mesh } from 'three';
-import { PlaneGeometry } from 'three';
-import { Vector2 } from 'three';
 import Terminal from './Components/Terminal.js';
+import City from './Components/City.js';
 
 export default class World {
   constructor(_options) {
@@ -25,10 +18,20 @@ export default class World {
   }
 
   init() {
-    this.light = new AmbientLight(0xaaffaa, 1);
-    this.scene.add(this.light)
+    this.ambientLight = new AmbientLight(0xaaffaa, 0.5);
+    this.scene.add(this.ambientLight)
 
-    this.terminal = new Terminal();
+    this.directionalLight = new DirectionalLight(0xffffff, 5);
+    this.directionalLight.position.set(0, 5, 5);
+
+    // add a helper for dir light
+    const helper = new DirectionalLightHelper(this.directionalLight, 5);
+    this.scene.add(helper);
+
+    this.scene.add(this.directionalLight);
+    
+    // this.terminal = new Terminal();
+    this.city = new City();
 
     this.elapsedTime = 0;
   }
