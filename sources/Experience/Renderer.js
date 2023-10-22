@@ -92,6 +92,16 @@ export default class Renderer {
         this.postProcess.renderPass = new RenderPass(this.scene, this.camera.instance)
         this.postProcess.halftonePass = new HalftonePass()
 
+        // TODO - Try to pass params to the instance directly + add debug
+        this.postProcess.halftonePass.uniforms.shape.value = 3
+        this.postProcess.halftonePass.uniforms.radius.value = 100
+        this.postProcess.halftonePass.uniforms.rotateR.value = 90
+        this.postProcess.halftonePass.uniforms.rotateB.value = 90
+        this.postProcess.halftonePass.uniforms.rotateG.value = 90
+        this.postProcess.halftonePass.uniforms.scatter.value = 0
+        this.postProcess.halftonePass.uniforms.blendingMode.value = 1
+        this.postProcess.halftonePass.uniforms.blending.value = 1
+
         /**
          * Effect composer
          */
@@ -99,9 +109,9 @@ export default class Renderer {
             generateMipmaps: false,
             minFilter: THREE.LinearFilter,
             magFilter: THREE.LinearFilter,
-            format: THREE.RGBFormat,
+            format: THREE.RGBAFormat,
             encoding: THREE.sRGBEncoding,
-            samples: 2,
+            samples: 1,
         })
         this.postProcess.composer = new EffectComposer(this.instance, this.renderTarget)
         this.postProcess.composer.setSize(this.config.width, this.config.height)
@@ -134,6 +144,11 @@ export default class Renderer {
 
         if (this.stats) {
             this.stats.afterRender()
+        }
+
+        // Animate halftone
+        if (this.postProcess.halftonePass.uniforms.radius.value > 10) {
+            this.postProcess.halftonePass.uniforms.radius.value -= 0.5
         }
     }
 
