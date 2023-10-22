@@ -144,12 +144,12 @@ export default class Renderer {
             .add(this.postProcess.halftonePass.uniforms.blendingMode, 'value')
             .min(0)
             .max(1)
-            .step(1)
+            .step(0.01)
             .name('blendingMode')
         this.debugHalftoneFolder
             .add(this.postProcess.halftonePass.uniforms.blending, 'value')
             .min(0)
-            .max(1)
+            .max(5)
             .step(1)
             .name('blending')
 
