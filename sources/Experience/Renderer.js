@@ -170,34 +170,8 @@ export default class Renderer {
                 stencilBuffer: true,
             }
         )
-
-        this.rt1 = new THREE.WebGLRenderTarget(
-            this.config.width,
-            this.config.height,
-            {
-                generateMipmaps: false,
-                minFilter: THREE.LinearFilter,
-                magFilter: THREE.LinearFilter,
-                format: THREE.RGBAFormat,
-                encoding: THREE.sRGBEncoding,
-                samples: 1,
-                stencilBuffer: true,
-            }
-        )
-
-        this.rt2 = new THREE.WebGLRenderTarget(
-            this.config.width,
-            this.config.height,
-            {
-                generateMipmaps: false,
-                minFilter: THREE.LinearFilter,
-                magFilter: THREE.LinearFilter,
-                format: THREE.RGBAFormat,
-                encoding: THREE.sRGBEncoding,
-                samples: 1,
-                stencilBuffer: true,
-            }
-        )
+        this.rt1 = this.rt0.clone();
+        this.rt2 = this.rt0.clone();
 
         this.renderMesh = new THREE.Mesh(
             new THREE.PlaneGeometry(2, 2),
@@ -228,19 +202,15 @@ export default class Renderer {
     renderTargets() {
         this.scene = this.experience.scene;
 
+        // Base
         this.scene?.traverse((o) => {
             if (o.material?.name == 'TerminalMaterial') {
                 o.material.colorWrite = true;
             }
         })
-
-        // Base
         this.experience.world?.terminal?.screenStencil.setMaterial('baseMat')
         this.camera.instance.layers.disableAll()
-        this.camera.instance.layers.enable(LAYERS.DEFAULT)
-        this.camera.instance.layers.enable(LAYERS.TERMINAL)
         this.camera.instance.layers.enable(LAYERS.GLOBAL)
-        this.camera.instance.layers.enable(LAYERS.MASK)
         this.instance.setRenderTarget(this.rt0)
         this.instance.render(this.scene, this.camera.instance)
 
@@ -248,8 +218,6 @@ export default class Renderer {
         this.camera.instance.layers.disableAll()
         this.camera.instance.layers.enable(LAYERS.GLOBAL)
         this.camera.instance.layers.enable(LAYERS.SCREEN)
-        this.camera.instance.layers.enable(LAYERS.MASK)
-        this.camera.instance.layers.enable(LAYERS.TERMINAL)
         this.instance.setRenderTarget(this.rt1)
         this.instance.render(this.scene, this.camera.instance)
         
@@ -262,8 +230,6 @@ export default class Renderer {
         })
         this.camera.instance.layers.disableAll()
         this.camera.instance.layers.enable(LAYERS.GLOBAL)
-        this.camera.instance.layers.enable(LAYERS.TERMINAL)
-        this.camera.instance.layers.enable(LAYERS.MASK)
         this.instance.setRenderTarget(this.rt2)
         this.instance.render(this.scene, this.camera.instance)
 

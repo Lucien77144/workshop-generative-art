@@ -21,7 +21,7 @@ export default class Stencil {
   }
 
   init() {
-    this.baseMat = new MeshPhongMaterial({ color: '#090909' });
+    this.baseMat = new MeshPhongMaterial({ color: '#121212' });
     this.baseMat.depthWrite = false;
     this.baseMat.stencilWrite = true;
     this.baseMat.stencilRef = this.stencilRef;

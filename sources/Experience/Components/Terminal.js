@@ -2,7 +2,6 @@ import Experience from '../Experience'
 import Stencil from './Stencil'
 import Screen from './Screen'
 import { LAYERS } from '../Const/const'
-import { MeshPhongMaterial } from 'three'
 
 export default class Terminal {
     constructor(_options) {
@@ -22,9 +21,9 @@ export default class Terminal {
                     target: o,
                     instance: Screen,
                 })
-                o.layers.set(LAYERS.MASK)
+                o.layers.set(LAYERS.GLOBAL)
             } else if (o.material?.name == 'TerminalMaterial') {
-              o.layers.set(LAYERS.TERMINAL)
+              o.layers.set(LAYERS.GLOBAL)
             }
         })
         this.terminal.position.set(0, 0, 0)
