@@ -28,6 +28,7 @@ export default class Flowers {
         this.scene.add(this.group)
 
         const material = new MeshBasicMaterial({ color: 0x45b7e8 })
+        const alienFlower = this.resources.items.alienFlower.scene
 
         for (let i = 0; i < this.experience.inputDate / 10; i++) {
             const curve = new CatmullRomCurve3([
@@ -48,21 +49,22 @@ export default class Flowers {
             const geometry = new TubeGeometry(curve, 20, 0.1, 20, false)
             const mesh = new Mesh(geometry, material)
 
-            // const alienFlower = this.resources.items.alienFlower.scene
-            // alienFlower.position.copy(curve.getPointAt(1))
-            // mesh.add(alienFlower)
-
-            const sphere = new Mesh(
-                new SphereGeometry(0.2, 20, 20),
-                new MeshBasicMaterial({ color: 0x45b7e8 })
+            alienFlower.position.copy(curve.getPointAt(1))
+            alienFlower.scale.set(
+                0.25 + Math.random() * 0.5,
+                0.25 + Math.random() * 0.5,
+                0.25 + Math.random() * 0.5
             )
-            sphere.position.copy(curve.getPointAt(1))
-            mesh.add(sphere)
+
+            mesh.add(alienFlower.clone())
 
             mesh.scale.set(0, 0, 0)
-            mesh.position.set(Math.random() * 3, -0.05, 3)
+            mesh.position.set(2.5 - Math.random() * 5, -0.05, 3)
+
             this.group.add(mesh)
         }
+
+        console.log(this.group)
     }
 
     resize() {}
