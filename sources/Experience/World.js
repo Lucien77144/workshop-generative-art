@@ -1,7 +1,7 @@
 import { AmbientLight, DirectionalLight, DirectionalLightHelper } from 'three';
 import Experience from './Experience.js';
 import Terminal from './Components/Terminal.js';
-import City from './Components/City.js';
+import Floor from './Components/Floor.js';
 
 export default class World {
   constructor(_options) {
@@ -25,9 +25,9 @@ export default class World {
     this.directionalLight.position.set(0, 5, 5);
 
     this.scene.add(this.directionalLight);
-    
-    // this.terminal = new Terminal();
-    this.city = new City();
+
+    this.terminal = new Terminal();
+    this.floor = new Floor();
 
     this.elapsedTime = 0;
   }

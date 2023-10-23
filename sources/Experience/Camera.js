@@ -46,7 +46,8 @@ export default class Camera
         this.modes.debug.instance = this.instance.clone()
         this.modes.debug.instance.rotation.reorder('YXZ')
         // this.modes.debug.instance.position.set(5, 5, 5)
-        this.modes.debug.instance.position.set(0, 0, 3)
+        // this.modes.debug.instance.position.set(0, 3, 6)
+        this.modes.debug.instance.position.set(0, 3, 10)
         
         this.modes.debug.orbitControls = new OrbitControls(this.modes.debug.instance, this.targetElement)
         this.modes.debug.orbitControls.enabled = this.modes.debug.active

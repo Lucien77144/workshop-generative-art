@@ -1,11 +1,6 @@
-import {
-  BoxGeometry,
-  DoubleSide,
-  MeshBasicMaterial,
-} from 'three';
-import { Mesh } from 'three';
-import { Vector2 } from 'three';
 import Experience from '../Experience';
+import Stencil from './Stencil';
+import Screen from './Screen/Screen';
 
 export default class Terminal {
   constructor(_options) {
@@ -19,21 +14,22 @@ export default class Terminal {
 
   init() {
     this.terminal = this.resources.items.terminal.scene;
-    // console.log(this.terminal);
-
+    this.terminal.traverse((o) => {
+      if (o.material?.name == 'Screen') {
+        this.screenStencil = new Stencil({
+          target: o,
+          instance: Screen,
+        });
+      }
+    });
     this.terminal.position.set(0, 0, 0);
 
     this.scene.add(this.terminal);
-    this.elapsedTime = 0;
   }
 
   resize() {}
 
-  update() {
-    this.deltaTime = this.time - window.performance.now();
-    this.elapsedTime = window.performance.now() * 0.001;
-    this.time = window.performance.now();
-  }
+  update() {}
 
   destroy() {}
 }
