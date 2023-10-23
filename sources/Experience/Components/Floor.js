@@ -5,6 +5,7 @@ import {
     PlaneGeometry,
 } from 'three'
 import Experience from '../Experience'
+import { LAYERS } from '../Const/const'
 
 export default class Floor {
     constructor(_options) {
@@ -21,7 +22,7 @@ export default class Floor {
         this.mesh = new Mesh(
             new PlaneGeometry(100, 100),
             new MeshBasicMaterial({
-                color: '#101010',
+                color: '#131313',
             })
         )
 
@@ -30,6 +31,7 @@ export default class Floor {
         this.mesh.material.stencilFunc = GreaterStencilFunc
 
         this.mesh.rotation.x = -Math.PI * 0.5
+        this.mesh.layers.set(LAYERS.GLOBAL)
 
         this.scene.add(this.mesh)
     }
