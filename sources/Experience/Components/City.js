@@ -5,7 +5,7 @@ export default class City {
     constructor(_options) {
         this.experience = new Experience()
         this.config = this.experience.config
-        this.group = _options.group
+        // this.group = _options.group
         this.resources = this.experience.resources
         this.scene = this.resources.items.city.scene
         this.animations = this.resources.items.city.animations
@@ -17,10 +17,11 @@ export default class City {
     }
 
     init() {
-        this.scene.position.set(0.1, 0.2, -1)
-        this.scene.scale.set(0.2, 0.2, 0.2)
+        this.scene.position.set(0, -0.5, 0)
+        this.scene.scale.set(0.5, 0.5, 0.5)
 
-        this.group.add(this.scene)
+        // TEMPORARY
+        // this.group.add(this.scene)
     }
 
     setAnimations() {
@@ -47,11 +48,18 @@ export default class City {
             }
 
             if (
-                this.inputDate >= 3000 &&
+                this.inputDate >= 2100 &&
                 animation.name.startsWith('Cube.009')
             ) {
                 action.play()
             }
+
+            // if (
+            //     this.inputDate >= 2150 &&
+            //     animation.name.startsWith('Cube.009')
+            // ) {
+            //     action.play()
+            // }
         }
     }
 
@@ -64,7 +72,7 @@ export default class City {
     }
 
     destroy() {
-        this.group.remove(this.scene)
+        // this.group.remove(this.scene)
         clearTimeout(this.timeout)
     }
 }
