@@ -49,13 +49,13 @@ export default class Camera
         // this.modes.debug.instance.position.set(0, 3, 6)
         this.modes.debug.instance.position.set(0, 3, 6)
         
-        // this.modes.debug.orbitControls = new OrbitControls(this.modes.debug.instance, this.targetElement)
-        // this.modes.debug.orbitControls.enabled = this.modes.debug.active
-        // this.modes.debug.orbitControls.screenSpacePanning = true
-        // this.modes.debug.orbitControls.enableKeys = false
-        // this.modes.debug.orbitControls.zoomSpeed = 0.25
-        // this.modes.debug.orbitControls.enableDamping = true
-        // this.modes.debug.orbitControls.update()
+        this.modes.debug.orbitControls = new OrbitControls(this.modes.debug.instance, this.targetElement)
+        this.modes.debug.orbitControls.enabled = this.modes.debug.active
+        this.modes.debug.orbitControls.screenSpacePanning = true
+        this.modes.debug.orbitControls.enableKeys = false
+        this.modes.debug.orbitControls.zoomSpeed = 0.25
+        this.modes.debug.orbitControls.enableDamping = true
+        this.modes.debug.orbitControls.update()
     }
 
 
@@ -74,7 +74,7 @@ export default class Camera
     update()
     {
         // Update debug orbit controls
-        // this.modes.debug.orbitControls.update()
+        this.modes.debug.orbitControls.update()
 
         // Apply coordinates
         this.instance.position.copy(this.modes[this.mode].instance.position)
@@ -84,6 +84,6 @@ export default class Camera
 
     destroy()
     {
-        // this.modes.debug.orbitControls.destroy()
+        this.modes.debug.orbitControls.destroy()
     }
 }

@@ -21,9 +21,8 @@ export default class Terminal {
                     target: o,
                     instance: Screen,
                 })
-            }
-
-            if (o.material) {
+                o.layers.set(LAYERS.GLOBAL)
+            } else if (o.material?.name == 'TerminalMaterial') {
                 o.layers.set(LAYERS.GLOBAL)
             }
         })
