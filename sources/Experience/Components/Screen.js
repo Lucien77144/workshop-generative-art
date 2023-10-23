@@ -49,7 +49,11 @@ export default class Screen {
 
     resize() {}
 
-    update() {}
+    update() {
+        if (this.city) {
+            this.city.update();
+        }
+    }
 
     destroy() {}
 }
