@@ -20,12 +20,12 @@ export default class World {
 
   init() {
     this.ambientLight = new AmbientLight(0xaaffaa, 0.5);
-    this.ambientLight.layers.set(LAYERS.ALL);
+    this.ambientLight.layers.set(LAYERS.GLOBAL);
     this.scene.add(this.ambientLight);
 
     this.directionalLight = new DirectionalLight(0xffffff, 5);
     this.directionalLight.position.set(0, 5, 5);
-
+    this.directionalLight.layers.set(LAYERS.GLOBAL);
     this.scene.add(this.directionalLight);
 
     this.terminal = new Terminal();

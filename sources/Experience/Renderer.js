@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import Experience from './Experience.js'
 import { LAYERS } from './Const/const.js'
-import vertexShader from './Shaders/vertexShader.vert'
-import fragmentShader from './Shaders/fragmentShader.frag'
+import vertexShader from './Shaders/vertexShader.vert?raw'
+import fragmentShader from './Shaders/fragmentShader.frag?raw'
 
 export default class Renderer {
     constructor(_options = {}) {
@@ -99,7 +99,7 @@ export default class Renderer {
                 scatter: { value: 0 },
                 blendingMode: { value: 1 },
                 blending: { value: 1 },
-            }
+            },
         }
 
         // Debug
@@ -141,10 +141,7 @@ export default class Renderer {
                 .step(0.01)
                 .name('scatter')
             this.debugHalftoneFolder
-                .add(
-                    this.halftonePass.uniforms.blendingMode,
-                    'value'
-                )
+                .add(this.halftonePass.uniforms.blendingMode, 'value')
                 .min(0)
                 .max(1)
                 .step(0.01)
@@ -160,20 +157,66 @@ export default class Renderer {
         /**
          * Effect composer
          */
-        this.rt0 = this.rt1 = this.rt2 =
-            new THREE.WebGLRenderTarget(
-                this.config.width,
-                this.config.height,
-                {
-                    generateMipmaps: false,
-                    minFilter: THREE.LinearFilter,
-                    magFilter: THREE.LinearFilter,
-                    format: THREE.RGBAFormat,
-                    encoding: THREE.sRGBEncoding,
-                    samples: 1,
-                    stencilBuffer: true,
-                }
-            );
+        this.rt0 = new THREE.WebGLRenderTarget(
+            this.config.width,
+            this.config.height,
+            {
+                generateMipmaps: false,
+                minFilter: THREE.LinearFilter,
+                magFilter: THREE.LinearFilter,
+                format: THREE.RGBAFormat,
+                encoding: THREE.sRGBEncoding,
+                samples: 1,
+                stencilBuffer: true,
+            }
+        )
+
+        this.rt1 = new THREE.WebGLRenderTarget(
+            this.config.width,
+            this.config.height,
+            {
+                generateMipmaps: false,
+                minFilter: THREE.LinearFilter,
+                magFilter: THREE.LinearFilter,
+                format: THREE.RGBAFormat,
+                encoding: THREE.sRGBEncoding,
+                samples: 1,
+                stencilBuffer: true,
+            }
+        )
+
+        this.rt2 = new THREE.WebGLRenderTarget(
+            this.config.width,
+            this.config.height,
+            {
+                generateMipmaps: false,
+                minFilter: THREE.LinearFilter,
+                magFilter: THREE.LinearFilter,
+                format: THREE.RGBAFormat,
+                encoding: THREE.sRGBEncoding,
+                samples: 1,
+                stencilBuffer: true,
+            }
+        )
+
+        this.renderMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(2, 2),
+            new THREE.ShaderMaterial({
+                uniforms: {
+                    uBase: {
+                        value: this.rt0.texture,
+                    },
+                    uHalfstone: {
+                        value: this.rt1.texture,
+                    },
+                    uMask: {
+                        value: this.rt2.texture,
+                    },
+                },
+                vertexShader,
+                fragmentShader,
+            })
+        )
     }
 
     resize() {
@@ -183,30 +226,51 @@ export default class Renderer {
     }
 
     renderTargets() {
-        this.instance.setRenderTarget(this.rt0);
-        this.instance.render(this.scene, this.camera.instance);
+        this.scene = this.experience.scene;
+
+        this.scene?.traverse((o) => {
+            if (o.material?.name == 'TerminalMaterial') {
+                o.material.colorWrite = true;
+            }
+        })
+
+        // Base
+        this.experience.world?.terminal?.screenStencil.setMaterial('baseMat')
+        this.camera.instance.layers.disableAll()
+        this.camera.instance.layers.enable(LAYERS.DEFAULT)
+        this.camera.instance.layers.enable(LAYERS.TERMINAL)
+        this.camera.instance.layers.enable(LAYERS.GLOBAL)
+        this.camera.instance.layers.enable(LAYERS.MASK)
+        this.instance.setRenderTarget(this.rt0)
+        this.instance.render(this.scene, this.camera.instance)
+
+        // Content
+        this.camera.instance.layers.disableAll()
+        this.camera.instance.layers.enable(LAYERS.GLOBAL)
+        this.camera.instance.layers.enable(LAYERS.SCREEN)
+        this.camera.instance.layers.enable(LAYERS.MASK)
+        this.camera.instance.layers.enable(LAYERS.TERMINAL)
+        this.instance.setRenderTarget(this.rt1)
+        this.instance.render(this.scene, this.camera.instance)
         
-        this.camera.instance.layers.disableAll();
-        this.camera.instance.layers.enable(LAYERS.ALL);
-        this.camera.instance.layers.enable(LAYERS.SCREEN);
-        this.camera.instance.layers.enable(LAYERS.MASK);
-        this.instance.setRenderTarget(this.rt1);
-        this.instance.render(this.scene, this.camera.instance);
+        // Mask
+        this.experience.world?.terminal?.screenStencil.setMaterial('maskMat')
+        this.scene?.traverse((o) => {
+            if (o.material?.name == 'TerminalMaterial') {
+                o.material.colorWrite = false;
+            }
+        })
+        this.camera.instance.layers.disableAll()
+        this.camera.instance.layers.enable(LAYERS.GLOBAL)
+        this.camera.instance.layers.enable(LAYERS.TERMINAL)
+        this.camera.instance.layers.enable(LAYERS.MASK)
+        this.instance.setRenderTarget(this.rt2)
+        this.instance.render(this.scene, this.camera.instance)
 
-        // this.camera.instance.layers.set(LAYERS.MASK);
-        // this.instance.setRenderTarget(this.rt2);
-        // this.instance.render(this.scene, this.camera.instance);
-
-        this.renderMesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(1, 1),
-            new THREE.ShaderMaterial({
-                vertexShader,
-                fragmentShader,
-            })
-        )
-
-        this.instance.setRenderTarget(null);
-        this.instance.render(this.scene, this.camera.instance);
+        // Shader
+        this.camera.instance.layers.set(LAYERS.DEFAULT)
+        this.instance.setRenderTarget(null)
+        this.instance.render(this.renderMesh, this.camera.instance)
     }
 
     update() {
@@ -214,7 +278,7 @@ export default class Renderer {
             this.stats.beforeRender()
         }
 
-        this.renderTargets();
+        this.renderTargets()
 
         // Animate halftone
         if (this.halftonePass.uniforms.radius.value > 10) {

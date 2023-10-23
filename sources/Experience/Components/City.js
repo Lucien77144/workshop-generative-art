@@ -15,7 +15,7 @@ export default class City {
         console.log(this.city)
         // this.mixer = new AnimationMixer(this.city);
 
-        this.city.position.set(.1, 0.2, 0)
+        this.city.position.set(.1, 0.2, -1)
         this.city.scale.set(0.2, 0.2, 0.2)
 
         this.group.add(this.city)

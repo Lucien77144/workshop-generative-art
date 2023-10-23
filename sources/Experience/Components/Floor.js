@@ -5,6 +5,7 @@ import {
   PlaneGeometry,
 } from 'three';
 import Experience from '../Experience';
+import { LAYERS } from '../Const/const';
 
 export default class Floor {
   constructor(_options) {
@@ -21,7 +22,7 @@ export default class Floor {
     this.mesh = new Mesh(
       new PlaneGeometry(100, 100),
       new MeshBasicMaterial({
-        color: '#020202',
+        color: '#101010',
       })
     );
 

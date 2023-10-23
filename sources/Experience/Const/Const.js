@@ -1,6 +1,7 @@
 export const LAYERS = {
-    ALL: 0,
-    DEFAULT: 1,
-    SCREEN: 2,
-    MASK: 3,
+    DEFAULT: 0,
+    GLOBAL: 1,
+    MASK: 2,
+    SCREEN: 3,
+    TERMINAL: 4,
 }
