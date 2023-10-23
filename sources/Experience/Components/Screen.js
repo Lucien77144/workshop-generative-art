@@ -19,7 +19,8 @@ export default class Screen {
 
         this.city = new City({
             group: this.group,
-        })
+            inputDate: 3000,
+        });
 
         this.group.traverse((o) => {
             o.layers.set(LAYERS.SCREEN)
@@ -36,7 +37,11 @@ export default class Screen {
 
     resize() {}
 
-    update() {}
+    update() {
+        if (this.city) {
+            this.city.update();
+        }
+    }
 
     destroy() {}
 }

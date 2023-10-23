@@ -30,17 +30,13 @@ export default class World {
 
         this.terminal = new Terminal()
         this.floor = new Floor()
-
-        this.elapsedTime = 0
     }
 
     resize() {}
 
     update() {
-        this.deltaTime = this.time - window.performance.now()
-        this.elapsedTime = window.performance.now() * 0.001
-        this.time = window.performance.now()
+        if (this.terminal) {
+            this.terminal.update()
+        }
     }
-
-    destroy() {}
 }
