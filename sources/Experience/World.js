@@ -1,4 +1,4 @@
-import { AmbientLight } from 'three';
+import { AmbientLight, DirectionalLight, DirectionalLightHelper } from 'three';
 import Experience from './Experience.js';
 import Terminal from './Components/Terminal.js';
 import Floor from './Components/Floor.js';
@@ -18,8 +18,13 @@ export default class World {
   }
 
   init() {
-    this.light = new AmbientLight(0xaaffaa, 1);
-    this.scene.add(this.light);
+    this.ambientLight = new AmbientLight(0xaaffaa, 0.5);
+    this.scene.add(this.ambientLight)
+
+    this.directionalLight = new DirectionalLight(0xffffff, 5);
+    this.directionalLight.position.set(0, 5, 5);
+
+    this.scene.add(this.directionalLight);
 
     this.terminal = new Terminal();
     this.floor = new Floor();

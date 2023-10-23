@@ -6,6 +6,7 @@ import {
   MeshBasicMaterial,
 } from 'three';
 import Experience from '../../Experience';
+import City from '../City';
 
 export default class Screen {
   constructor(_options = {}) {
@@ -20,6 +21,10 @@ export default class Screen {
 
   init() {
     this.group = new Group(); // group for screen
+
+    this.city = new City({
+        group: this.group,
+    });
 
     this.box = new Mesh(
       new BoxGeometry(0.1, 0.1, 0.1),
