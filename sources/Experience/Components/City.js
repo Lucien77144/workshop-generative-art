@@ -5,7 +5,7 @@ export default class City {
   constructor(_options) {
     this.experience = new Experience();
     this.config = this.experience.config;
-    this.scene = this.experience.scene;
+    this.group = _options.group;
     this.resources = this.experience.resources;
 
     this.init();
@@ -19,7 +19,7 @@ export default class City {
     this.city.position.set(0, -1, 0);
     this.city.scale.set(0.5, 0.5, 0.5);
 
-    this.scene.add(this.city);
+    this.group.add(this.city);
     // this.elapsedTime = 0;
   }
 
