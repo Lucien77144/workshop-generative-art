@@ -1,14 +1,7 @@
-import {
-  AmbientLight,
-  BoxGeometry,
-  DoubleSide,
-  MeshBasicMaterial,
-} from 'three';
+import { AmbientLight } from 'three';
 import Experience from './Experience.js';
-import { Mesh } from 'three';
-import { PlaneGeometry } from 'three';
-import { Vector2 } from 'three';
 import Terminal from './Components/Terminal.js';
+import Floor from './Components/Floor.js';
 
 export default class World {
   constructor(_options) {
@@ -29,6 +22,8 @@ export default class World {
     this.scene.add(this.light);
 
     this.terminal = new Terminal();
+    this.floor = new Floor();
+
     this.elapsedTime = 0;
   }
 

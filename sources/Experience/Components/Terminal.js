@@ -1,4 +1,3 @@
-import { AlwaysStencilFunc, MeshPhongMaterial, ReplaceStencilOp } from 'three';
 import Experience from '../Experience';
 import Stencil from './Stencil';
 import Screen from './Screen/Screen';
