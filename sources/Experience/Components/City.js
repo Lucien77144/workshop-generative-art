@@ -42,31 +42,25 @@ export default class City {
                     this.experience.inputDate >= 200 &&
                     animation.name.startsWith('Cube.009')
                 ) {
-                    setTimeout(() => {
-                        action.play()
-                    }, 1500)
+                    action.play()
                 }
 
                 if (
                     this.experience.inputDate >= 300 &&
                     animation.name.startsWith('Cube.010')
                 ) {
-                    setTimeout( () => {
-                        action.play()
-                    }, 3000)
+                    action.play()
                 }
 
                 if (
                     this.experience.inputDate >= 400 &&
                     animation.name.startsWith('Cube.003')
                 ) {
-                    setTimeout(() => {
-                        action.play()
-                    }, 4500)
+                    action.play()
                 }
             }
 
-            await w.delay(0)
+            await w.delay(3000)
             this.generateFlowers()
         }
     }
