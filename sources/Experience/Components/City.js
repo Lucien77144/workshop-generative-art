@@ -1,5 +1,9 @@
 import Experience from '../Experience'
 import { AnimationMixer } from 'three'
+import Flowers from './Flowers'
+import { Wait } from '../Utils/Wait'
+
+const w = new Wait()
 
 export default class City {
     constructor(_options) {
@@ -10,10 +14,11 @@ export default class City {
         this.scene = this.resources.items.city.scene
         this.animations = this.resources.items.city.animations
         this.timeout = null
-        this.inputDate = _options.inputDate
 
         this.init()
-        this.setAnimations()
+        this.destroyBuildings()
+        // this.generateGrass()
+        // this.generateTrees()
     }
 
     init() {
@@ -24,7 +29,7 @@ export default class City {
         // this.group.add(this.scene)
     }
 
-    setAnimations() {
+    async destroyBuildings() {
         if (this.scene.visible) {
             this.mixer = new AnimationMixer(this.scene)
 
@@ -34,8 +39,8 @@ export default class City {
                 action.clampWhenFinished = true
 
                 if (
-                    this.inputDate >= 2050 &&
-                    animation.name.startsWith('Cube.010')
+                    this.experience.inputDate >= 200 &&
+                    animation.name.startsWith('Cube.009')
                 ) {
                     setTimeout(() => {
                         action.play()
@@ -43,29 +48,42 @@ export default class City {
                 }
 
                 if (
-                    this.inputDate >= 2100 &&
-                    animation.name.startsWith('Cube.009')
+                    this.experience.inputDate >= 300 &&
+                    animation.name.startsWith('Cube.010')
                 ) {
-                    setTimeout(() => {
+                    setTimeout( () => {
                         action.play()
                     }, 3000)
                 }
 
-                // if (
-                //     this.inputDate >= 2150 &&
-                //     animation.name.startsWith('Cube.008')
-                // ) {
-                //     setTimeout(() => {
-                //         action.play()
-                //     }, 4500)
-                // }
+                if (
+                    this.experience.inputDate >= 400 &&
+                    animation.name.startsWith('Cube.003')
+                ) {
+                    setTimeout(() => {
+                        action.play()
+                    }, 4500)
+                }
             }
+
+            await w.delay(0)
+            this.generateFlowers()
         }
+    }
+
+    generateFlowers() {
+        this.flowers = new Flowers({
+            scene: this.scene,
+        })
     }
 
     resize() {}
 
     update() {
+        if (this.flowers) {
+            this.flowers.update()
+        }
+
         if (this.mixer) {
             this.mixer.update(this.experience.time.delta * 0.0005)
         }
@@ -74,5 +92,6 @@ export default class City {
     destroy() {
         // this.group.remove(this.scene)
         clearTimeout(this.timeout)
+        w.kill()
     }
 }
