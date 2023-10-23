@@ -28,6 +28,7 @@ export default class Renderer {
     }
 
     setInstance() {
+        // this.clearColor = '#45b7e8' // Cyan blue
         this.clearColor = '#010101'
 
         // Renderer
@@ -95,7 +96,7 @@ export default class Renderer {
 
         // TODO - Try to pass params to the instance directly
         this.postProcess.halftonePass.uniforms.shape.value = 3
-        this.postProcess.halftonePass.uniforms.radius.value = 100
+        this.postProcess.halftonePass.uniforms.radius.value = this.config.pixelRatio * 3
         this.postProcess.halftonePass.uniforms.rotateR.value = 90
         this.postProcess.halftonePass.uniforms.rotateB.value = 90
         this.postProcess.halftonePass.uniforms.rotateG.value = 90
@@ -210,7 +211,7 @@ export default class Renderer {
             this.postProcess.composer.render()
 
             // Animate halftone
-            if (this.postProcess.halftonePass.uniforms.radius.value > 7) {
+            if (this.postProcess.halftonePass.uniforms.radius.value > this.config.pixelRatio * 3) {
                 this.postProcess.halftonePass.uniforms.radius.value -= 1
             }
         } else {
