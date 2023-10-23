@@ -21,19 +21,24 @@ export default class Terminal {
                     target: o,
                     instance: Screen,
                 })
+            }
+
+            if (o.material) {
                 o.layers.set(LAYERS.GLOBAL)
-            } else if (o.material?.name == 'TerminalMaterial') {
-              o.layers.set(LAYERS.GLOBAL)
             }
         })
+        this.screen = this.screenStencil.instance
         this.terminal.position.set(0, 0, 0)
-
         this.scene.add(this.terminal)
     }
 
     resize() {}
 
-    update() {}
+    update() {
+        if (this.screen) {
+            this.screen.update()
+        }
+    }
 
     destroy() {}
 }
