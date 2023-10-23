@@ -41,8 +41,8 @@ export default class World {
         this.elapsedTime = window.performance.now() * 0.001
         this.time = window.performance.now()
 
-        if (this.city) {
-            this.city.update()
+        if (this.terminal) {
+            this.terminal.update();
         }
     }
 

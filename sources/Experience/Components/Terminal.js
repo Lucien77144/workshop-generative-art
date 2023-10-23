@@ -2,7 +2,6 @@ import Experience from '../Experience';
 import Stencil from './Stencil';
 import Screen from './Screen';
 import { LAYERS } from '../Const/const';
-import { MeshPhongMaterial } from 'three';
 
 export default class Terminal {
   constructor(_options) {
@@ -15,6 +14,8 @@ export default class Terminal {
   }
 
   init() {
+    this.screen = new Screen()
+
     this.terminal = this.resources.items.terminal.scene;
     this.terminal.traverse((o) => {
       if (o.material?.name == 'Screen') {
@@ -32,7 +33,11 @@ export default class Terminal {
 
   resize() {}
 
-  update() {}
+  update() {
+    if (this.screen) {
+      this.screen.update();
+    }
+  }
 
   destroy() {}
 }
