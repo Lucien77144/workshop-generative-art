@@ -40,9 +40,9 @@ export default class Experience {
         this.setResources()
         this.setWorld()
 
-        const _CONFIG = 2400 // User input
-        const _BASE = 2000 // Makes the final value easier to use
-        this.inputDate = _CONFIG - _BASE
+        const _USER_INPUT = 2400
+        const _BASE = 2000
+        this.inputDate = _USER_INPUT - _BASE // Makes the final value easier to use
 
         this.sizes.on('resize', () => {
             this.resize()
