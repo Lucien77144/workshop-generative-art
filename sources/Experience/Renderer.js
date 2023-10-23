@@ -104,54 +104,56 @@ export default class Renderer {
         this.postProcess.halftonePass.uniforms.blending.value = 1
 
         // Debug
-        this.debugHalftoneFolder
-            .add(this.postProcess.halftonePass.uniforms.shape, 'value')
-            .min(1)
-            .max(5)
-            .step(1)
-            .name('shape')
-        this.debugHalftoneFolder
-            .add(this.postProcess.halftonePass.uniforms.radius, 'value')
-            .min(0)
-            .max(100)
-            .step(1)
-            .name('radius')
-        this.debugHalftoneFolder
-            .add(this.postProcess.halftonePass.uniforms.rotateR, 'value')
-            .min(0)
-            .max(180)
-            .step(1)
-            .name('rotateR')
-        this.debugHalftoneFolder
-            .add(this.postProcess.halftonePass.uniforms.rotateB, 'value')
-            .min(0)
-            .max(180)
-            .step(1)
-            .name('rotateB')
-        this.debugHalftoneFolder
-            .add(this.postProcess.halftonePass.uniforms.rotateG, 'value')
-            .min(0)
-            .max(180)
-            .step(1)
-            .name('rotateG')
-        this.debugHalftoneFolder
-            .add(this.postProcess.halftonePass.uniforms.scatter, 'value')
-            .min(0)
-            .max(1)
-            .step(0.01)
-            .name('scatter')
-        this.debugHalftoneFolder
-            .add(this.postProcess.halftonePass.uniforms.blendingMode, 'value')
-            .min(0)
-            .max(1)
-            .step(0.01)
-            .name('blendingMode')
-        this.debugHalftoneFolder
-            .add(this.postProcess.halftonePass.uniforms.blending, 'value')
-            .min(0)
-            .max(5)
-            .step(1)
-            .name('blending')
+        if (this.debug) {
+            this.debugHalftoneFolder
+                .add(this.postProcess.halftonePass.uniforms.shape, 'value')
+                .min(1)
+                .max(5)
+                .step(1)
+                .name('shape')
+            this.debugHalftoneFolder
+                .add(this.postProcess.halftonePass.uniforms.radius, 'value')
+                .min(0)
+                .max(100)
+                .step(1)
+                .name('radius')
+            this.debugHalftoneFolder
+                .add(this.postProcess.halftonePass.uniforms.rotateR, 'value')
+                .min(0)
+                .max(180)
+                .step(1)
+                .name('rotateR')
+            this.debugHalftoneFolder
+                .add(this.postProcess.halftonePass.uniforms.rotateB, 'value')
+                .min(0)
+                .max(180)
+                .step(1)
+                .name('rotateB')
+            this.debugHalftoneFolder
+                .add(this.postProcess.halftonePass.uniforms.rotateG, 'value')
+                .min(0)
+                .max(180)
+                .step(1)
+                .name('rotateG')
+            this.debugHalftoneFolder
+                .add(this.postProcess.halftonePass.uniforms.scatter, 'value')
+                .min(0)
+                .max(1)
+                .step(0.01)
+                .name('scatter')
+            this.debugHalftoneFolder
+                .add(this.postProcess.halftonePass.uniforms.blendingMode, 'value')
+                .min(0)
+                .max(1)
+                .step(0.01)
+                .name('blendingMode')
+            this.debugHalftoneFolder
+                .add(this.postProcess.halftonePass.uniforms.blending, 'value')
+                .min(0)
+                .max(5)
+                .step(1)
+                .name('blending')
+        }
 
         /**
          * Effect composer
