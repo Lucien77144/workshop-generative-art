@@ -12,7 +12,7 @@ export default class City {
 
     init() {
         this.city = this.resources.items.city.scene
-        console.log(this.city)
+        // console.log(this.city)
         // this.mixer = new AnimationMixer(this.city);
 
         this.city.position.set(.1, 0.2, -1)

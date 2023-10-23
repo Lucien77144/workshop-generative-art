@@ -3,6 +3,8 @@ uniform sampler2D uHalfstone;
 uniform sampler2D uMask;
 varying vec2 vUv;
 
+#include "imported_fragment_shader.frag"
+
 void main() {
     vec2 uv = vUv;
     vec4 light = vec4(.5, .2, .2, 1.);

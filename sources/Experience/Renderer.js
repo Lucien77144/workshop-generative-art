@@ -4,6 +4,8 @@ import { LAYERS } from './Const/const.js'
 import vertexShader from './Shaders/vertexShader.vert?raw'
 import fragmentShader from './Shaders/fragmentShader.frag?raw'
 
+import { HalftoneShader } from '../../node_modules/three/examples/jsm/shaders/HalftoneShader.js'
+
 export default class Renderer {
     constructor(_options = {}) {
         this.experience = new Experience()
@@ -172,6 +174,8 @@ export default class Renderer {
         )
         this.rt1 = this.rt0.clone();
         this.rt2 = this.rt0.clone();
+
+        console.log(HalftoneShader);
 
         this.renderMesh = new THREE.Mesh(
             new THREE.PlaneGeometry(2, 2),
