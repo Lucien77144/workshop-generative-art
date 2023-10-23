@@ -30,7 +30,13 @@ export default class Flowers {
         const material = new MeshBasicMaterial({ color: 0x45b7e8 })
         const alienFlower = this.resources.items.alienFlower.scene
 
+        const _RADIUS = 3 // Set your desired radius here
+
         for (let i = 0; i < this.experience.inputDate / 10; i++) {
+            const angle = (i / (this.experience.inputDate / 10)) * Math.PI * 2
+            const x = _RADIUS * Math.cos(angle)
+            const z = _RADIUS * Math.sin(angle)
+
             const curve = new CatmullRomCurve3([
                 new Vector3(
                     Math.random() < 0.5 ? -1 : 1,
@@ -55,16 +61,12 @@ export default class Flowers {
                 0.25 + Math.random() * 0.5,
                 0.25 + Math.random() * 0.5
             )
-
             mesh.add(alienFlower.clone())
 
             mesh.scale.set(0, 0, 0)
-            mesh.position.set(2.5 - Math.random() * 5, -0.05, 3)
-
+            mesh.position.set(x, -0.05, z)
             this.group.add(mesh)
         }
-
-        console.log(this.group)
     }
 
     resize() {}
