@@ -28,38 +28,38 @@ export default class City {
         if (this.scene.visible) {
             this.mixer = new AnimationMixer(this.scene)
 
-            this.timeout = setTimeout(() => {
-                this.fireAnimation()
-            }, 3000)
-        }
-    }
+            for (const animation of this.animations) {
+                const action = this.mixer.clipAction(animation)
+                action.repetitions = 0
+                action.clampWhenFinished = true
 
-    fireAnimation() {
-        for (const animation of this.animations) {
-            const action = this.mixer.clipAction(animation)
-            action.repetitions = 0
-            action.clampWhenFinished = true
-            
-            if (
-                this.inputDate >= 2050 &&
-                animation.name.startsWith('Cube.010')
-            ) {
-                action.play()
+                if (
+                    this.inputDate >= 2050 &&
+                    animation.name.startsWith('Cube.010')
+                ) {
+                    setTimeout(() => {
+                        action.play()
+                    }, 1500)
+                }
+
+                if (
+                    this.inputDate >= 2100 &&
+                    animation.name.startsWith('Cube.009')
+                ) {
+                    setTimeout(() => {
+                        action.play()
+                    }, 3000)
+                }
+
+                // if (
+                //     this.inputDate >= 2150 &&
+                //     animation.name.startsWith('Cube.008')
+                // ) {
+                //     setTimeout(() => {
+                //         action.play()
+                //     }, 4500)
+                // }
             }
-
-            if (
-                this.inputDate >= 2100 &&
-                animation.name.startsWith('Cube.009')
-            ) {
-                action.play()
-            }
-
-            // if (
-            //     this.inputDate >= 2150 &&
-            //     animation.name.startsWith('Cube.009')
-            // ) {
-            //     action.play()
-            // }
         }
     }
 
