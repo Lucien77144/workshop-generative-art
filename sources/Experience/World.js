@@ -1,8 +1,9 @@
-import { AmbientLight, DirectionalLight, DirectionalLightHelper } from 'three';
-import Experience from './Experience.js';
-import Terminal from './Components/Terminal.js';
-import Floor from './Components/Floor.js';
-import { LAYERS } from './Const/const.js';
+import { AmbientLight, DirectionalLight, DirectionalLightHelper } from 'three'
+import Experience from './Experience.js'
+import Terminal from './Components/Terminal.js'
+import Floor from './Components/Floor.js'
+import { LAYERS } from './Const/const.js'
+import City from './Components/City.js'
 
 export default class World {
     constructor(_options) {
@@ -18,18 +19,19 @@ export default class World {
         })
     }
 
-  init() {
-    this.ambientLight = new AmbientLight(0xaaffaa, 0.5);
-    this.ambientLight.layers.set(LAYERS.ALL);
-    this.scene.add(this.ambientLight);
+    init() {
+        this.ambientLight = new AmbientLight(0xaaffaa, 0.5)
+        this.ambientLight.layers.set(LAYERS.ALL)
+        this.scene.add(this.ambientLight)
 
         this.directionalLight = new DirectionalLight(0xffffff, 5)
         this.directionalLight.position.set(0, 5, 5)
 
         this.scene.add(this.directionalLight)
 
-        this.terminal = new Terminal();
-        this.floor = new Floor();
+        this.terminal = new Terminal()
+        this.floor = new Floor()
+        this.city = new City()
 
         this.elapsedTime = 0
     }
@@ -42,7 +44,7 @@ export default class World {
         this.time = window.performance.now()
 
         if (this.terminal) {
-            this.terminal.update();
+            this.terminal.update()
         }
     }
 

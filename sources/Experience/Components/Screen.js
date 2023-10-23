@@ -32,6 +32,7 @@ export default class Screen {
 
         this.city = new City({
             group: this.group,
+            inputDate: 3000,
         });
 
         this.group.traverse((o) => {
