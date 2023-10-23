@@ -1,6 +1,8 @@
 import Experience from '../Experience';
 import Stencil from './Stencil';
-import Screen from './Screen/Screen';
+import Screen from './Screen';
+import { LAYERS } from '../Const/const';
+import { MeshPhongMaterial } from 'three';
 
 export default class Terminal {
   constructor(_options) {
@@ -20,6 +22,7 @@ export default class Terminal {
           target: o,
           instance: Screen,
         });
+        o.layers.set(LAYERS.MASK);
       }
     });
     this.terminal.position.set(0, 0, 0);

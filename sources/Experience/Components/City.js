@@ -1,35 +1,29 @@
-import Experience from '../Experience';
-import { AnimationMixer } from 'three';
+import Experience from '../Experience'
 
 export default class City {
-  constructor(_options) {
-    this.experience = new Experience();
-    this.config = this.experience.config;
-    this.group = _options.group;
-    this.resources = this.experience.resources;
+    constructor(_options) {
+        this.experience = new Experience()
+        this.config = this.experience.config
+        this.group = _options.group
+        this.resources = this.experience.resources
 
-    this.init();
-  }
+        this.init()
+    }
 
-  init() {
-    this.city = this.resources.items.city.scene;
-    console.log(this.city);
-    // this.mixer = new AnimationMixer(this.city);
+    init() {
+        this.city = this.resources.items.city.scene
+        console.log(this.city)
+        // this.mixer = new AnimationMixer(this.city);
 
-    this.city.position.set(0, -1, 0);
-    this.city.scale.set(0.5, 0.5, 0.5);
+        this.city.position.set(.1, 0.2, 0)
+        this.city.scale.set(0.2, 0.2, 0.2)
 
-    this.group.add(this.city);
-    // this.elapsedTime = 0;
-  }
+        this.group.add(this.city)
+    }
 
-  resize() {}
+    resize() {}
 
-  update() {
-    // this.deltaTime = this.time - window.performance.now();
-    // this.elapsedTime = window.performance.now() * 0.001;
-    // this.time = window.performance.now();
-  }
+    update() {}
 
-  destroy() {}
+    destroy() {}
 }

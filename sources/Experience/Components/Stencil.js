@@ -16,7 +16,7 @@ export default class Stencil {
   }
 
   init() {
-    this.target.material = new MeshPhongMaterial({ color: 'white' });
+    this.target.material = new MeshPhongMaterial({ color: '#ff0000' });
     this.target.material.depthWrite = false;
     this.target.material.stencilWrite = true;
     this.target.material.stencilRef = this.stencilRef;
