@@ -15,7 +15,7 @@ export default class City {
     }
 
     init() {
-        this.scene.position.set(0, 0.2, 0)
+        this.scene.position.set(0.1, 0.2, -1)
         this.scene.scale.set(0.2, 0.2, 0.2)
 
         this.group.add(this.scene)
