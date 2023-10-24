@@ -1,4 +1,11 @@
-import { AmbientLight, DirectionalLight } from 'three'
+import {
+    AmbientLight,
+    DirectionalLight,
+    Group,
+    Mesh,
+    MeshBasicMaterial,
+    PlaneGeometry,
+} from 'three'
 import Experience from './Experience.js'
 import Terminal from './Components/Terminal.js'
 import Floor from './Components/Floor.js'
@@ -32,31 +39,16 @@ export default class World {
 
         this.terminal = new Terminal()
         this.floor = new Floor()
-
-        // this.city = new City({
-        //   group: this.scene,
-        //   inputDate: 3000,
-        // })
-
-        // let _target;
-        // this.city.instance.traverse((o) => {
-        //     if (o.name === 'Cube') {
-        //         _target = o;
-        //         console.log(o.clone());
-        //     }
-        // })
-
-        // this.floor = new GrassFloor({
-        //     _group: this.scene,
-        //     _position: _target.position,
-        //     _target,
-        //     _count: 300000,
-        // })
     }
 
     resize() {}
 
     update() {
+        // TEMPORARY
+        if (this.city) {
+            this.city.update()
+        }
+
         if (this.terminal) {
             this.terminal.update()
         }

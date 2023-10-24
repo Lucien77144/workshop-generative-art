@@ -40,6 +40,11 @@ export default class Screen {
             _count: 500000,
         })
 
+        this.setStencil();
+        this.scene.add(this.group)
+    }
+
+    setStencil() {
         this.group.traverse((o) => {
             o.layers.set(LAYERS.SCREEN)
             if (o.material) {
@@ -49,8 +54,6 @@ export default class Screen {
                 o.material.stencilFunc = EqualStencilFunc
             }
         })
-
-        this.scene.add(this.group)
     }
 
     resize() {}

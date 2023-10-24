@@ -30,6 +30,24 @@ export default class Experience {
             return
         }
 
+        // User input
+        const _USER_INPUT = new URLSearchParams(window.location.search).get(
+            'date'
+        )
+
+        // if 'date' is < 2000, force it to be set at 2000
+        if (_USER_INPUT < 2000 || !_USER_INPUT) {
+            window.location.search = 'date=2000'
+        }
+
+        // if 'date' is > 3000, force it to bet set at 3000
+        if (_USER_INPUT > 3000) {
+            window.location.search = 'date=3000'
+        }
+
+        const _BASE = 2000
+        this.inputDate = _USER_INPUT - _BASE // Makes the final value easier to use
+
         this.time = new Time()
         this.sizes = new Sizes()
         this.setConfig()
@@ -48,11 +66,11 @@ export default class Experience {
         this.update()
     }
 
-    makeCracks() {
-        this.cracks = new Crack()
-        this.cracks.setup()
-        this.cracks.render()
-    }
+    // makeCracks() {
+    //     this.cracks = new Crack()
+    //     this.cracks.setup()
+    //     this.cracks.render()
+    // }
 
     setConfig() {
         this.config = {}

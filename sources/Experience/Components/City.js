@@ -1,5 +1,9 @@
-import Experience from '../Experience'
+import Experience from './../Experience'
 import { AnimationMixer } from 'three'
+import Flowers from './Flowers/Flowers'
+import { Wait } from '../Utils/Wait'
+
+const w = new Wait()
 
 export default class City {
     constructor(_options) {
@@ -10,58 +14,83 @@ export default class City {
         this.instance = this.resources.items.city.scene
         this.animations = this.resources.items.city.animations
         this.timeout = null
-        this.inputDate = _options.inputDate
+        this.screen = null
 
         this.init()
-        this.setAnimations()
+        this.destroyBuildings()
     }
 
     init() {
         this.group.add(this.instance)
     }
 
-    setAnimations() {
-        if (this.instance.visible) {
-            this.mixer = new AnimationMixer(this.instance)
+    async destroyBuildings() {
+        if (this.group.visible) {
+            this.mixer = new AnimationMixer(this.group)
 
-            this.timeout = setTimeout(() => {
-                this.fireAnimation()
-            }, 3000)
+            for (const animation of this.animations) {
+                const action = this.mixer.clipAction(animation)
+                action.repetitions = 0
+                action.clampWhenFinished = true
+
+                if (
+                    this.experience.inputDate >= 200 &&
+                    animation.name.startsWith('Cube.009')
+                ) {
+                    action.play()
+                }
+
+                if (
+                    this.experience.inputDate >= 300 &&
+                    animation.name.startsWith('Cube.010')
+                ) {
+                    action.play()
+                }
+
+                if (
+                    this.experience.inputDate >= 400 &&
+                    animation.name.startsWith('Cube.003')
+                ) {
+                    action.play()
+                }
+            }
+
+            await w.delay(0)
+            this.generateFlowers()
         }
     }
 
-    fireAnimation() {
-        for (const animation of this.animations) {
-            const action = this.mixer.clipAction(animation)
-            action.repetitions = 0
-            action.clampWhenFinished = true
-            
-            if (
-                this.inputDate >= 2050 &&
-                animation.name.startsWith('Cube.010')
-            ) {
-                action.play()
-            }
+    generateFlowers() {
+        this.screen = this.experience.world.terminal.screen
+        this.flowers = new Flowers({
+            scene: this.group,
+        })
+        this.screen.setStencil();
+    }
 
-            if (
-                this.inputDate >= 3000 &&
-                animation.name.startsWith('Cube.009')
-            ) {
-                action.play()
-            }
-        }
+    generateTrees() {
+        // ...
+    }
+
+    generateGrass() {
+        // ...
     }
 
     resize() {}
 
     update() {
+        if (this.flowers) {
+            this.flowers.update()
+        }
+
         if (this.mixer) {
             this.mixer.update(this.experience.time.delta * 0.0005)
         }
     }
 
     destroy() {
-        this.group.remove(this.instance)
+        // this.group.remove(this.scene)
         clearTimeout(this.timeout)
+        w.kill()
     }
 }
