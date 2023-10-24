@@ -1,4 +1,11 @@
-import { AmbientLight, DirectionalLight, Group } from 'three'
+import {
+    AmbientLight,
+    DirectionalLight,
+    Group,
+    Mesh,
+    MeshBasicMaterial,
+    PlaneGeometry,
+} from 'three'
 import Experience from './Experience.js'
 import Terminal from './Components/Terminal.js'
 import Floor from './Components/Floor.js'
