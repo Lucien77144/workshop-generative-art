@@ -211,9 +211,9 @@ export default class Renderer {
             this.postProcess.composer.render()
 
             // Animate halftone
-            if (this.postProcess.halftonePass.uniforms.radius.value > this.config.pixelRatio * 3) {
-                this.postProcess.halftonePass.uniforms.radius.value -= 1
-            }
+            // if (this.postProcess.halftonePass.uniforms.radius.value > this.config.pixelRatio * 3) {
+            //     this.postProcess.halftonePass.uniforms.radius.value -= 0.5
+            // }
         } else {
             this.instance.render(this.scene, this.camera.instance)
         }
