@@ -93,7 +93,7 @@ export default class Flowers {
                 .add(new Vector3(0, 0.3, 0))
             const dir = curve
                 .getPointAt(1)
-                .sub(curve.getPointAt(0.99))
+                .sub(curve.getPointAt(0.8))
                 .normalize()
 
             redFlower.scale.set(0.3, 0.3, 0.3)
@@ -106,6 +106,8 @@ export default class Flowers {
             // Offset to make the flower look at the right direction
             redFlower.rotateOnAxis(new Vector3(1, 0, 0), Math.PI * 0.5)
             flowerGroup.add(redFlower.clone())
+
+            console.log(flower.random);
 
             flowerGroup.add(flower)
             flowerGroup.scale.set(0, 0, 0)
@@ -124,9 +126,8 @@ export default class Flowers {
             this.flowers.children.forEach((flower) => {
                 // flower.children[1].material.uniforms.uTime.value += 0.01
 
-                // TODO - Fix rotation
-                flower.children[0].rotation.y +=
-                    flower.random < 0.5 ? 0.001 : -0.001
+                flower.children[0].children[0].rotation.y +=
+                    flower.random < 0.5 ? -0.001 : 0.001
             })
         }
 
