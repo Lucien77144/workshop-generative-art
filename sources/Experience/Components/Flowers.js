@@ -30,13 +30,14 @@ export default class Flowers {
         const material = new MeshBasicMaterial({ color: 0x45b7e8 })
         const alienFlower = this.resources.items.alienFlower.scene
 
-        const _RADIUS = 3 // Set your desired radius here
+        const _RADIUS = 3
 
         for (let i = 0; i < this.experience.inputDate / 10; i++) {
             const angle = (i / (this.experience.inputDate / 10)) * Math.PI * 2
             const x = _RADIUS * Math.cos(angle)
             const z = _RADIUS * Math.sin(angle)
 
+            // TODO - Avoid using basic random values
             const curve = new CatmullRomCurve3([
                 new Vector3(
                     Math.random() < 0.5 ? -1 : 1,
