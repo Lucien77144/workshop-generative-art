@@ -26,7 +26,10 @@ export default class Flowers {
 
     init() {
         const _RADIUS = 4
-        const alienFlower = this.resources.items.alienFlower.scene
+        // const alienFlower = this.resources.items.alienFlower.scene
+        const redFlower = this.resources.items.redFlower.scene
+        const blueFlower = this.resources.items.blueFlower.scene
+        const pinkFlower = this.resources.items.pinkFlower.scene
 
         this.flowers = new Group()
 
@@ -40,67 +43,62 @@ export default class Flowers {
             },
         })
 
-        for (let i = 0; i < this.experience.inputDate / 20; i++) {
-            const sinus = Math.sin(i) * 10
-            
-
-            const angle = (i / (this.experience.inputDate / 20)) * Math.PI * 2
+        for (let i = 0; i < this.experience.inputDate / 10; i++) {
+            const angle = (i / (this.experience.inputDate / 10)) * Math.PI * 2
             const x = _RADIUS * Math.cos(angle)
             const z = _RADIUS * Math.sin(angle)
 
             const flowerGroup = new Group()
 
             const curve = new CatmullRomCurve3([
+                new Vector3(0, 0, 0),
                 new Vector3(
-                    this.prng() < 0.5 ? -1 : 1, // x
-                    0, // y
-                    this.prng() < 0.5 ? -1 : 1 // z
+                    Math.sin(i) * 0.5 * this.prng() * 2,
+                    1, // y
+                    Math.sin(i) * 0.5 * -this.prng() * 2
                 ),
                 new Vector3(
-                    0, // x
-                    this.prng() * 1 + 2, // y
-                    0 // z
+                    Math.sin(i) * 0.5 * -this.prng() * 3,
+                    Math.abs((Math.sin(i) + 4)), // y
+                    Math.sin(i) * 0.5 * this.prng() * 3
                 ),
                 new Vector3(
-                    this.prng() < 0.5 ? -1 : 1, // x
-                    this.prng() * 2 + 5, // y
-                    this.prng() < 0.5 ? -1 : 1 // z
+                    Math.sin(i) * 0.5 * -this.prng() * 2,
+                    Math.abs((Math.sin(i) + 5)), // y
+                    Math.sin(i) * 0.5 * -this.prng() * 2
                 ),
             ])
+
+            console.log(Math.abs(Math.sin(i) + 4))
 
             const geometry = new TubeGeometry(curve, 20, 0.09, 20, false)
             const flower = new Mesh(geometry, material)
 
             flower.scaleRandomVector = new Vector3(
-                this.prng() * 0.2 + 0.5,
-                this.prng() * 0.2 + 0.5,
-                this.prng() * 0.2 + 0.5
+                this.prng() * 0.1 + 0.3,
+                this.prng() * 0.1 + 0.3,
+                this.prng() * 0.1 + 0.3
             )
 
-            alienFlower.position.copy(curve.getPointAt(1))
+            redFlower.position.copy(curve.getPointAt(1))
             const dir = curve
                 .getPointAt(1)
                 .sub(curve.getPointAt(0.99))
                 .normalize()
 
-            // TODO - Add some random in here
-            // Real alien flower
-            alienFlower.scale.set(0.5, 0.5, 0.5)
+            redFlower.scale.set(0.3, 0.3, 0.3)
 
-            // Leaf
-            // alienFlower.scale.set(5, 5, 5)
-
-            const targetPos = alienFlower.position.clone().add(dir)
-            alienFlower.lookAt(targetPos)
+            const targetPos = redFlower.position.clone().add(dir)
+            redFlower.lookAt(targetPos)
 
             // const axesHelper = new AxesHelper(5)
-            // alienFlower.add(axesHelper)
+            // redFlower.add(axesHelper)
 
-            alienFlower.rotateOnAxis(new Vector3(1, 0, 0), Math.PI * 0.5)
+            redFlower.rotateOnAxis(new Vector3(1, 0, 0), Math.PI * 0.5)
 
             flowerGroup.scale.set(0, 0, 0)
             flowerGroup.position.set(x + this.prng(), -0.05, z - this.prng())
-            flowerGroup.add(alienFlower.clone())
+            flowerGroup.add(redFlower.clone())
             flowerGroup.add(flower)
 
             this.flowers.add(flowerGroup)
