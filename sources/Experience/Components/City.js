@@ -1,6 +1,6 @@
-import Experience from '../Experience'
+import Experience from './../Experience'
 import { AnimationMixer } from 'three'
-import Flowers from './Flowers'
+import Flowers from './Flowers/Flowers'
 import { Wait } from '../Utils/Wait'
 
 const w = new Wait()
@@ -17,8 +17,6 @@ export default class City {
 
         this.init()
         this.destroyBuildings()
-        // this.generateGrass()
-        // this.generateTrees()
     }
 
     init() {
@@ -69,6 +67,14 @@ export default class City {
         this.flowers = new Flowers({
             scene: this.scene,
         })
+    }
+
+    generateTrees() {
+        // ...
+    }
+
+    generateGrass() {
+        // ...
     }
 
     resize() {}

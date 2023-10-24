@@ -1,14 +1,11 @@
-import Experience from '../Experience'
+import Experience from './../../Experience'
 import {
     Mesh,
     CatmullRomCurve3,
     Vector3,
-    MeshBasicMaterial,
+    MeshToonMaterial,
     TubeGeometry,
     Group,
-    MathUtils,
-    Quaternion,
-    Euler,
     AxesHelper,
 } from 'three'
 import Alea from 'alea'
@@ -16,15 +13,12 @@ import Alea from 'alea'
 export default class Flowers {
     constructor(_options) {
         this.experience = new Experience()
-
-        console.log(this.experience)
-
         this.scene = _options.scene
         this.config = this.experience.config
         this.resources = this.experience.resources
 
-        // Params
-        this.targetScale = 0.5
+        this.prng = new Alea(this.experience.inputDate)
+
         this.init()
     }
 
@@ -33,8 +27,9 @@ export default class Flowers {
         this.flowers = new Group()
         this.scene.add(this.flowers)
 
-        const material = new MeshBasicMaterial({ color: 0x45b7e8 })
+        const material = new MeshToonMaterial({ color: 0x45b7e8 })
         const alienFlower = this.resources.items.alienFlower.scene
+        // const 
 
         const _RADIUS = 3.5
 
@@ -55,37 +50,35 @@ export default class Flowers {
                 ),
             ])
 
-            // TODO - Avoid creating a new geometry for each flower ?
             const geometry = new TubeGeometry(curve, 20, 0.1, 20, false)
             const flower = new Mesh(geometry, material)
+
+            flower.scaleVector = new Vector3(0.5, 0.5, 0.5)
+            // console.log(flower.scaleVector);
 
             alienFlower.position.copy(curve.getPointAt(1))
             const dir = curve
                 .getPointAt(1)
-                .sub(curve.getPointAt(0.95))
+                .sub(curve.getPointAt(0.99))
                 .normalize()
 
-            // alienFlower.scale.set(
-            //     1 + prng() * 5,
-            //     1 + prng() * 5,
-            //     1 + prng() * 5
-            // )
+            // Real alien flower
+            alienFlower.scale.set(0.5, 0.5, 0.5)
 
-            alienFlower.scale.set(
-                0.25 + prng() * 0.5,
-                0.25 + prng() * 0.5,
-                0.25 + prng() * 0.5
-            )
+            // Leaf
+            // alienFlower.scale.set(5, 5, 5)
+
             const targetPos = alienFlower.position.clone().add(dir)
             alienFlower.lookAt(targetPos)
-            alienFlower.rotateOnAxis(new Vector3(1, 0, 0), Math.PI * 0.5)
-            flowerGroup.add(alienFlower.clone())
 
-            const axesHelper = new AxesHelper(5)
-            axesHelper.scale.set(2, 2, 2)
+            // const axesHelper = new AxesHelper(5)
             // alienFlower.add(axesHelper)
+
+            alienFlower.rotateOnAxis(new Vector3(1, 0, 0), Math.PI * 0.5)
+
             flowerGroup.scale.set(0, 0, 0)
             flowerGroup.position.set(x, -0.05, z)
+            flowerGroup.add(alienFlower.clone())
             flowerGroup.add(flower)
 
             this.flowers.add(flowerGroup)
@@ -95,15 +88,14 @@ export default class Flowers {
     resize() {}
 
     update() {
-        // animate each flower inside this.flowers
-        const prng = new Alea(this.experience.inputDate)
-
+        if (this.experience.time.elapsed > 5000) {
+            return
+        }
         for (let i = 0; i < this.flowers.children.length; i++) {
             const flower = this.flowers.children[i]
-
             flower.scale.lerp(
-                new Vector3(0.5, 0.5, 0.5).multiplyScalar(0.5 + prng() * 0.5),
-                prng() * 0.05
+                new Vector3(0.5, 0.5, 0.5),
+                0.01
             )
         }
     }
