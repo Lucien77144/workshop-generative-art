@@ -1,4 +1,4 @@
-import { AmbientLight, DirectionalLight } from 'three'
+import { AmbientLight, DirectionalLight, Group } from 'three'
 import Experience from './Experience.js'
 import Terminal from './Components/Terminal.js'
 import Floor from './Components/Floor.js'
@@ -33,7 +33,9 @@ export default class World {
             group: null,
             inputDate: 2550,
         })
-        this.scene.add(this.city.scene)
+        this.cityGroup = new Group()
+        this.cityGroup.add(this.city.scene)
+        this.scene.add(this.cityGroup)
 
         // this.terminal = new Terminal()
         // this.floor = new Floor()

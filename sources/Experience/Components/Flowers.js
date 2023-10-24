@@ -5,10 +5,13 @@ import {
     Vector3,
     MeshBasicMaterial,
     TubeGeometry,
-    SphereGeometry,
     Group,
     MathUtils,
+    Quaternion,
+    Euler,
+    AxesHelper,
 } from 'three'
+import Alea from 'alea'
 
 export default class Flowers {
     constructor(_options) {
@@ -18,26 +21,29 @@ export default class Flowers {
         this.resources = this.experience.resources
 
         // Params
-        this.targetScale = 0.3
+        const prng = new Alea(this.experience.inputDate)
+        this.targetScale = 0.5
 
         this.init()
     }
 
     init() {
-        this.group = new Group()
-        this.scene.add(this.group)
+        const prng = new Alea(this.experience.inputDate)
+        this.flowers = new Group()
+        this.scene.add(this.flowers)
 
         const material = new MeshBasicMaterial({ color: 0x45b7e8 })
         const alienFlower = this.resources.items.alienFlower.scene
 
-        const _RADIUS = 3
+        const _RADIUS = 3.5
 
-        for (let i = 0; i < this.experience.inputDate / 10; i++) {
-            const angle = (i / (this.experience.inputDate / 10)) * Math.PI * 2
+        for (let i = 0; i < this.experience.inputDate / 30; i++) {
+            const angle = (i / (this.experience.inputDate / 30)) * Math.PI * 2
             const x = _RADIUS * Math.cos(angle)
             const z = _RADIUS * Math.sin(angle)
 
-            // TODO - Avoid using basic random values
+            const flowerGroup = new Group()
+
             const curve = new CatmullRomCurve3([
                 new Vector3(
                     Math.random() < 0.5 ? -1 : 1,
@@ -54,46 +60,44 @@ export default class Flowers {
 
             // TODO - Avoid creating a new geometry for each flower ?
             const geometry = new TubeGeometry(curve, 20, 0.1, 20, false)
-            const mesh = new Mesh(geometry, material)
+            const flower = new Mesh(geometry, material)
 
             alienFlower.position.copy(curve.getPointAt(1))
-            alienFlower.scale.set(
-                0.25 + Math.random() * 0.5,
-                0.25 + Math.random() * 0.5,
-                0.25 + Math.random() * 0.5
-            )
-            mesh.add(alienFlower.clone())
+            const dir = curve
+                .getPointAt(1)
+                .sub(curve.getPointAt(0.99))
+                .normalize()
 
-            mesh.scale.set(0, 0, 0)
-            mesh.position.set(x, -0.05, z)
-            this.group.add(mesh)
+            // alienFlower.scale.set(
+            //     1 + prng() * 5,
+            //     1 + prng() * 5,
+            //     1 + prng() * 5
+            // )
+
+            alienFlower.scale.set(
+                0.1 + prng() * 0.5,
+                0.1 + prng() * 0.5,
+                0.1 + prng() * 0.5
+            )
+            const targetPos = alienFlower.position.clone().add(dir)
+            alienFlower.lookAt(targetPos)
+            flowerGroup.add(alienFlower.clone())
+
+            const axesHelper = new AxesHelper(5)
+            axesHelper.scale.set(2, 2, 2)
+            alienFlower.add(axesHelper)
+            flowerGroup.scale.set(0.5, 0.5, 0.5)
+            flowerGroup.position.set(x, -0.05, z)
+            flowerGroup.add(flower)
+
+            this.scene.add(flowerGroup)
         }
     }
 
     resize() {}
 
     update() {
-        this.group.traverse((_child) => {
-            if (_child instanceof Mesh && _child.scale.x < this.targetScale) {
-                const lerpFactor = 0.01
-
-                _child.scale.x = MathUtils.lerp(
-                    _child.scale.x,
-                    this.targetScale,
-                    lerpFactor
-                )
-                _child.scale.y = MathUtils.lerp(
-                    _child.scale.y,
-                    this.targetScale,
-                    lerpFactor
-                )
-                _child.scale.z = MathUtils.lerp(
-                    _child.scale.z,
-                    this.targetScale,
-                    lerpFactor
-                )
-            }
-        })
+        // animate flowers
     }
 
     destroy() {}
