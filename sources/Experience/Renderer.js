@@ -14,7 +14,7 @@ export default class Renderer {
         this.sizes = this.experience.sizes
         this.scene = this.experience.scene
         this.camera = this.experience.camera
-        
+
         // Debug
         if (this.debug) {
             this.debugRendererFolder = this.debug.addFolder('Renderer')
@@ -170,8 +170,8 @@ export default class Renderer {
                 stencilBuffer: true,
             }
         )
-        this.rt1 = this.rt0.clone();
-        this.rt2 = this.rt0.clone();
+        this.rt1 = this.rt0.clone()
+        this.rt2 = this.rt0.clone()
 
         this.renderMesh = new THREE.Mesh(
             new THREE.PlaneGeometry(2, 2),
@@ -181,12 +181,13 @@ export default class Renderer {
                     uBase: {
                         value: this.rt0.texture,
                     },
-                    uHalfstone: {
+                    uScreen: {
                         value: this.rt1.texture,
                     },
                     uMask: {
                         value: this.rt2.texture,
                     },
+                    uTime: { value: 0 },
                 },
                 vertexShader,
                 fragmentShader,
@@ -201,12 +202,12 @@ export default class Renderer {
     }
 
     renderTargets() {
-        this.scene = this.experience.scene;
+        this.scene = this.experience.scene
 
         // Base
         this.scene?.traverse((o) => {
             if (o.material?.name == 'TerminalMaterial') {
-                o.material.colorWrite = true;
+                o.material.colorWrite = true
             }
         })
         this.experience.world?.terminal?.screenStencil.setMaterial('baseMat')
@@ -222,12 +223,12 @@ export default class Renderer {
         this.camera.instance.layers.enable(LAYERS.SCREEN)
         this.instance.setRenderTarget(this.rt1)
         this.instance.render(this.scene, this.camera.instance)
-        
+
         // Mask
         this.experience.world?.terminal?.screenStencil.setMaterial('maskMat')
         this.scene?.traverse((o) => {
             if (o.material?.name == 'TerminalMaterial') {
-                o.material.colorWrite = false;
+                o.material.colorWrite = false
             }
         })
         this.camera.instance.layers.disableAll()
@@ -251,6 +252,10 @@ export default class Renderer {
         // Animate halftone
         if (this.halftonePass.uniforms.radius.value > 10) {
             this.halftonePass.uniforms.radius.value -= 1
+        }
+
+        if (this.renderMesh?.material.uniforms.uTime) {
+            this.renderMesh.material.uniforms.uTime.value = this.time.elapsed
         }
 
         if (this.stats) {

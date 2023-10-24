@@ -11,13 +11,14 @@ export default class Screen {
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.stencilRef = _options.stencilRef
+        this.time = this.experience.time
 
         this.init()
     }
 
     init() {
         this.group = new Group() // group for screen
-        this.group.position.set(0.1, 0.2, -1)
+        this.group.position.set(-0.2, 0.2, -2)
         this.group.scale.set(0.2, 0.2, 0.2)
 
         this.city = new City({
@@ -25,10 +26,10 @@ export default class Screen {
             inputDate: 3000,
         })
 
-        let _target;
+        let _target
         this.city.instance.traverse((o) => {
             if (o.name === 'Cube') {
-                _target = o;
+                _target = o
             }
         })
 
@@ -55,10 +56,12 @@ export default class Screen {
     resize() {}
 
     update() {
-        if (this.city) {
-            this.city.update()
-        }
+        this.city?.update()
         this.floor?.update()
+
+        if (this.group) {
+            this.group.rotation.y += this.time.delta * 0.0001
+        }
     }
 
     destroy() {}

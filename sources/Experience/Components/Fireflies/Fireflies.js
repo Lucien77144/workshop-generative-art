@@ -74,10 +74,10 @@ export default class Fireflies {
                 uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
                 uFliesSize: { value: this.FliesSize },
                 uSize: { value: this.size },
-                uColor: { value: new Color('#f0e196') },
+                uColor: { value: new Color('#757575') },
             },
-            vertexShader: vertexShader,
-            fragmentShader: fragmentShader,
+            vertexShader,
+            fragmentShader,
         })
     }
 
@@ -95,6 +95,6 @@ export default class Fireflies {
     }
 
     update() {
-        this.firefliesMaterial.uniforms.uTime.value = this.time.elapsed * 0.001
+        this.firefliesMaterial.uniforms.uTime.value = this.time.elapsed
     }
 }
