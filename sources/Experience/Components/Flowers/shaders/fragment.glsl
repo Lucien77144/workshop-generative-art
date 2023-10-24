@@ -8,5 +8,5 @@ varying vec2 vUv;
 void main() {
     vec2 uv = vUv;
     
-    gl_FragColor = vec4(0.33, 0.75, 0.72, 1.0);
+    gl_FragColor = vec4(0.36, 0.67, 0.52, 1.0);
 }
