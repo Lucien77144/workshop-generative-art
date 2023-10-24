@@ -211,6 +211,7 @@ export default class Renderer {
         })
         this.experience.world?.terminal?.screenStencil.setMaterial('baseMat')
         this.camera.instance.layers.disableAll()
+        this.camera.instance.layers.enable(LAYERS.DEFAULT)
         this.camera.instance.layers.enable(LAYERS.GLOBAL)
         this.instance.setRenderTarget(this.rt0)
         this.instance.render(this.scene, this.camera.instance)

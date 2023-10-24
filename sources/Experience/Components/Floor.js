@@ -31,7 +31,7 @@ export default class Floor {
         this.mesh.material.stencilFunc = GreaterStencilFunc
 
         this.mesh.rotation.x = -Math.PI * 0.5
-        this.mesh.layers.set(LAYERS.GLOBAL)
+        this.mesh.layers.set(LAYERS.DEFAULT)
 
         this.scene.add(this.mesh)
     }

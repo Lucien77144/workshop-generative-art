@@ -1,11 +1,11 @@
-import Experience from "webgl/Experience.js";
-import { Color, DoubleSide, Mesh, MeshBasicMaterial, MirroredRepeatWrapping, NearestFilter, PlaneGeometry, RepeatWrapping, ShaderMaterial, Vector3 } from "three";
-import dispVertex from "./shaders/Displacement/vertexShader.glsl";
-import dispFragment from "./shaders/Displacement/fragmentShader.glsl";
-import grassVertex from "./shaders/Grass/vertexShader.glsl";
-import grassFragment from "./shaders/Grass/fragmentShader.glsl";
+import { Color, DoubleSide, Mesh, NearestFilter, PlaneGeometry, ShaderMaterial, Vector3 } from "three";
+import dispVertex from "./shaders/Displacement/vertexShader.vert?raw";
+import dispFragment from "./shaders/Displacement/fragmentShader.frag?raw";
+import grassVertex from "./shaders/Grass/vertexShader.vert?raw";
+import grassFragment from "./shaders/Grass/fragmentShader.frag?raw";
 import GrassGeometry from "./GrassGeometry";
 import Fireflies from "../Fireflies/Fireflies";
+import Experience from "../../Experience";
 
 export default class GrassFloor {
   constructor({
@@ -36,7 +36,7 @@ export default class GrassFloor {
     },
   } = {}) {
     this.experience = new Experience();
-    this.world = this.experience.activeScene.world;
+    this.scene = this.experience.scene;
     this.resources = this.experience.resources;
     this.time = this.experience.time;
     this.debug = this.experience.debug;
@@ -100,7 +100,7 @@ export default class GrassFloor {
     this.ground.rotation.x = -Math.PI / 2;
     this.ground.name = this.name;
 
-    this.world.add(this.ground);
+    this.scene.add(this.ground);
   }
 
   setGrass() {
@@ -111,7 +111,7 @@ export default class GrassFloor {
     this.grass.position.copy(this.ground.position);
     this.grass.name = this.name + "-blades";
 
-    this.world.add(this.grass);
+    this.scene.add(this.grass);
   }
 
   setGrassGeometry() {
