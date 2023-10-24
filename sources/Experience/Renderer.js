@@ -21,7 +21,7 @@ export default class Renderer {
             this.debugHalftoneFolder = this.debug.addFolder('Halftone')
         }
 
-        this.usePostprocess = true
+        // this.usePostprocess = true
 
         this.setInstance()
         this.setPostProcess()
