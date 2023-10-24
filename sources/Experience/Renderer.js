@@ -14,7 +14,7 @@ export default class Renderer {
         this.sizes = this.experience.sizes
         this.scene = this.experience.scene
         this.camera = this.experience.camera
-
+        
         // Debug
         if (this.debug) {
             this.debugRendererFolder = this.debug.addFolder('Renderer')

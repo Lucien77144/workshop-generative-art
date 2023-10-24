@@ -5,12 +5,13 @@ import { AdditiveBlending, BufferAttribute, BufferGeometry, Color, Points, Shade
 
 export default class Fireflies {
     constructor({
+        _scene = null,
         _count = 150,
         _size = new Vector3(100, 100, 100),
         _position = new Vector3(0, 0, 0),
     } = {}) {
         this.experience = new Experience();
-        this.world = this.experience.scene;
+        this.scene = _scene ?? this.experience.scene;
         this.time = this.experience.time;
         this.firefliesCount = _count;
         this.size = _size;
@@ -67,7 +68,7 @@ export default class Fireflies {
     setFireflies() {
         this.fireflies = new Points(this.firefliesGeometry, this.firefliesMaterial)
         this.fireflies.position.set(this.position.x - this.size.x/2, this.position.y, this.position.z - this.size.z/2);
-        this.world.add(this.fireflies)
+        this.scene.add(this.fireflies)
     }
 
     update() {

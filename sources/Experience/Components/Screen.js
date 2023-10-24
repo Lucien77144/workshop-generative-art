@@ -1,7 +1,8 @@
-import { EqualStencilFunc, Group } from 'three'
+import { EqualStencilFunc, Group, MeshPhongMaterial, Vector3 } from 'three'
 import Experience from '../Experience'
 import City from './City'
 import { LAYERS } from '../Const/const'
+import GrassFloor from './GrassFloor/GrassFloor'
 
 export default class Screen {
     constructor(_options = {}) {
@@ -20,11 +21,28 @@ export default class Screen {
         this.city = new City({
             group: this.group,
             inputDate: 3000,
-        });
+        })
+
+        let _target;
+        this.city.instance.traverse((o) => {
+            if (o.name === 'Cube') {
+                _target = o;
+                o.material = new MeshPhongMaterial({
+                    color: 'red',
+                })
+            }
+        })
+
+        this.floor = new GrassFloor({
+            _group: this.group,
+            _position: this.city.instance.position,
+            _target,
+            _count: 5000,
+        })
 
         this.group.traverse((o) => {
             o.layers.set(LAYERS.SCREEN)
-            if (o.material) {
+            if (this.stencilRef && o.material) {
                 o.material = o.material.clone()
                 o.material.stencilWrite = true
                 o.material.stencilRef = this.stencilRef
@@ -39,8 +57,9 @@ export default class Screen {
 
     update() {
         if (this.city) {
-            this.city.update();
+            this.city.update()
         }
+        this.floor?.update()
     }
 
     destroy() {}

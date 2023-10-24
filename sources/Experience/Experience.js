@@ -11,6 +11,7 @@ import Camera from './Camera.js'
 import World from './World.js'
 
 import assets from './assets.js'
+import Crack from './Components/Cracks.js'
 
 export default class Experience {
     static instance
@@ -45,6 +46,12 @@ export default class Experience {
         })
 
         this.update()
+    }
+
+    makeCracks() {
+        this.cracks = new Crack()
+        this.cracks.setup()
+        this.cracks.render()
     }
 
     setConfig() {

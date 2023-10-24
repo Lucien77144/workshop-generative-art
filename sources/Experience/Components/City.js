@@ -7,7 +7,7 @@ export default class City {
         this.config = this.experience.config
         this.group = _options.group
         this.resources = this.experience.resources
-        this.scene = this.resources.items.city.scene
+        this.instance = this.resources.items.city.scene
         this.animations = this.resources.items.city.animations
         this.timeout = null
         this.inputDate = _options.inputDate
@@ -17,15 +17,15 @@ export default class City {
     }
 
     init() {
-        this.scene.position.set(0.1, 0.2, -1)
-        this.scene.scale.set(0.2, 0.2, 0.2)
+        this.instance.position.set(0.1, 0.2, -1)
+        this.instance.scale.set(0.2, 0.2, 0.2)
 
-        this.group.add(this.scene)
+        this.group.add(this.instance)
     }
 
     setAnimations() {
-        if (this.scene.visible) {
-            this.mixer = new AnimationMixer(this.scene)
+        if (this.instance.visible) {
+            this.mixer = new AnimationMixer(this.instance)
 
             this.timeout = setTimeout(() => {
                 this.fireAnimation()
@@ -64,7 +64,7 @@ export default class City {
     }
 
     destroy() {
-        this.group.remove(this.scene)
+        this.group.remove(this.instance)
         clearTimeout(this.timeout)
     }
 }

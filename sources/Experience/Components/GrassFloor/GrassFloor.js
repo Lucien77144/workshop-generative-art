@@ -1,152 +1,189 @@
-import { Color, DoubleSide, Mesh, NearestFilter, PlaneGeometry, ShaderMaterial, Vector3 } from "three";
-import dispVertex from "./shaders/Displacement/vertexShader.vert?raw";
-import dispFragment from "./shaders/Displacement/fragmentShader.frag?raw";
-import grassVertex from "./shaders/Grass/vertexShader.vert?raw";
-import grassFragment from "./shaders/Grass/fragmentShader.frag?raw";
-import GrassGeometry from "./GrassGeometry";
-import Fireflies from "../Fireflies/Fireflies";
-import Experience from "../../Experience";
+import {
+    Color,
+    DoubleSide,
+    Mesh,
+    NearestFilter,
+    PlaneGeometry,
+    ShaderMaterial,
+    Vector3,
+} from 'three'
+import dispVertex from './shaders/Displacement/vertexShader.vert?raw'
+import dispFragment from './shaders/Displacement/fragmentShader.frag?raw'
+import grassVertex from './shaders/Grass/vertexShader.vert?raw'
+import grassFragment from './shaders/Grass/fragmentShader.frag?raw'
+import GrassGeometry from './GrassGeometry'
+import Fireflies from '../Fireflies/Fireflies'
+import Experience from '../../Experience'
 
 export default class GrassFloor {
-  constructor({
-    _position = new Vector3(0, 0, 0),
-    _size = new Vector3(10, 1, 20),
-    _count = 125000,
-    _maps = {
-      displacementMap: "displacementMap",
-      mask: "grassMask",
-      baseTexture: "dirtTexture",
-      secondTexture: "mudTexture",
-    },
-    _colors = {
-      base: new Color('#11382a'),
-      set: [ // 4 colors to set, only the first not commented set is used
-        {
-          uColor1: { value: new Color('#15945d') },
-          uColor2: { value: new Color('#0a9044') },
-          uColor3: { value: new Color('#14857c') },
-          uColor4: { value: new Color('#0ca87e') },
+    constructor({
+        _position = new Vector3(0, 0, 0),
+        _size = new Vector3(10, 1, 20),
+        _target = null,
+        _group = null,
+        _count = 125000,
+        _maps = {
+            // displacementMap: 'black',
+            // mask: 'black',
+            // baseTexture: 'dirtTexture',
+            // secondTexture: 'mudTexture',
+            displacementMap: "displacementMap",
+            mask: "grassMask",
+            baseTexture: "dirtTexture",
+            secondTexture: "mudTexture",
         },
-      ]
-    },
-    _fireflies = {
-      status: true,
-      count: 750,
-      instance: null,
-    },
-  } = {}) {
-    this.experience = new Experience();
-    this.scene = this.experience.scene;
-    this.resources = this.experience.resources;
-    this.time = this.experience.time;
-    this.debug = this.experience.debug;
+        _colors = {
+            base: new Color('#11382a'),
+            set: [
+                // 4 colors to set, only the first not commented set is used
+                {
+                    uColor1: { value: new Color('#15945d') },
+                    uColor2: { value: new Color('#0a9044') },
+                    uColor3: { value: new Color('#14857c') },
+                    uColor4: { value: new Color('#0ca87e') },
+                },
+            ],
+        },
+        _fireflies = {
+            status: true,
+            count: 500,
+        },
+    } = {}) {
+        this.experience = new Experience()
+        this.scene = _group ?? this.experience.scene
+        this.resources = this.experience.resources
+        this.time = this.experience.time
+        this.debug = this.experience.debug
 
-    this.count = _count;
-    this.position = _position;
-    this.size = _size;
-    this.name = `grassFloor-${this.experience.scene.children.filter((child) => child.name.includes("grassFloor")).length}`;
-    this.colors = _colors;
-    this.fireflies = _fireflies;
+        this.count = _count
+        this.target = _target
+        this.position = _position
+        this.size = _size
+        this.name = `grassFloor-${
+            this.experience.scene.children.filter((child) =>
+                child.name.includes('grassFloor')
+            ).length
+        }`
+        this.colors = _colors
+        this.fireflies = _fireflies
 
-    this.grassParameters = {
-      count: this.count,
-      size: this.size,
-      baseTexture: this.resources.items[_maps.baseTexture],
-      secondTexture: this.resources.items[_maps.secondTexture],
-      displacementMap: this.resources.items[_maps.displacementMap],
-      mask: this.resources.items[_maps.mask],
-      colors : this.colors,
-    };
+        console.log(this.resources.items[_maps.baseTexture]);
 
-    this.setGround();
-    this.setGrass();
-    this.fireflies.status && this.setFireflies();
-  }
+        this.grassParameters = {
+            count: this.count,
+            size:
+                this.target?.geometry.boundingBox.getSize(new Vector3()) ??
+                this.size,
+            baseTexture: this.resources.items[_maps.baseTexture],
+            secondTexture: this.resources.items[_maps.secondTexture],
+            displacementMap: this.resources.items[_maps.displacementMap],
+            mask: this.resources.items[_maps.mask],
+            colors: this.colors,
+        }
 
-  setGroundGeometry() {
-    this.groundGeometry = new PlaneGeometry(this.grassParameters.size.x, this.grassParameters.size.z, 100, 100);
-  }
+        this.setGround()
+        this.setGrass()
+        this.fireflies.status && this.setFireflies()
+    }
 
-  setGroundMaterial() {
-    this.grassParameters.baseTexture.generateMipmaps = false;
-    this.grassParameters.baseTexture.minFilter = NearestFilter;
-    this.grassParameters.baseTexture.magFilter = NearestFilter;
+    setGroundGeometry() {
+        this.groundGeometry =
+            this.target?.geometry ??
+            new PlaneGeometry(
+                this.grassParameters.size.x,
+                this.grassParameters.size.z,
+                100,
+                100
+            )
+    }
 
-    this.grassParameters.secondTexture.generateMipmaps = false;
-    this.grassParameters.secondTexture.minFilter = NearestFilter;
-    this.grassParameters.secondTexture.magFilter = NearestFilter;
+    setGroundMaterial() {
+        this.grassParameters.baseTexture.generateMipmaps = false
+        this.grassParameters.baseTexture.minFilter = NearestFilter
+        this.grassParameters.baseTexture.magFilter = NearestFilter
 
-    this.groundMaterial = new ShaderMaterial({
-      uniforms: {
-        uBaseTexture: { value: this.grassParameters.baseTexture },
-        uSecondTexture: { value: this.grassParameters.secondTexture },
-        uDisplacement: { value: this.grassParameters.displacementMap },
-        uMask: { value: this.grassParameters.mask },
-        uSize: { value: this.grassParameters.size },
-        uBaseColor: { value: this.grassParameters.colors.base },
-      },
-      transparent: true,
-      vertexShader: dispVertex,
-      fragmentShader: dispFragment,
-    });
-  }
+        this.grassParameters.secondTexture.generateMipmaps = false
+        this.grassParameters.secondTexture.minFilter = NearestFilter
+        this.grassParameters.secondTexture.magFilter = NearestFilter
 
-  setGround() {
-    this.setGroundGeometry();
-    this.setGroundMaterial();
+        this.groundMaterial = new ShaderMaterial({
+            uniforms: {
+                uBaseTexture: { value: this.grassParameters.baseTexture },
+                uSecondTexture: { value: this.grassParameters.secondTexture },
+                uDisplacement: { value: this.grassParameters.displacementMap },
+                uMask: { value: this.grassParameters.mask },
+                uSize: { value: this.grassParameters.size },
+                uBaseColor: { value: this.grassParameters.colors.base },
+            },
+            transparent: true,
+            vertexShader: dispVertex,
+            fragmentShader: dispFragment,
+        })
+    }
 
-    this.ground = new Mesh(this.groundGeometry, this.groundMaterial);
-    this.ground.position.copy(this.position);
-    this.ground.rotation.x = -Math.PI / 2;
-    this.ground.name = this.name;
+    setGround() {
+        this.setGroundGeometry()
+        this.setGroundMaterial()
 
-    this.scene.add(this.ground);
-  }
+        if (this.target) {
+            this.ground = this.target
+        } else {
+            this.ground = new Mesh(this.groundGeometry, this.groundMaterial)
+            this.ground.rotation.x = -Math.PI / 2
+            this.ground.name = this.name
+            this.ground.position.copy(this.position)
 
-  setGrass() {
-    this.setGrassGeometry();
-    this.setGrassMaterial();
+            this.scene.add(this.ground)
+        }
+    }
 
-    this.grass = new Mesh(this.grassGeometry, this.grassMaterial);
-    this.grass.position.copy(this.ground.position);
-    this.grass.name = this.name + "-blades";
+    setGrass() {
+        this.setGrassGeometry()
+        this.setGrassMaterial()
 
-    this.scene.add(this.grass);
-  }
+        this.grass = new Mesh(this.grassGeometry, this.grassMaterial)
+        this.grass.position.copy(this.position)
+        this.grass.name = this.name + '-blades'
 
-  setGrassGeometry() {
-    this.grassGeometry = new GrassGeometry(this.grassParameters);
-  }
+        this.scene.add(this.grass)
+    }
 
-  setGrassMaterial() {
-    this.grassMaterial = new ShaderMaterial({
-      uniforms: {
-        uTime: { value: 0 },
-        uDisplacement: { value: this.grassParameters.displacementMap },
-        uMask: { value: this.grassParameters.mask },
-        uSize: { value: this.grassParameters.size },
-        uMaxBladeSize: { value: this.grassGeometry.maxHeight },
-        uBaseColor: { value: this.grassParameters.colors.base },
-        ...this.grassParameters.colors.set[0],
-      },
-      side: DoubleSide,
-      transparent: true,
-      alphaTest: 0,
-      vertexShader: grassVertex,
-      fragmentShader: grassFragment,
-    });
-  }
+    setGrassGeometry() {
+        this.grassGeometry = new GrassGeometry(this.grassParameters)
+    }
 
-  setFireflies() {
-    this.fireflies.instance = new Fireflies({
-      _count: this.fireflies.count,
-      _position: this.position,
-      _size: this.size,
-    });
-  }
+    setGrassMaterial() {
+        this.grassMaterial = new ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uDisplacement: { value: this.grassParameters.displacementMap },
+                uMask: { value: this.grassParameters.mask },
+                uSize: { value: this.grassParameters.size },
+                uMaxBladeSize: { value: this.grassGeometry.maxHeight },
+                uBaseColor: { value: this.grassParameters.colors.base },
+                ...this.grassParameters.colors.set[0],
+            },
+            side: DoubleSide,
+            transparent: true,
+            alphaTest: 0,
+            vertexShader: grassVertex,
+            fragmentShader: grassFragment,
+        })
+    }
 
-  update() {
-    if(this.grassMaterial?.uniforms?.uTime) this.grassMaterial.uniforms.uTime.value = this.time.elapsed;
-    if(this.fireflies?.instance) this.fireflies.instance.update();
-  }
+    setFireflies() {
+        this.fireflies.instance = new Fireflies({
+            _scene: this.scene,
+            _count: this.fireflies.count,
+            _position: this.position,
+            _size: this.size,
+        })
+    }
+
+    update() {
+        if (this.grassMaterial?.uniforms?.uTime) {
+            this.grassMaterial.uniforms.uTime.value = this.time.elapsed;
+        }
+        if (this.fireflies?.instance) this.fireflies.instance.update()
+    }
 }

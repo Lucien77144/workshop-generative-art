@@ -1,9 +1,8 @@
-import { AmbientLight, DirectionalLight, Vector3 } from 'three'
+import { AmbientLight, DirectionalLight } from 'three'
 import Experience from './Experience.js'
 import Terminal from './Components/Terminal.js'
 import Floor from './Components/Floor.js'
 import { LAYERS } from './Const/const.js'
-import GrassFloor from './Components/GrassFloor/GrassFloor.js'
 
 export default class World {
     constructor(_options) {
@@ -30,15 +29,7 @@ export default class World {
         this.scene.add(this.directionalLight)
 
         this.terminal = new Terminal()
-        // this.floor = new Floor()
-
-        this.floors = [
-            new GrassFloor({
-                _position: new Vector3(-20.5, 0, -14),
-                _size: new Vector3(54, 2, 95),
-                _count: 500000,
-            }),
-        ]
+        this.floor = new Floor()
     }
 
     resize() {}

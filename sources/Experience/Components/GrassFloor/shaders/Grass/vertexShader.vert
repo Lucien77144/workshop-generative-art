@@ -30,13 +30,16 @@ void main() {
   vPosition = position;
   vBasePosition = position;
   vUv = uv;
+
+  vec4 disp = getTexture2D(uDisplacement);
+  vec4 mask = getTexture2D(uMask);
   
   float wind = getWind();
-  vPosition.y += (getTexture2D(uDisplacement).r * uSize.y) + wind;
+  vPosition.y += (disp.r * uSize.y) + wind;
   vBasePosition.y += wind;
   vPosition.z += wave(wind);
 
-  vMask = 1. - (getTexture2D(uMask).b + getTexture2D(uMask).g + getTexture2D(uMask).r);
+  vMask = 1. - (mask.b + mask.g + mask.r);
   vPosition.y -= (uMaxBladeSize - uMaxBladeSize * vMask);
   vPosition.z += 1.;
   
