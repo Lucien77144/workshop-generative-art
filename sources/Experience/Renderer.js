@@ -21,7 +21,7 @@ export default class Renderer {
             this.debugHalftoneFolder = this.debug.addFolder('Halftone')
         }
 
-        // this.usePostprocess = true
+        this.usePostprocess = true
 
         this.setInstance()
         this.setPostProcess()
@@ -96,7 +96,7 @@ export default class Renderer {
 
         // TODO - Try to pass params to the instance directly
         this.postProcess.halftonePass.uniforms.shape.value = 3
-        this.postProcess.halftonePass.uniforms.radius.value = this.config.pixelRatio * 3
+        this.postProcess.halftonePass.uniforms.radius.value = this.config.pixelRatio * 4
         this.postProcess.halftonePass.uniforms.rotateR.value = 90
         this.postProcess.halftonePass.uniforms.rotateB.value = 90
         this.postProcess.halftonePass.uniforms.rotateG.value = 90
