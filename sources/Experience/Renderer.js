@@ -18,7 +18,6 @@ export default class Renderer {
         // Debug
         if (this.debug) {
             this.debugRendererFolder = this.debug.addFolder('Renderer')
-            this.debugHalftoneFolder = this.debug.addFolder('Halftone')
         }
 
         this.setInstance()
@@ -100,58 +99,6 @@ export default class Renderer {
                 blendingMode: { value: 1 },
                 blending: { value: 1 },
             },
-        }
-
-        // Debug
-        if (this.debug) {
-            this.debugHalftoneFolder
-                .add(this.halftonePass.uniforms.shape, 'value')
-                .min(1)
-                .max(5)
-                .step(1)
-                .name('shape')
-            this.debugHalftoneFolder
-                .add(this.halftonePass.uniforms.radius, 'value')
-                .min(0)
-                .max(100)
-                .step(1)
-                .name('radius')
-            this.debugHalftoneFolder
-                .add(this.halftonePass.uniforms.rotateR, 'value')
-                .min(0)
-                .max(180)
-                .step(1)
-                .name('rotateR')
-            this.debugHalftoneFolder
-                .add(this.halftonePass.uniforms.rotateB, 'value')
-                .min(0)
-                .max(180)
-                .step(1)
-                .name('rotateB')
-            this.debugHalftoneFolder
-                .add(this.halftonePass.uniforms.rotateG, 'value')
-                .min(0)
-                .max(180)
-                .step(1)
-                .name('rotateG')
-            this.debugHalftoneFolder
-                .add(this.halftonePass.uniforms.scatter, 'value')
-                .min(0)
-                .max(1)
-                .step(0.01)
-                .name('scatter')
-            this.debugHalftoneFolder
-                .add(this.halftonePass.uniforms.blendingMode, 'value')
-                .min(0)
-                .max(1)
-                .step(0.01)
-                .name('blendingMode')
-            this.debugHalftoneFolder
-                .add(this.halftonePass.uniforms.blending, 'value')
-                .min(0)
-                .max(5)
-                .step(1)
-                .name('blending')
         }
 
         /**
