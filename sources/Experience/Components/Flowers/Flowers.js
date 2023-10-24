@@ -116,7 +116,7 @@ export default class Flowers {
             })
         }
 
-        if (this.experience.time.elapsed > 5000) {
+        if (this.experience.time.elapsed > 8000) {
             return
         }
         for (let i = 0; i < this.flowers.children.length; i++) {

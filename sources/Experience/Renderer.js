@@ -171,25 +171,25 @@ export default class Renderer {
         this.postProcess.composer.setSize(this.config.width, this.config.height)
         this.postProcess.composer.setPixelRatio(this.config.pixelRatio)
 
-        this.renderMesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(2, 2),
-            new THREE.ShaderMaterial({
-                uniforms: {
-                    ...this.halftonePass.uniforms,
-                    uBase: {
-                        value: this.rt0.texture,
-                    },
-                    uHalfstone: {
-                        value: this.rt1.texture,
-                    },
-                    uMask: {
-                        value: this.rt2.texture,
-                    },
-                },
-                vertexShader,
-                fragmentShader,
-            })
-        )
+        // this.renderMesh = new THREE.Mesh(
+        //     new THREE.PlaneGeometry(2, 2),
+        //     new THREE.ShaderMaterial({
+        //         uniforms: {
+        //             ...this.halftonePass.uniforms,
+        //             uBase: {
+        //                 value: this.rt0.texture,
+        //             },
+        //             uHalfstone: {
+        //                 value: this.rt1.texture,
+        //             },
+        //             uMask: {
+        //                 value: this.rt2.texture,
+        //             },
+        //         },
+        //         vertexShader,
+        //         fragmentShader,
+        //     })
+        // )
     }
 
     resize() {
