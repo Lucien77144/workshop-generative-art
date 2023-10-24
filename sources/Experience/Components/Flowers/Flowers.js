@@ -2,18 +2,14 @@ import Experience from './../../Experience'
 import {
     Mesh,
     CatmullRomCurve3,
-    Vector2,
     Vector3,
     TubeGeometry,
     Group,
-    AxesHelper,
-    ShaderMaterial,
-    MeshToonMaterial,
     MeshPhongMaterial,
 } from 'three'
 import Alea from 'alea'
-import fragmentShader from './shaders/fragment.glsl?raw'
-import vertexShader from './shaders/vertex.glsl?raw'
+// import fragmentShader from './shaders/fragment.glsl?raw'
+// import vertexShader from './shaders/vertex.glsl?raw'
 
 export default class Flowers {
     constructor(_options) {
@@ -28,7 +24,6 @@ export default class Flowers {
 
     init() {
         const _RADIUS = 4
-        // const alienFlower = this.resources.items.alienFlower.scene
         const redFlower = this.resources.items.redFlower.scene
         const blueFlower = this.resources.items.blueFlower.scene
         const pinkFlower = this.resources.items.pinkFlower.scene
@@ -51,8 +46,21 @@ export default class Flowers {
             specular: 0x000000,
         })
 
-        for (let i = 0; i < this.experience.inputDate / 10; i++) {
-            const angle = (i / (this.experience.inputDate / 10)) * Math.PI * 2
+        for (let i = 0; i < this.experience.inputDate * 0.1; i++) {
+            let flowerToAdd = null
+
+            // Chance factor to have a blue flower
+            const chanceFactor = Math.min(
+                this.experience.inputDate * 0.0003333333333333333,
+                1
+            )
+            if (this.prng() < chanceFactor) {
+                flowerToAdd = this.prng() < 0.1 ? pinkFlower : blueFlower
+            } else {
+                flowerToAdd = redFlower
+            }
+
+            const angle = (i / (this.experience.inputDate * 0.1)) * Math.PI * 2
             const x = _RADIUS * Math.cos(angle)
             const z = _RADIUS * Math.sin(angle)
 
@@ -67,7 +75,7 @@ export default class Flowers {
                 ),
                 new Vector3(
                     Math.sin(i) * 0.5 * -this.prng() * 3,
-                    Math.abs(Math.sin(i) + 4), // y
+                    Math.abs(Math.sin(i) + 3), // y
                     Math.sin(i) * 0.5 * this.prng() * 3
                 ),
                 new Vector3(
@@ -80,7 +88,7 @@ export default class Flowers {
             const geometry = new TubeGeometry(curve, 15, 0.12, 3, false)
             const flower = new Mesh(geometry, material)
 
-            // Stock random values for each flower
+            // Stock random values for each flower, can be used later
             flower.random = this.prng()
             flower.scaleRandomVector = new Vector3(
                 flower.random * 0.1 + 0.3,
@@ -88,7 +96,7 @@ export default class Flowers {
                 flower.random * 0.1 + 0.3
             )
 
-            redFlower.position
+            flowerToAdd.position
                 .copy(curve.getPointAt(1))
                 .add(new Vector3(0, 0.3, 0))
             const dir = curve
@@ -96,22 +104,21 @@ export default class Flowers {
                 .sub(curve.getPointAt(0.8))
                 .normalize()
 
-            redFlower.scale.set(0.3, 0.3, 0.3)
-            flower.targetVec = redFlower.position.clone().add(dir)
-            redFlower.lookAt(flower.targetVec)
-
-            // const axesHelper = new AxesHelper(5)
-            // redFlower.add(axesHelper)
+            flowerToAdd.scale.set(0.3, 0.3, 0.3)
+            flower.targetVec = flowerToAdd.position.clone().add(dir)
+            flowerToAdd.lookAt(flower.targetVec)
 
             // Offset to make the flower look at the right direction
-            redFlower.rotateOnAxis(new Vector3(1, 0, 0), Math.PI * 0.5)
-            flowerGroup.add(redFlower.clone())
-
-            // console.log(flower.random)
+            flowerToAdd.rotateOnAxis(new Vector3(1, 0, 0), Math.PI * 0.5)
+            flowerGroup.add(flowerToAdd.clone())
 
             flowerGroup.add(flower)
             flowerGroup.scale.set(0, 0, 0)
-            flowerGroup.position.set(x + this.prng(), -0.05, z - this.prng())
+            flowerGroup.position.set(
+                x + this.prng() * Math.sin(i) * 2,
+                -0.05,
+                z - this.prng() * Math.sin(i) * 2
+            )
 
             this.flowers.add(flowerGroup)
         }
@@ -127,6 +134,7 @@ export default class Flowers {
                 // flower.children[1].material.uniforms.uTime.value += 0.01
 
                 flower.children[0].children[0].rotation.y +=
+                    // TODO - Fix (rotation is always the same)
                     flower.random < 0.5 ? -0.001 : 0.001
             })
         }
@@ -138,7 +146,7 @@ export default class Flowers {
             const flower = this.flowers.children[i]
             const scaleRandomVector = flower.children[1].scaleRandomVector
 
-            // TODO - Add some random in here
+            // TODO - Fix random in here
             flower.scale.lerp(scaleRandomVector, 0.01)
         }
     }
