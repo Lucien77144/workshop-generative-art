@@ -17,9 +17,6 @@ export default class City {
     }
 
     init() {
-        this.instance.position.set(0.1, 0.2, -1)
-        this.instance.scale.set(0.2, 0.2, 0.2)
-
         this.group.add(this.instance)
     }
 

@@ -17,6 +17,8 @@ export default class Screen {
 
     init() {
         this.group = new Group() // group for screen
+        this.group.position.set(0.1, 0.2, -1)
+        this.group.scale.set(0.2, 0.2, 0.2)
 
         this.city = new City({
             group: this.group,
@@ -27,22 +29,19 @@ export default class Screen {
         this.city.instance.traverse((o) => {
             if (o.name === 'Cube') {
                 _target = o;
-                o.material = new MeshPhongMaterial({
-                    color: 'red',
-                })
             }
         })
 
         this.floor = new GrassFloor({
             _group: this.group,
-            _position: this.city.instance.position,
+            _position: _target.position,
             _target,
-            _count: 5000,
+            _count: 500000,
         })
 
         this.group.traverse((o) => {
             o.layers.set(LAYERS.SCREEN)
-            if (this.stencilRef && o.material) {
+            if (o.material) {
                 o.material = o.material.clone()
                 o.material.stencilWrite = true
                 o.material.stencilRef = this.stencilRef

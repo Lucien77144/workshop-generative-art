@@ -23,14 +23,10 @@ export default class GrassFloor {
         _group = null,
         _count = 125000,
         _maps = {
-            // displacementMap: 'black',
-            // mask: 'black',
-            // baseTexture: 'dirtTexture',
-            // secondTexture: 'mudTexture',
-            displacementMap: "displacementMap",
-            mask: "grassMask",
-            baseTexture: "dirtTexture",
-            secondTexture: "mudTexture",
+            displacementMap: 'black',
+            mask: 'black',
+            baseTexture: 'dirtTexture',
+            secondTexture: 'mudTexture',
         },
         _colors = {
             base: new Color('#11382a'),
@@ -58,7 +54,8 @@ export default class GrassFloor {
         this.count = _count
         this.target = _target
         this.position = _position
-        this.size = _size
+        this.size =
+            this.target?.geometry.boundingBox.getSize(new Vector3()) ?? _size
         this.name = `grassFloor-${
             this.experience.scene.children.filter((child) =>
                 child.name.includes('grassFloor')
@@ -67,13 +64,9 @@ export default class GrassFloor {
         this.colors = _colors
         this.fireflies = _fireflies
 
-        console.log(this.resources.items[_maps.baseTexture]);
-
         this.grassParameters = {
             count: this.count,
-            size:
-                this.target?.geometry.boundingBox.getSize(new Vector3()) ??
-                this.size,
+            size: this.size,
             baseTexture: this.resources.items[_maps.baseTexture],
             secondTexture: this.resources.items[_maps.secondTexture],
             displacementMap: this.resources.items[_maps.displacementMap],
@@ -115,7 +108,9 @@ export default class GrassFloor {
                 uSize: { value: this.grassParameters.size },
                 uBaseColor: { value: this.grassParameters.colors.base },
             },
+            side: DoubleSide,
             transparent: true,
+            alphaTest: 0,
             vertexShader: dispVertex,
             fragmentShader: dispFragment,
         })
@@ -127,11 +122,13 @@ export default class GrassFloor {
 
         if (this.target) {
             this.ground = this.target
+            this.ground.name = this.name
+            this.ground.material = this.groundMaterial
+            this.ground.position.y -= this.position.y
         } else {
             this.ground = new Mesh(this.groundGeometry, this.groundMaterial)
             this.ground.rotation.x = -Math.PI / 2
             this.ground.name = this.name
-            this.ground.position.copy(this.position)
 
             this.scene.add(this.ground)
         }
@@ -142,7 +139,6 @@ export default class GrassFloor {
         this.setGrassMaterial()
 
         this.grass = new Mesh(this.grassGeometry, this.grassMaterial)
-        this.grass.position.copy(this.position)
         this.grass.name = this.name + '-blades'
 
         this.scene.add(this.grass)
@@ -177,12 +173,13 @@ export default class GrassFloor {
             _count: this.fireflies.count,
             _position: this.position,
             _size: this.size,
+            _fliesSize: 10,
         })
     }
 
     update() {
-        if (this.grassMaterial?.uniforms?.uTime) {
-            this.grassMaterial.uniforms.uTime.value = this.time.elapsed;
+        if (this.grass?.material?.uniforms?.uTime) {
+            this.grass.material.uniforms.uTime.value = this.time.elapsed
         }
         if (this.fireflies?.instance) this.fireflies.instance.update()
     }

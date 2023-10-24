@@ -14,7 +14,4 @@ void main() {
     vec4 col = mix(halfstone, light, base.r);
 
     gl_FragColor = mix(base, col, mask.r);
-    // gl_FragColor = base;
-    // gl_FragColor = halfstone;
-    // gl_FragColor = mask;
 }

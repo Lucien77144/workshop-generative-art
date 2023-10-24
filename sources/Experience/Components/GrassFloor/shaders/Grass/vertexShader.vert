@@ -1,6 +1,6 @@
-uniform float uTime;
 uniform sampler2D uDisplacement;
 uniform sampler2D uMask;
+uniform float uTime;
 uniform vec3 uSize;
 uniform float uMaxBladeSize;
 
@@ -9,16 +9,18 @@ varying vec3 vBasePosition;
 varying vec3 vPosition;
 varying float vMask;
 
+float reduce = 1500.;
+
 float wave(float tipDistance) {
   // Tip is the fifth vertex drawn per blade
   bool isTip = (gl_VertexID + 1) % 5  == 0;
 
   float waveDistance = isTip ? tipDistance : 0.;
-  return sin(vPosition.z + uTime / 1500.) * waveDistance;
+  return sin(vPosition.z + uTime / reduce) * waveDistance;
 }
 
 float getWind() {
-  float windFactor = uTime / 1500. + (vPosition.x + vPosition.z * 2.) / 3.;
+  float windFactor = uTime / reduce + (vPosition.x + vPosition.z * 2.) / 3.;
   return -(cos(windFactor) + sin(windFactor) + 1.) / 20.;
 }
 
@@ -31,17 +33,16 @@ void main() {
   vBasePosition = position;
   vUv = uv;
 
-  vec4 disp = getTexture2D(uDisplacement);
   vec4 mask = getTexture2D(uMask);
-  
-  float wind = getWind();
+  vec4 disp = getTexture2D(uDisplacement);
+
+  float wind = getWind() / 3.;
   vPosition.y += (disp.r * uSize.y) + wind;
   vBasePosition.y += wind;
   vPosition.z += wave(wind);
 
   vMask = 1. - (mask.b + mask.g + mask.r);
   vPosition.y -= (uMaxBladeSize - uMaxBladeSize * vMask);
-  vPosition.z += 1.;
   
   gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.);
 }

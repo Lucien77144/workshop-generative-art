@@ -3,6 +3,8 @@ import Experience from './Experience.js'
 import Terminal from './Components/Terminal.js'
 import Floor from './Components/Floor.js'
 import { LAYERS } from './Const/const.js'
+import City from './Components/City.js'
+import GrassFloor from './Components/GrassFloor/GrassFloor.js'
 
 export default class World {
     constructor(_options) {
@@ -30,6 +32,26 @@ export default class World {
 
         this.terminal = new Terminal()
         this.floor = new Floor()
+
+        // this.city = new City({
+        //   group: this.scene,
+        //   inputDate: 3000,
+        // })
+
+        // let _target;
+        // this.city.instance.traverse((o) => {
+        //     if (o.name === 'Cube') {
+        //         _target = o;
+        //         console.log(o.clone());
+        //     }
+        // })
+
+        // this.floor = new GrassFloor({
+        //     _group: this.scene,
+        //     _position: _target.position,
+        //     _target,
+        //     _count: 300000,
+        // })
     }
 
     resize() {}
