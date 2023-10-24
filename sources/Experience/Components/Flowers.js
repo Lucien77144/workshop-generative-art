@@ -16,14 +16,15 @@ import Alea from 'alea'
 export default class Flowers {
     constructor(_options) {
         this.experience = new Experience()
+
+        console.log(this.experience)
+
         this.scene = _options.scene
         this.config = this.experience.config
         this.resources = this.experience.resources
 
         // Params
-        const prng = new Alea(this.experience.inputDate)
         this.targetScale = 0.5
-
         this.init()
     }
 
@@ -45,16 +46,12 @@ export default class Flowers {
             const flowerGroup = new Group()
 
             const curve = new CatmullRomCurve3([
+                new Vector3(prng() < 0.5 ? -1 : 1, 0, prng() < 0.5 ? -1 : 1),
+                new Vector3(0, Math.floor(prng() * 2) * 2 + 3, 0),
                 new Vector3(
-                    Math.random() < 0.5 ? -1 : 1,
-                    0,
-                    Math.random() < 0.5 ? -1 : 1
-                ),
-                new Vector3(0, Math.floor(Math.random() * 2) * 2 + 3, 0),
-                new Vector3(
-                    Math.random() < 0.5 ? -1 : 1,
-                    (Math.floor(Math.random() * 2) * 2 + 3) * 2,
-                    Math.random() < 0.5 ? -1 : 1
+                    prng() < 0.5 ? -1 : 1,
+                    (Math.floor(prng() * 2) * 2 + 3) * 2,
+                    prng() < 0.5 ? -1 : 1
                 ),
             ])
 
@@ -65,7 +62,7 @@ export default class Flowers {
             alienFlower.position.copy(curve.getPointAt(1))
             const dir = curve
                 .getPointAt(1)
-                .sub(curve.getPointAt(0.99))
+                .sub(curve.getPointAt(0.95))
                 .normalize()
 
             // alienFlower.scale.set(
@@ -75,29 +72,40 @@ export default class Flowers {
             // )
 
             alienFlower.scale.set(
-                0.1 + prng() * 0.5,
-                0.1 + prng() * 0.5,
-                0.1 + prng() * 0.5
+                0.25 + prng() * 0.5,
+                0.25 + prng() * 0.5,
+                0.25 + prng() * 0.5
             )
             const targetPos = alienFlower.position.clone().add(dir)
             alienFlower.lookAt(targetPos)
+            alienFlower.rotateOnAxis(new Vector3(1, 0, 0), Math.PI * 0.5)
             flowerGroup.add(alienFlower.clone())
 
             const axesHelper = new AxesHelper(5)
             axesHelper.scale.set(2, 2, 2)
-            alienFlower.add(axesHelper)
-            flowerGroup.scale.set(0.5, 0.5, 0.5)
+            // alienFlower.add(axesHelper)
+            flowerGroup.scale.set(0, 0, 0)
             flowerGroup.position.set(x, -0.05, z)
             flowerGroup.add(flower)
 
-            this.scene.add(flowerGroup)
+            this.flowers.add(flowerGroup)
         }
     }
 
     resize() {}
 
     update() {
-        // animate flowers
+        // animate each flower inside this.flowers
+        const prng = new Alea(this.experience.inputDate)
+
+        for (let i = 0; i < this.flowers.children.length; i++) {
+            const flower = this.flowers.children[i]
+
+            flower.scale.lerp(
+                new Vector3(0.5, 0.5, 0.5).multiplyScalar(0.5 + prng() * 0.5),
+                prng() * 0.05
+            )
+        }
     }
 
     destroy() {}

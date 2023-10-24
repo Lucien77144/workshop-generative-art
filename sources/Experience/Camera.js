@@ -15,6 +15,8 @@ export default class Camera
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
 
+        this.order = 'YXZ'
+
         // Set up
         this.mode = 'debug' // defaultCamera \ debugCamera
 
@@ -26,7 +28,7 @@ export default class Camera
     {
         // Set up
         this.instance = new THREE.PerspectiveCamera(25, this.config.width / this.config.height, 0.1, 150)
-        this.instance.rotation.reorder('YXZ')
+        this.instance.rotation.reorder(this.order)
         this.instance.near = 0
 
         this.scene.add(this.instance)
@@ -39,15 +41,15 @@ export default class Camera
         // Default
         this.modes.default = {}
         this.modes.default.instance = this.instance.clone()
-        this.modes.default.instance.rotation.reorder('YXZ')
+        this.modes.default.instance.rotation.reorder(this.order)
 
         // Debug
         this.modes.debug = {}
         this.modes.debug.instance = this.instance.clone()
-        this.modes.debug.instance.rotation.reorder('YXZ')
+        this.modes.debug.instance.rotation.reorder(this.order)
         // this.modes.debug.instance.position.set(5, 5, 5)
         // this.modes.debug.instance.position.set(0, 3, 6)
-        this.modes.debug.instance.position.set(0, 3, 6)
+        this.modes.debug.instance.position.set(0, 3, 10)
         
         this.modes.debug.orbitControls = new OrbitControls(this.modes.debug.instance, this.targetElement)
         this.modes.debug.orbitControls.enabled = this.modes.debug.active
