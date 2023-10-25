@@ -70,11 +70,6 @@ export default class Flowers {
 
             // Stock random values for each flower, can be used later
             stem.random = this.prng()
-            stem.scaleRandomVector = new Vector3(
-                stem.random * (0.5 - 0.2) + 0.2,
-                stem.random * (0.5 - 0.2) + 0.2,
-                stem.random * (0.5 - 0.2) + 0.2
-            )
 
             flowerToAdd.position.copy(curve.getPointAt(1))
             const dir = curve
@@ -109,9 +104,9 @@ export default class Flowers {
 
             // Animate entire group
             gsap.to(flowerGroup.scale, {
-                x: scaleRandomVector.x,
-                y: scaleRandomVector.y,
-                z: scaleRandomVector.z,
+                x: stem.random * (0.5 - 0.2) + 0.2,
+                y: stem.random * (0.5 - 0.2) + 0.2,
+                z: stem.random * (0.5 - 0.2) + 0.2,
                 delay: random * 3,
                 duration: 1,
                 ease: 'ease.inOut',
@@ -136,18 +131,18 @@ export default class Flowers {
     resize() {}
 
     update() {
-        if (this.experience.time.elapsed < 8000) {
-            StemMaterial.update()
-        } else {
-            return
-        }
-
         if (this.flowers.children) {
             this.flowers.children.forEach((flowerGroup) => {
                 // Rotate flowers
                 flowerGroup.children[0].children[0].rotation.y +=
                     flowerGroup.children[1].random < 0.5 ? -0.001 : 0.001
             })
+        }
+
+        if (this.experience.time.elapsed < 6000) {
+            StemMaterial.update()
+        } else {
+            return
         }
     }
 
