@@ -16,7 +16,7 @@ export default class Camera {
         this.order = 'YXZ'
 
         // Set up
-        this.mode = 'debug'
+        this.mode = 'default'
 
         if (this.debug) {
             this.debugCameraFolder = this.debug.addFolder('Camera')
@@ -47,7 +47,8 @@ export default class Camera {
         this.modes.default = {}
         this.modes.default.instance = this.instance.clone()
         this.modes.default.instance.rotation.reorder(this.order)
-        this.modes.default.instance.position.set(0, 0.5, 8)
+        this.modes.default.instance.position.set(-7, 6, 10)
+        this.modes.default.instance.rotation.set(-0.43, -0.6, 0)
 
         // Focus
         this.modes.focus = {}
@@ -57,7 +58,8 @@ export default class Camera {
         // Debug
         this.modes.debug = {}
         this.modes.debug.instance = this.instance.clone()
-        this.modes.debug.instance.position.set(0, 0.5, 8)
+        this.modes.debug.instance.position.set(-7, 6, 10)
+        this.modes.debug.instance.rotation.set(-0.43, -0.6, 0)
         this.modes.debug.orbitControls = new OrbitControls(
             this.modes.debug.instance,
             this.targetElement
