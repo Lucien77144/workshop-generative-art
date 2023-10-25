@@ -61,7 +61,7 @@ export default class Screen {
         this.grassFloor?.update()
 
         if (this.group) {
-            this.group.rotation.y += this.time.delta * 0.0001
+            this.group.rotation.y += this.time.delta * 0.00005
         }
     }
 

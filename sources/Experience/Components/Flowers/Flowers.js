@@ -62,8 +62,8 @@ export default class Flowers {
                 ),
             ])
 
-            this.stemGeometry = new TubeGeometry(curve, 15, 0.12, 3, false)
-            const stem = new Mesh(this.stemGeometry, this.stemMaterial)
+            const stemGeometry = new TubeGeometry(curve, 15, 0.12, 3, false)
+            const stem = new Mesh(stemGeometry, this.stemMaterial)
 
             // Stock random values for each flower, can be used later
             stem.random = this.prng()
@@ -104,17 +104,17 @@ export default class Flowers {
                 x: stem.random * (0.5 - 0.2) + 0.2,
                 y: stem.random * (0.5 - 0.2) + 0.2,
                 z: stem.random * (0.5 - 0.2) + 0.2,
-                delay: random * 3,
+                delay: 0.5 + random * 3,
                 duration: 1,
                 ease: 'ease.inOut',
                 onComplete: () => {
+                    // Animate the flower
                     gsap.to(flowerGroup.children[0].children[0].scale, {
                         x: random * (0.075 - 0.06) + 0.06,
                         y: random * (0.075 - 0.06) + 0.06,
                         z: random * (0.075 - 0.06) + 0.06,
                         duration: 2,
                         ease: 'power3.out',
-                        delay: 0.2,
                     })
                 },
             })
