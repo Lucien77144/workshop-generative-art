@@ -84,7 +84,6 @@ export default class Experience {
         const USER_INPUT = parseInt(
             new URLSearchParams(window.location.search).get('date')
         )
-        console.log(USER_INPUT)
         const MIN_INPUT = 2000
         const MAX_INPUT = 3000
         const RANGE = MAX_INPUT - MIN_INPUT
@@ -111,7 +110,8 @@ export default class Experience {
                     this.dateFactor.date = MAX_INPUT
                 }
 
-                this.dateFactor.value = (this.dateFactor.date - MIN_INPUT) / RANGE
+                this.dateFactor.value =
+                    (this.dateFactor.date - MIN_INPUT) / RANGE
             }, // value between 0 and 1
             min: (offset) => {
                 // min value by offset (offset between 0 and 1)
@@ -147,10 +147,21 @@ export default class Experience {
             .max(MAX_INPUT)
             .onChange((e) => {
                 e = parseInt(e)
-                const uniforms = this.renderer?.renderMesh?.material?.uniforms
-                if (uniforms?.uDateFactor) {
-                    this.dateFactor.update()
-                    uniforms.uDateFactor.value = this.dateFactor.min(90)
+                const renderU = this.renderer?.renderMesh?.material?.uniforms
+                const grassFloor = this.world?.terminal?.screen?.grassFloor
+                const grassU = grassFloor?.grass?.material?.uniforms
+                const groundU = grassFloor?.ground?.material?.uniforms
+
+                this.dateFactor.update()
+                if (renderU?.uDateFactor) {
+                    renderU.uDateFactorMin.value = this.dateFactor.min(90)
+                    renderU.uDateFactor.value = this.dateFactor.value
+                }
+                if (grassU?.uDateFactor) {
+                    grassU.uDateFactor.value = this.dateFactor.value
+                }
+                if (groundU?.uDateFactor) {
+                    groundU.uDateFactor.value = this.dateFactor.value
                 }
             })
     }

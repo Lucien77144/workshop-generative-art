@@ -1,14 +1,20 @@
 import * as THREE from 'three'
 
-const BLADE_WIDTH = 0.01
-const BLADE_HEIGHT = 0.001
-const BLADE_HEIGHT_VARIATION = 0.1
+let BLADE_WIDTH = 0.01
+let BLADE_HEIGHT = 0.001
+let BLADE_HEIGHT_VARIATION = 0.1
+let BLADE_TIP_OFFSET = 0.02
 const BLADE_VERTEX_COUNT = 5
-const BLADE_TIP_OFFSET = 0.005
 
 export class GrassGeometry extends THREE.BufferGeometry {
     constructor(params) {
         super()
+
+        BLADE_WIDTH *= params.grassScale
+        BLADE_HEIGHT *= params.grassScale
+        BLADE_HEIGHT_VARIATION *= params.grassScale
+        BLADE_TIP_OFFSET *= params.grassScale
+
         this.maxHeight = BLADE_HEIGHT_VARIATION + BLADE_HEIGHT
 
         const positions = []

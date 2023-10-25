@@ -88,22 +88,6 @@ export default class Renderer {
     }
 
     setPostProcess() {
-        this.halftonePass = {
-            uniforms: {
-                shape: { value: 3 },
-                radius: { value: 100 },
-                rotateR: { value: 90 },
-                rotateB: { value: 90 },
-                rotateG: { value: 90 },
-                scatter: { value: 0 },
-                blendingMode: { value: 1 },
-                blending: { value: 1 },
-            },
-        }
-
-        /**
-         * Effect composer
-         */
         this.rt0 = new THREE.WebGLRenderTarget(
             this.config.width,
             this.config.height,
@@ -124,7 +108,6 @@ export default class Renderer {
             new THREE.PlaneGeometry(2, 2),
             new THREE.ShaderMaterial({
                 uniforms: {
-                    ...this.halftonePass.uniforms,
                     uBase: {
                         value: this.rt0.texture,
                     },
@@ -136,6 +119,7 @@ export default class Renderer {
                     },
                     uTime: { value: 0 },
                     uDateFactor: { value: this.experience.dateFactor.value },
+                    uDateFactorMin: { value: this.experience.dateFactor.min(90) },
                 },
                 vertexShader,
                 fragmentShader,
@@ -145,8 +129,8 @@ export default class Renderer {
 
     resize() {
         // Instance
-        this.instance.setSize(this.config.width, this.config.height)
         this.instance.setPixelRatio(this.config.pixelRatio)
+        this.instance.setSize(this.config.width, this.config.height)
     }
 
     renderTargets() {
@@ -196,11 +180,6 @@ export default class Renderer {
         }
 
         this.renderTargets()
-
-        // Animate halftone
-        if (this.halftonePass.uniforms.radius.value > 10) {
-            this.halftonePass.uniforms.radius.value -= 1
-        }
 
         if (this.renderMesh?.material.uniforms.uTime) {
             this.renderMesh.material.uniforms.uTime.value = this.time.elapsed

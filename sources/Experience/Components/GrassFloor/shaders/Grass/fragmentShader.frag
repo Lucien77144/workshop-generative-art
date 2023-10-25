@@ -6,8 +6,9 @@ uniform vec3 uColor1;
 uniform vec3 uColor2;
 uniform vec3 uColor3;
 uniform vec3 uColor4;
+uniform float uDateFactor;
 
-varying vec3 vBasePosition;
+varying vec2 vUv;
 varying vec3 vPosition;
 varying float vMask;
 
@@ -65,5 +66,8 @@ void main() {
 
   float distX = (vPosition.x + 20.5) / uSize.x;
 
-  gl_FragColor = vec4(mix(uBaseColor, color, vBasePosition.y / uMaxBladeSize), 1. * vMask * distX);
+  float noiseFactor = step(getNoise(4.) + 1., uDateFactor * 2.);
+
+  gl_FragColor = vec4(mix(uBaseColor, color, vPosition.y / uMaxBladeSize), 1. * vMask * distX);
+  gl_FragColor = vec4(gl_FragColor.rgb, sign(vPosition.y));
 }

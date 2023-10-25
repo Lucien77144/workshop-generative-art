@@ -32,11 +32,12 @@ export default class Screen {
             }
         })
 
-        this.floor = new GrassFloor({
+        this.grassFloor = new GrassFloor({
             _group: this.group,
             _position: _target.position,
             _target,
-            _count: 500000,
+            _count: 10000,
+            _grassScale: 5,
         })
 
         this.setStencil();
@@ -59,7 +60,7 @@ export default class Screen {
 
     update() {
         this.city?.update()
-        this.floor?.update()
+        this.grassFloor?.update()
 
         if (this.group) {
             this.group.rotation.y += this.time.delta * 0.0001

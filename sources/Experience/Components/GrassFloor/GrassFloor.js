@@ -44,6 +44,7 @@ export default class GrassFloor {
             status: true,
             count: 500,
         },
+        _grassScale = 1,
     } = {}) {
         this.experience = new Experience()
         this.scene = _group ?? this.experience.scene
@@ -54,6 +55,7 @@ export default class GrassFloor {
         this.count = _count
         this.target = _target
         this.position = _position
+        this.grassScale = _grassScale
         this.size =
             this.target?.geometry.boundingBox.getSize(new Vector3()) ?? _size
         this.name = `grassFloor-${
@@ -72,6 +74,7 @@ export default class GrassFloor {
             displacementMap: this.resources.items[_maps.displacementMap],
             mask: this.resources.items[_maps.mask],
             colors: this.colors,
+            grassScale: this.grassScale,
         }
 
         this.setGround()
@@ -107,6 +110,7 @@ export default class GrassFloor {
                 uMask: { value: this.grassParameters.mask },
                 uSize: { value: this.grassParameters.size },
                 uBaseColor: { value: this.grassParameters.colors.base },
+                uDateFactor: { value: this.experience.dateFactor.value },
             },
             side: DoubleSide,
             transparent: true,
@@ -157,6 +161,8 @@ export default class GrassFloor {
                 uSize: { value: this.grassParameters.size },
                 uMaxBladeSize: { value: this.grassGeometry.maxHeight },
                 uBaseColor: { value: this.grassParameters.colors.base },
+                uGrassScale: { value: this.grassParameters.grassScale },
+                uDateFactor: { value: this.experience.dateFactor.value },
                 ...this.grassParameters.colors.set[0],
             },
             side: DoubleSide,
@@ -170,7 +176,7 @@ export default class GrassFloor {
     setFireflies() {
         this.fireflies.instance = new Fireflies({
             _scene: this.scene,
-            _count: this.fireflies.count,
+            _count: this.fireflies.count * this.experience.dateFactor.value,
             _position: this.position,
             _size: this.size,
             _fliesSize: 10,

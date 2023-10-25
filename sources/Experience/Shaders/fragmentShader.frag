@@ -1,4 +1,5 @@
 uniform float uDateFactor;
+uniform float uDateFactorMin;
 uniform sampler2D uBase;
 uniform sampler2D uScreen;
 uniform sampler2D uMask;
@@ -42,11 +43,11 @@ void main() {
     vec2 screenUv = vUv;
     vec4 light = vec4(.5, .2, .2, 1.);
 
-    applyCRT(screenUv, .001 + clampedSine(uTime, .001) / 10., uTime * .001, uDateFactor);
-    applyGlass(screenUv, .005 * uDateFactor, 5. * uDateFactor);
+    applyCRT(screenUv, .001 + clampedSine(uTime, .001) / 10., uTime * .001, uDateFactorMin);
+    applyGlass(screenUv, .005 * uDateFactorMin, 5. * uDateFactorMin);
 
     vec4 base = texture2D(uBase, uv);
-    vec4 screen = applyBlackAndWhite(texture2D(uScreen, screenUv), clampedSine(uTime, 1. - uDateFactor));
+    vec4 screen = applyBlackAndWhite(texture2D(uScreen, screenUv), clampedSine(uTime, uDateFactor));
     vec4 mask = texture2D(uMask, uv);
 
     vec4 col = mix(screen, light, base.r);
