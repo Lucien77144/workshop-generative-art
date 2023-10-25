@@ -87,8 +87,9 @@ void main() {
   vPosition.y += (disp.r * uSize.y) + wind;
   vPosition.z += wave(wind);
   
-  float stepF = smoothstep(0., uDateFactor, uTime * .001);
-  float noise = smoothstep(getNoise(4.) + 1., 0., uDateFactor * 2.);
+  float t = clamp(uTime * .001 - 1., 0., 1.);
+  float f = uDateFactor * t * 2.;
+  float noise = smoothstep(getNoise(4.) + 1., 0., f);
   vPosition.y -= (noise * uMaxBladeSize);
 
   vMask = 1. - (mask.b + mask.g + mask.r);

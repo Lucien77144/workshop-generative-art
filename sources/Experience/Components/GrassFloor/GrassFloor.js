@@ -111,6 +111,7 @@ export default class GrassFloor {
                 uSize: { value: this.grassParameters.size },
                 uBaseColor: { value: this.grassParameters.colors.base },
                 uDateFactor: { value: this.experience.dateFactor.value },
+                uTime: { value: 0 },
             },
             side: DoubleSide,
             transparent: true,
@@ -186,6 +187,9 @@ export default class GrassFloor {
     update() {
         if (this.grass?.material?.uniforms?.uTime) {
             this.grass.material.uniforms.uTime.value = this.time.elapsed
+        }
+        if (this.ground?.material?.uniforms?.uTime) {
+            this.ground.material.uniforms.uTime.value = this.time.elapsed
         }
         if (this.fireflies?.instance) this.fireflies.instance.update()
     }

@@ -4,6 +4,7 @@ uniform sampler2D uMask;
 uniform sampler2D uBaseTexture;
 uniform sampler2D uSecondTexture;
 uniform float uDateFactor;
+uniform float uTime;
 
 varying vec3 vPosition;
 varying vec2 vUv;
@@ -77,7 +78,13 @@ void main() {
 	float distX = (vPosition.x + 20.5) * 4. / uSize.x;
 
 	gl_FragColor = vec4(mix(color, getTextureColor(uBaseTexture), getTexture2D(uMask).b), distX);
+  
+  float t = clamp(uTime * .001 - 1., 0., 1.);
+  float f = uDateFactor * t * 2.;
+  float noise = smoothstep(getNoise(4.) + 1., 0., f);
 
-	float noise = smoothstep(getNoise(4.) + 1., 0., uDateFactor * 2.);
-	gl_FragColor = mix(gl_FragColor, vec4(vec3(luminance(gl_FragColor.rgb)), 1.), noise);
+  vec4 grey = vec4(vec3(luminance(gl_FragColor.rgb)), 1.);
+
+	// float noise = smoothstep(getNoise(4.) + 1., 0., uDateFactor * 2.);
+	gl_FragColor = mix(gl_FragColor, grey, noise);
 }
