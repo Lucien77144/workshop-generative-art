@@ -138,32 +138,35 @@ export default class Experience {
             },
         }
 
-        this.debugRendererFolder = this.debug.addFolder('Experience')
+        if (this.debug) {
+            this.debugRendererFolder = this.debug.addFolder('Experience')
 
-        this.debugRendererFolder
-            .add(this.dateFactor, 'date')
-            .name('Date')
-            .min(MIN_INPUT)
-            .max(MAX_INPUT)
-            .onChange((e) => {
-                e = parseInt(e)
-                const renderU = this.renderer?.renderMesh?.material?.uniforms
-                const grassFloor = this.world?.terminal?.screen?.grassFloor
-                const grassU = grassFloor?.grass?.material?.uniforms
-                const groundU = grassFloor?.ground?.material?.uniforms
+            this.debugRendererFolder
+                .add(this.dateFactor, 'date')
+                .name('Date')
+                .min(MIN_INPUT)
+                .max(MAX_INPUT)
+                .onChange((e) => {
+                    e = parseInt(e)
+                    const renderU =
+                        this.renderer?.renderMesh?.material?.uniforms
+                    const grassFloor = this.world?.terminal?.screen?.grassFloor
+                    const grassU = grassFloor?.grass?.material?.uniforms
+                    const groundU = grassFloor?.ground?.material?.uniforms
 
-                this.dateFactor.update()
-                if (renderU?.uDateFactor) {
-                    renderU.uDateFactorMin.value = this.dateFactor.min(90)
-                    renderU.uDateFactor.value = this.dateFactor.value
-                }
-                if (grassU?.uDateFactor) {
-                    grassU.uDateFactor.value = this.dateFactor.value
-                }
-                if (groundU?.uDateFactor) {
-                    groundU.uDateFactor.value = this.dateFactor.value
-                }
-            })
+                    this.dateFactor.update()
+                    if (renderU?.uDateFactor) {
+                        renderU.uDateFactorMin.value = this.dateFactor.min(90)
+                        renderU.uDateFactor.value = this.dateFactor.value
+                    }
+                    if (grassU?.uDateFactor) {
+                        grassU.uDateFactor.value = this.dateFactor.value
+                    }
+                    if (groundU?.uDateFactor) {
+                        groundU.uDateFactor.value = this.dateFactor.value
+                    }
+                })
+        }
     }
 
     setStats() {

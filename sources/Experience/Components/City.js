@@ -1,5 +1,5 @@
 import Experience from './../Experience'
-import { AnimationMixer } from 'three'
+import { AnimationMixer, MeshMatcapMaterial } from 'three'
 import Flowers from './Flowers/Flowers'
 import { Wait } from '../Utils/Wait'
 
@@ -13,7 +13,6 @@ export default class City {
         this.resources = this.experience.resources
         this.instance = this.resources.items.city.scene
         this.animations = this.resources.items.city.animations
-        this.timeout = null
         this.screen = null
 
         this.init()
@@ -83,7 +82,6 @@ export default class City {
 
     destroy() {
         // this.group.remove(this.scene)
-        clearTimeout(this.timeout)
         w.kill()
     }
 }

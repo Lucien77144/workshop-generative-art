@@ -1,15 +1,8 @@
 import Experience from './../../Experience'
-import {
-    Mesh,
-    CatmullRomCurve3,
-    Vector3,
-    TubeGeometry,
-    Group,
-    MeshPhongMaterial,
-} from 'three'
+import { Mesh, CatmullRomCurve3, Vector3, TubeGeometry, Group } from 'three'
 import Alea from 'alea'
-// import fragmentShader from './shaders/fragment.glsl?raw'
-// import vertexShader from './shaders/vertex.glsl?raw'
+import StemMaterial from './shaders/StemMaterial'
+import gsap from 'gsap'
 
 export default class Flowers {
     constructor(_options) {
@@ -23,28 +16,14 @@ export default class Flowers {
     }
 
     init() {
-        const RADIUS = 4
+        const RADIUS = 4.5
         const redFlower = this.resources.items.redFlower.scene
         const blueFlower = this.resources.items.blueFlower.scene
         const pinkFlower = this.resources.items.pinkFlower.scene
 
         this.flowers = new Group()
 
-        // const material = new ShaderMaterial({
-        //     fragmentShader,
-        //     vertexShader,
-        //     uniforms: {
-        //         uFrequency: { value: new Vector2(10, 5) },
-        //         uTime: { value: 0 },
-        //         uInputDate: { value: this.experience.inputDate },
-        //     },
-        // })
-
-        const material = new MeshPhongMaterial({
-            color: 0x3e9020,
-            shininess: 100,
-            specular: 0x000000,
-        })
+        this.stemMaterial = new StemMaterial({}, this.experience.time)
 
         const dateFactor = this.experience.dateFactor.value * 100
         const chanceFactor = Math.min(dateFactor * 0.008, 1)
@@ -83,40 +62,62 @@ export default class Flowers {
                 ),
             ])
 
-            const geometry = new TubeGeometry(curve, 15, 0.12, 3, false)
-            const flower = new Mesh(geometry, material)
+            this.stemGeometry = new TubeGeometry(curve, 15, 0.12, 3, false)
+            const stem = new Mesh(this.stemGeometry, this.stemMaterial)
 
             // Stock random values for each flower, can be used later
-            flower.random = this.prng()
-            flower.scaleRandomVector = new Vector3(
-                flower.random * 0.1 + 0.3,
-                flower.random * 0.1 + 0.3,
-                flower.random * 0.1 + 0.3
-            )
+            stem.random = this.prng()
 
-            flowerToAdd.position
-                .copy(curve.getPointAt(1))
-                .add(new Vector3(0, 0.3, 0))
+            flowerToAdd.position.copy(curve.getPointAt(1))
             const dir = curve
                 .getPointAt(1)
                 .sub(curve.getPointAt(0.8))
                 .normalize()
 
-            flowerToAdd.scale.set(0.3, 0.3, 0.3)
-            flower.targetVec = flowerToAdd.position.clone().add(dir)
-            flowerToAdd.lookAt(flower.targetVec)
+            flowerToAdd.children[0].scale.set(0, 0, 0)
+            stem.targetVec = flowerToAdd.position.clone().add(dir)
+            flowerToAdd.lookAt(stem.targetVec)
 
             // Offset to make the flower look at the right direction
             flowerToAdd.rotateOnAxis(new Vector3(1, 0, 0), Math.PI * 0.5)
             flowerGroup.add(flowerToAdd.clone())
 
-            flowerGroup.add(flower)
             flowerGroup.scale.set(0, 0, 0)
+            flowerGroup.add(stem)
+
+            flowerGroup.delay = Math.abs(this.prng() * 2)
+            flowerGroup.hasAnimated = false
+
             flowerGroup.position.set(
                 x + this.prng() * Math.sin(i) * 2,
                 -0.05,
                 z - this.prng() * Math.sin(i) * 2
             )
+
+            /**
+             * Animation
+             */
+            const { random } = flowerGroup.children[1]
+
+            // Animate entire group
+            gsap.to(flowerGroup.scale, {
+                x: stem.random * (0.5 - 0.2) + 0.2,
+                y: stem.random * (0.5 - 0.2) + 0.2,
+                z: stem.random * (0.5 - 0.2) + 0.2,
+                delay: random * 3,
+                duration: 1,
+                ease: 'ease.inOut',
+                onComplete: () => {
+                    gsap.to(flowerGroup.children[0].children[0].scale, {
+                        x: random * (0.075 - 0.06) + 0.06,
+                        y: random * (0.075 - 0.06) + 0.06,
+                        z: random * (0.075 - 0.06) + 0.06,
+                        duration: 2,
+                        ease: 'power3.out',
+                        delay: 0.2,
+                    })
+                },
+            })
 
             this.flowers.add(flowerGroup)
         }
@@ -128,24 +129,17 @@ export default class Flowers {
 
     update() {
         if (this.flowers.children) {
-            this.flowers.children.forEach((flower) => {
-                // flower.children[1].material.uniforms.uTime.value += 0.01
-
-                flower.children[0].children[0].rotation.y +=
-                    // TODO - Fix (rotation is always the same)
-                    flower.random < 0.5 ? -0.001 : 0.001
+            this.flowers.children.forEach((flowerGroup) => {
+                // Rotate flowers
+                flowerGroup.children[0].children[0].rotation.y +=
+                    flowerGroup.children[1].random < 0.5 ? -0.001 : 0.001
             })
         }
 
-        if (this.experience.time.elapsed > 8000) {
+        if (this.experience.time.elapsed < 6000) {
+            StemMaterial.update()
+        } else {
             return
-        }
-        for (let i = 0; i < this.flowers.children.length; i++) {
-            const flower = this.flowers.children[i]
-            const scaleRandomVector = flower.children[1].scaleRandomVector
-
-            // TODO - Fix random in here
-            flower.scale.lerp(scaleRandomVector, 0.01)
         }
     }
 

@@ -1,12 +1,15 @@
-uniform float uTime;
-uniform float uInputDate;
+uniform float uProgress;
 
 varying vec2 vUv;
 
-#define PI 3.14159s
-
 void main() {
     vec2 uv = vUv;
+    float isVisible = step(uProgress, uv.x);
+
+    if(isVisible == 1.) {
+        discard;
+    };
     
-    gl_FragColor = vec4(0.36, 0.67, 0.52, 1.0);
+    gl_FragColor = vec4(0.35, 0.84, 0.6, 1.0);
 }
+ 
