@@ -23,7 +23,6 @@ export default class Screen {
 
         this.city = new City({
             group: this.group,
-            inputDate: 3000,
         })
 
         let _target

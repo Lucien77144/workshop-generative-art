@@ -30,28 +30,11 @@ export default class Experience {
             return
         }
 
-        // User input
-        const _USER_INPUT = new URLSearchParams(window.location.search).get(
-            'date'
-        )
-
-        // if 'date' is < 2000, force it to be set at 2000
-        if (_USER_INPUT < 2000 || !_USER_INPUT) {
-            window.location.search = 'date=2000'
-        }
-
-        // if 'date' is > 3000, force it to bet set at 3000
-        if (_USER_INPUT > 3000) {
-            window.location.search = 'date=3000'
-        }
-
-        const _BASE = 2000
-        this.inputDate = _USER_INPUT - _BASE // Makes the final value easier to use
-
         this.time = new Time()
         this.sizes = new Sizes()
         this.setConfig()
         this.setDebug()
+        this.setDateFactor()
         this.setStats()
         this.setScene()
         this.setCamera()
@@ -94,6 +77,82 @@ export default class Experience {
         if (this.config.debug) {
             this.debug = new GUI()
         }
+    }
+
+    setDateFactor() {
+        // User input
+        const USER_INPUT = parseInt(
+            new URLSearchParams(window.location.search).get('date')
+        )
+        console.log(USER_INPUT)
+        const MIN_INPUT = 2000
+        const MAX_INPUT = 3000
+        const RANGE = MAX_INPUT - MIN_INPUT
+
+        // if 'date' is < MIN_INPUT, force it to be set at MIN_INPUT
+        if (USER_INPUT < MIN_INPUT || !USER_INPUT) {
+            window.location.search = `date=${MIN_INPUT}`
+        }
+
+        // if 'date' is > MAX_INPUT, force it to bet set at MAX_INPUT
+        if (USER_INPUT > MAX_INPUT) {
+            window.location.search = `date=${MAX_INPUT}`
+        }
+
+        // Makes the final value easier to use
+        this.dateFactor = {
+            date: USER_INPUT,
+            value: (USER_INPUT - MIN_INPUT) / RANGE,
+            update: () => {
+                // this.dateFactor.date = this.dateFactor.value() * RANGE + MIN_INPUT
+                if (this.dateFactor.date < MIN_INPUT || !this.dateFactor.date) {
+                    this.dateFactor.date = MIN_INPUT
+                } else if (this.dateFactor.date > MAX_INPUT) {
+                    this.dateFactor.date = MAX_INPUT
+                }
+
+                this.dateFactor.value = (this.dateFactor.date - MIN_INPUT) / RANGE
+            }, // value between 0 and 1
+            min: (offset) => {
+                // min value by offset (offset between 0 and 1)
+
+                const DATE = this.dateFactor.date
+                const LIMIT = offset * RANGE * 0.01 + MIN_INPUT
+                const USER = DATE < LIMIT ? LIMIT : DATE
+
+                return (USER - LIMIT) / (MAX_INPUT - LIMIT)
+            },
+            max: (offset) => {
+                // max value by offset (offset between 0 and 1)
+
+                const DATE = this.dateFactor.date
+                const LIMIT = offset * RANGE * 0.01 + MIN_INPUT
+                const USER = DATE > LIMIT ? LIMIT : DATE
+
+                return (USER - MIN_INPUT) / (LIMIT - MIN_INPUT)
+            },
+            step: (offset) => {
+                // Steped value by offset
+
+                return Math.floor(this.dateFactor.value / offset) * offset
+            },
+        }
+
+        this.debugRendererFolder = this.debug.addFolder('Experience')
+
+        this.debugRendererFolder
+            .add(this.dateFactor, 'date')
+            .name('Date')
+            .min(MIN_INPUT)
+            .max(MAX_INPUT)
+            .onChange((e) => {
+                e = parseInt(e)
+                const uniforms = this.renderer?.renderMesh?.material?.uniforms
+                if (uniforms?.uDateFactor) {
+                    this.dateFactor.update()
+                    uniforms.uDateFactor.value = this.dateFactor.min(90)
+                }
+            })
     }
 
     setStats() {

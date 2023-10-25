@@ -17,13 +17,13 @@ export default class Flowers {
         this.scene = _options.scene
         this.config = this.experience.config
         this.resources = this.experience.resources
-        this.prng = new Alea(this.experience.inputDate)
+        this.prng = new Alea(this.experience.dateFactor.value)
 
         this.init()
     }
 
     init() {
-        const _RADIUS = 4
+        const RADIUS = 4
         const redFlower = this.resources.items.redFlower.scene
         const blueFlower = this.resources.items.blueFlower.scene
         const pinkFlower = this.resources.items.pinkFlower.scene
@@ -46,23 +46,21 @@ export default class Flowers {
             specular: 0x000000,
         })
 
-        for (let i = 0; i < this.experience.inputDate * 0.1; i++) {
+        const dateFactor = this.experience.dateFactor.value * 100
+        const chanceFactor = Math.min(dateFactor * 0.008, 1)
+        for (let i = 0; i < dateFactor; i++) {
             let flowerToAdd = null
 
             // Chance factor to have a blue flower
-            const chanceFactor = Math.min(
-                this.experience.inputDate * 0.0003333333333333333,
-                1
-            )
             if (this.prng() < chanceFactor) {
                 flowerToAdd = this.prng() < 0.1 ? pinkFlower : blueFlower
             } else {
                 flowerToAdd = redFlower
             }
 
-            const angle = (i / (this.experience.inputDate * 0.1)) * Math.PI * 2
-            const x = _RADIUS * Math.cos(angle)
-            const z = _RADIUS * Math.sin(angle)
+            const angle = (i / dateFactor) * Math.PI * 2
+            const x = RADIUS * Math.cos(angle)
+            const z = RADIUS * Math.sin(angle)
 
             const flowerGroup = new Group()
 

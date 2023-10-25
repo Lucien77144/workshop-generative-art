@@ -1,3 +1,4 @@
+uniform float uDateFactor;
 uniform sampler2D uBase;
 uniform sampler2D uScreen;
 uniform sampler2D uMask;
@@ -19,12 +20,16 @@ float luminance(vec3 rgb) {
 // ------------------------------
 
 void applyCRT(inout vec2 uv, float s, float dir, float oldness) {
+    uv -= .5;
     float crt = sin(abs(uv.y + dir) * (50. * oldness + 1.));
     uv.x += sign(crt) * s;
+    uv += .5;
 }
 
 void applyGlass(inout vec2 uv, float p, float s) {
+    uv -= .5;
     uv += (random(uv) * s - 1.) * p;
+    uv += .5;
 }
 
 vec4 applyBlackAndWhite(vec4 c, float f) {
@@ -36,14 +41,12 @@ void main() {
     vec2 uv = vUv;
     vec2 screenUv = vUv;
     vec4 light = vec4(.5, .2, .2, 1.);
-    float oldness = .0; // 0. = new, 1. = old
 
-    applyCRT(screenUv, .001 + clampedSine(uTime, .001) / 10., uTime * .001, oldness);
-    applyGlass(screenUv, .005 * oldness, 5. * oldness);
+    applyCRT(screenUv, .001 + clampedSine(uTime, .001) / 10., uTime * .001, uDateFactor);
+    applyGlass(screenUv, .005 * uDateFactor, 5. * uDateFactor);
 
     vec4 base = texture2D(uBase, uv);
-    vec4 screen = texture2D(uScreen, screenUv);
-        screen = applyBlackAndWhite(screen, clampedSine(uTime * .5, 1. - oldness));
+    vec4 screen = applyBlackAndWhite(texture2D(uScreen, screenUv), clampedSine(uTime, 1. - uDateFactor));
     vec4 mask = texture2D(uMask, uv);
 
     vec4 col = mix(screen, light, base.r);

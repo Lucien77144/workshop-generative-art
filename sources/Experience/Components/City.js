@@ -33,22 +33,24 @@ export default class City {
                 action.repetitions = 0
                 action.clampWhenFinished = true
 
+                const dateFactor = this.experience.dateFactor.value * 3000
+
                 if (
-                    this.experience.inputDate >= 200 &&
+                    dateFactor >= 200 &&
                     animation.name.startsWith('Cube.009')
                 ) {
                     action.play()
                 }
 
                 if (
-                    this.experience.inputDate >= 300 &&
+                    dateFactor >= 300 &&
                     animation.name.startsWith('Cube.010')
                 ) {
                     action.play()
                 }
 
                 if (
-                    this.experience.inputDate >= 400 &&
+                    dateFactor >= 400 &&
                     animation.name.startsWith('Cube.003')
                 ) {
                     action.play()
@@ -65,7 +67,7 @@ export default class City {
         this.flowers = new Flowers({
             scene: this.group,
         })
-        this.screen.setStencil();
+        this.screen.setStencil()
     }
 
     generateTrees() {
