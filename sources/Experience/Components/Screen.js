@@ -21,9 +21,7 @@ export default class Screen {
         this.group.position.set(-0.2, 0.2, -2)
         this.group.scale.set(0.2, 0.2, 0.2)
 
-        this.city = new City({
-            group: this.group,
-        })
+        this.city = new City({ group: this.group })
 
         let _target
         this.city.instance.traverse((o) => {
@@ -40,7 +38,7 @@ export default class Screen {
             _grassScale: 5,
         })
 
-        this.setStencil();
+        this.setStencil()
         this.scene.add(this.group)
     }
 
