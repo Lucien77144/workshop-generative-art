@@ -2,10 +2,7 @@ import Experience from './../../Experience'
 import { Mesh, CatmullRomCurve3, Vector3, TubeGeometry, Group } from 'three'
 import Alea from 'alea'
 import StemMaterial from './shaders/StemMaterial'
-import { Wait } from '../../Utils/Wait'
 import gsap from 'gsap'
-
-const w = new Wait()
 
 export default class Flowers {
     constructor(_options) {
@@ -100,7 +97,7 @@ export default class Flowers {
             /**
              * Animation
              */
-            const { random, scaleRandomVector } = flowerGroup.children[1]
+            const { random } = flowerGroup.children[1]
 
             // Animate entire group
             gsap.to(flowerGroup.scale, {
