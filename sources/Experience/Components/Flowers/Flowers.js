@@ -3,6 +3,7 @@ import { Mesh, CatmullRomCurve3, Vector3, TubeGeometry, Group } from 'three'
 import Alea from 'alea'
 import StemMaterial from './shaders/StemMaterial'
 import { Wait } from '../../Utils/Wait'
+import gsap from 'gsap'
 
 const w = new Wait()
 
@@ -25,19 +26,7 @@ export default class Flowers {
 
         this.flowers = new Group()
 
-        console.log('yay')
-
         this.stemMaterial = new StemMaterial({}, this.experience.time)
-
-        // const material = new ShaderMaterial({
-        //     fragmentShader,
-        //     vertexShader,
-        //     uniforms: {
-        //         uFrequency: { value: new Vector2(10, 5) },
-        //         uProgress: { value: 0 },
-        //         uInputDate: { value: this.experience.inputDate },
-        //     },
-        // })
 
         const dateFactor = this.experience.dateFactor.value * 100
         const chanceFactor = Math.min(dateFactor * 0.008, 1)
@@ -113,6 +102,31 @@ export default class Flowers {
                 z - this.prng() * Math.sin(i) * 2
             )
 
+            /**
+             * Animation
+             */
+            const { random, scaleRandomVector } = flowerGroup.children[1]
+
+            // Animate entire group
+            gsap.to(flowerGroup.scale, {
+                x: scaleRandomVector.x,
+                y: scaleRandomVector.y,
+                z: scaleRandomVector.z,
+                delay: random * 3,
+                duration: 1,
+                ease: 'ease.inOut',
+                onComplete: () => {
+                    gsap.to(flowerGroup.children[0].children[0].scale, {
+                        x: random * (0.075 - 0.06) + 0.06,
+                        y: random * (0.075 - 0.06) + 0.06,
+                        z: random * (0.075 - 0.06) + 0.06,
+                        duration: 2,
+                        ease: 'power3.out',
+                        delay: 0.2,
+                    })
+                },
+            })
+
             this.flowers.add(flowerGroup)
         }
 
@@ -133,32 +147,6 @@ export default class Flowers {
                 // Rotate flowers
                 flowerGroup.children[0].children[0].rotation.y +=
                     flowerGroup.children[1].random < 0.5 ? -0.001 : 0.001
-
-                // Animate curves
-                if (this.experience.time.elapsed < 6000) {
-                    const { random, scaleRandomVector } =
-                        flowerGroup.children[1]
-
-                    flowerGroup.scale.lerp(
-                        scaleRandomVector,
-                        random * (0.01 - 0.02) + 0.02
-                    )
-                }
-
-                // Animate flowers models
-                if (this.experience.time.elapsed > 1600) {
-                    flowerGroup.children[0].children[0].scale.lerp(
-                        new Vector3(
-                            flowerGroup.children[1].random * (0.075 - 0.06) +
-                                0.06,
-                            flowerGroup.children[1].random * (0.075 - 0.06) +
-                                0.06,
-                            flowerGroup.children[1].random * (0.075 - 0.06) +
-                                0.06
-                        ),
-                        0.01
-                    )
-                }
             })
         }
     }
