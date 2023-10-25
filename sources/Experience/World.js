@@ -1,17 +1,11 @@
 import {
     AmbientLight,
     DirectionalLight,
-    Group,
-    Mesh,
-    MeshBasicMaterial,
-    PlaneGeometry,
 } from 'three'
 import Experience from './Experience.js'
 import Terminal from './Components/Terminal.js'
 import Floor from './Components/Floor.js'
 import { LAYERS } from './Const/const.js'
-import City from './Components/City.js'
-import GrassFloor from './Components/GrassFloor/GrassFloor.js'
 
 export default class World {
     constructor(_options) {
@@ -44,11 +38,6 @@ export default class World {
     resize() {}
 
     update() {
-        // TEMPORARY
-        if (this.city) {
-            this.city.update()
-        }
-
         if (this.terminal) {
             this.terminal.update()
         }
