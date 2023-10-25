@@ -1,7 +1,7 @@
 import {
     GreaterStencilFunc,
     Mesh,
-    MeshBasicMaterial,
+    MeshStandardMaterial,
     PlaneGeometry,
 } from 'three'
 import Experience from '../Experience'
@@ -20,8 +20,8 @@ export default class Floor {
 
     init() {
         this.mesh = new Mesh(
-            new PlaneGeometry(100, 100),
-            new MeshBasicMaterial({
+            new PlaneGeometry(10, 10),
+            new MeshStandardMaterial({
                 color: '#131313',
             })
         )

@@ -16,7 +16,7 @@ export default class Camera {
         this.order = 'YXZ'
 
         // Set up
-        this.mode = 'focus'
+        this.mode = 'debug'
 
         if (this.debug) {
             this.debugCameraFolder = this.debug.addFolder('Camera')
@@ -65,6 +65,7 @@ export default class Camera {
         this.modes.debug.orbitControls.enabled = this.modes.debug.active
         this.modes.debug.orbitControls.screenSpacePanning = true
         this.modes.debug.orbitControls.enableKeys = false
+        this.modes.debug.orbitControls.maxPolarAngle = Math.PI * 0.4
         this.modes.debug.orbitControls.zoomSpeed = 0.25
         this.modes.debug.orbitControls.enableDamping = true
         this.modes.debug.orbitControls.update()
@@ -97,7 +98,7 @@ export default class Camera {
 
     update() {
         // Update debug orbit controls
-        // this.modes.debug.orbitControls.update()
+        this.modes.debug.orbitControls.update()
 
         // Apply coordinates
         this.instance.position.copy(this.modes[this.mode].instance.position)
