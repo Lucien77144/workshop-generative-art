@@ -33,26 +33,17 @@ export default class City {
                 action.repetitions = 0
                 action.clampWhenFinished = true
 
-                const dateFactor = this.experience.dateFactor.value * 3000
+                const dateFactor = this.experience.dateFactor.value
 
-                if (
-                    dateFactor >= 200 &&
-                    animation.name.startsWith('Cube.009')
-                ) {
+                if (dateFactor >= 0.2 && animation.name.includes('Cube.009')) {
                     action.play()
                 }
 
-                if (
-                    dateFactor >= 300 &&
-                    animation.name.startsWith('Cube.010')
-                ) {
+                if (dateFactor >= 0.4 && animation.name.includes('Cube.010')) {
                     action.play()
                 }
 
-                if (
-                    dateFactor >= 400 &&
-                    animation.name.startsWith('Cube.003')
-                ) {
+                if (dateFactor >= 0.75 && animation.name.includes('Cube.003')) {
                     action.play()
                 }
             }
