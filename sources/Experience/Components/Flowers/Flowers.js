@@ -1,18 +1,8 @@
 import Experience from './../../Experience'
-import {
-    Mesh,
-    CatmullRomCurve3,
-    Vector3,
-    TubeGeometry,
-    Group,
-    MeshPhongMaterial,
-    ShaderMaterial,
-    Vector2,
-} from 'three'
+import { Mesh, CatmullRomCurve3, Vector3, TubeGeometry, Group } from 'three'
 import Alea from 'alea'
+import StemMaterial from './shaders/StemMaterial'
 import { Wait } from '../../Utils/Wait'
-import fragmentShader from './shaders/fragment.glsl?raw'
-import vertexShader from './shaders/vertex.glsl?raw'
 
 const w = new Wait()
 
@@ -35,15 +25,19 @@ export default class Flowers {
 
         this.flowers = new Group()
 
-        const material = new ShaderMaterial({
-            fragmentShader,
-            vertexShader,
-            uniforms: {
-                uFrequency: { value: new Vector2(10, 5) },
-                uProgress: { value: 0 },
-                uInputDate: { value: this.experience.inputDate },
-            },
-        })
+        console.log('yay')
+
+        this.stemMaterial = new StemMaterial({}, this.experience.time)
+
+        // const material = new ShaderMaterial({
+        //     fragmentShader,
+        //     vertexShader,
+        //     uniforms: {
+        //         uFrequency: { value: new Vector2(10, 5) },
+        //         uProgress: { value: 0 },
+        //         uInputDate: { value: this.experience.inputDate },
+        //     },
+        // })
 
         const dateFactor = this.experience.dateFactor.value * 100
         const chanceFactor = Math.min(dateFactor * 0.008, 1)
@@ -82,8 +76,8 @@ export default class Flowers {
                 ),
             ])
 
-            const geometry = new TubeGeometry(curve, 15, 0.12, 3, false)
-            const stem = new Mesh(geometry, material)
+            this.stemGeometry = new TubeGeometry(curve, 15, 0.12, 3, false)
+            const stem = new Mesh(this.stemGeometry, this.stemMaterial)
 
             // Stock random values for each flower, can be used later
             stem.random = this.prng()
@@ -128,12 +122,17 @@ export default class Flowers {
     resize() {}
 
     update() {
+        if (this.experience.time.elapsed < 8000) {
+            StemMaterial.update()
+        } else {
+            return
+        }
+
         if (this.flowers.children) {
             this.flowers.children.forEach((flowerGroup) => {
-                // Kill the loop after 8 seconds
-                if (this.experience.time.elapsed > 8000) {
-                    return
-                }
+                // Rotate flowers
+                flowerGroup.children[0].children[0].rotation.y +=
+                    flowerGroup.children[1].random < 0.5 ? -0.001 : 0.001
 
                 // Animate curves
                 if (this.experience.time.elapsed < 6000) {
@@ -144,13 +143,6 @@ export default class Flowers {
                         scaleRandomVector,
                         random * (0.01 - 0.02) + 0.02
                     )
-
-                    let progress =
-                        flowerGroup.children[1].material.uniforms.uProgress
-                            .value + 0.008
-                    progress = Math.min(progress, 1)
-                    flowerGroup.children[1].material.uniforms.uProgress.value =
-                        progress
                 }
 
                 // Animate flowers models
@@ -167,10 +159,6 @@ export default class Flowers {
                         0.01
                     )
                 }
-
-                // Rotate flowers
-                flowerGroup.children[0].children[0].rotation.y +=
-                    flowerGroup.children[1].random < 0.5 ? -0.001 : 0.001
             })
         }
     }
