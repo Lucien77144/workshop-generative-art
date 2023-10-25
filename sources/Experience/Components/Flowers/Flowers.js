@@ -6,10 +6,15 @@ import {
     TubeGeometry,
     Group,
     MeshPhongMaterial,
+    ShaderMaterial,
+    Vector2,
 } from 'three'
 import Alea from 'alea'
-// import fragmentShader from './shaders/fragment.glsl?raw'
-// import vertexShader from './shaders/vertex.glsl?raw'
+import { Wait } from '../../Utils/Wait'
+import fragmentShader from './shaders/fragment.glsl?raw'
+import vertexShader from './shaders/vertex.glsl?raw'
+
+const w = new Wait()
 
 export default class Flowers {
     constructor(_options) {
@@ -23,27 +28,21 @@ export default class Flowers {
     }
 
     init() {
-        const RADIUS = 4
+        const RADIUS = 4.5
         const redFlower = this.resources.items.redFlower.scene
         const blueFlower = this.resources.items.blueFlower.scene
         const pinkFlower = this.resources.items.pinkFlower.scene
 
         this.flowers = new Group()
 
-        // const material = new ShaderMaterial({
-        //     fragmentShader,
-        //     vertexShader,
-        //     uniforms: {
-        //         uFrequency: { value: new Vector2(10, 5) },
-        //         uTime: { value: 0 },
-        //         uInputDate: { value: this.experience.inputDate },
-        //     },
-        // })
-
-        const material = new MeshPhongMaterial({
-            color: 0x3e9020,
-            shininess: 100,
-            specular: 0x000000,
+        const material = new ShaderMaterial({
+            fragmentShader,
+            vertexShader,
+            uniforms: {
+                uFrequency: { value: new Vector2(10, 5) },
+                uProgress: { value: 0 },
+                uInputDate: { value: this.experience.inputDate },
+            },
         })
 
         const dateFactor = this.experience.dateFactor.value * 100
@@ -84,34 +83,36 @@ export default class Flowers {
             ])
 
             const geometry = new TubeGeometry(curve, 15, 0.12, 3, false)
-            const flower = new Mesh(geometry, material)
+            const stem = new Mesh(geometry, material)
 
             // Stock random values for each flower, can be used later
-            flower.random = this.prng()
-            flower.scaleRandomVector = new Vector3(
-                flower.random * 0.1 + 0.3,
-                flower.random * 0.1 + 0.3,
-                flower.random * 0.1 + 0.3
+            stem.random = this.prng()
+            stem.scaleRandomVector = new Vector3(
+                stem.random * (0.5 - 0.2) + 0.2,
+                stem.random * (0.5 - 0.2) + 0.2,
+                stem.random * (0.5 - 0.2) + 0.2
             )
 
-            flowerToAdd.position
-                .copy(curve.getPointAt(1))
-                .add(new Vector3(0, 0.3, 0))
+            flowerToAdd.position.copy(curve.getPointAt(1))
             const dir = curve
                 .getPointAt(1)
                 .sub(curve.getPointAt(0.8))
                 .normalize()
 
-            flowerToAdd.scale.set(0.3, 0.3, 0.3)
-            flower.targetVec = flowerToAdd.position.clone().add(dir)
-            flowerToAdd.lookAt(flower.targetVec)
+            flowerToAdd.children[0].scale.set(0, 0, 0)
+            stem.targetVec = flowerToAdd.position.clone().add(dir)
+            flowerToAdd.lookAt(stem.targetVec)
 
             // Offset to make the flower look at the right direction
             flowerToAdd.rotateOnAxis(new Vector3(1, 0, 0), Math.PI * 0.5)
             flowerGroup.add(flowerToAdd.clone())
 
-            flowerGroup.add(flower)
             flowerGroup.scale.set(0, 0, 0)
+            flowerGroup.add(stem)
+
+            flowerGroup.delay = Math.abs(this.prng() * 2)
+            flowerGroup.hasAnimated = false
+
             flowerGroup.position.set(
                 x + this.prng() * Math.sin(i) * 2,
                 -0.05,
@@ -128,24 +129,49 @@ export default class Flowers {
 
     update() {
         if (this.flowers.children) {
-            this.flowers.children.forEach((flower) => {
-                // flower.children[1].material.uniforms.uTime.value += 0.01
+            this.flowers.children.forEach((flowerGroup) => {
+                // Kill the loop after 8 seconds
+                if (this.experience.time.elapsed > 8000) {
+                    return
+                }
 
-                flower.children[0].children[0].rotation.y +=
-                    // TODO - Fix (rotation is always the same)
-                    flower.random < 0.5 ? -0.001 : 0.001
+                // Animate curves
+                if (this.experience.time.elapsed < 6000) {
+                    const { random, scaleRandomVector } =
+                        flowerGroup.children[1]
+
+                    flowerGroup.scale.lerp(
+                        scaleRandomVector,
+                        random * (0.01 - 0.02) + 0.02
+                    )
+
+                    let progress =
+                        flowerGroup.children[1].material.uniforms.uProgress
+                            .value + 0.008
+                    progress = Math.min(progress, 1)
+                    flowerGroup.children[1].material.uniforms.uProgress.value =
+                        progress
+                }
+
+                // Animate flowers models
+                if (this.experience.time.elapsed > 1600) {
+                    flowerGroup.children[0].children[0].scale.lerp(
+                        new Vector3(
+                            flowerGroup.children[1].random * (0.075 - 0.06) +
+                                0.06,
+                            flowerGroup.children[1].random * (0.075 - 0.06) +
+                                0.06,
+                            flowerGroup.children[1].random * (0.075 - 0.06) +
+                                0.06
+                        ),
+                        0.01
+                    )
+                }
+
+                // Rotate flowers
+                flowerGroup.children[0].children[0].rotation.y +=
+                    flowerGroup.children[1].random < 0.5 ? -0.001 : 0.001
             })
-        }
-
-        if (this.experience.time.elapsed > 8000) {
-            return
-        }
-        for (let i = 0; i < this.flowers.children.length; i++) {
-            const flower = this.flowers.children[i]
-            const scaleRandomVector = flower.children[1].scaleRandomVector
-
-            // TODO - Fix random in here
-            flower.scale.lerp(scaleRandomVector, 0.01)
         }
     }
 
