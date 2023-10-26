@@ -1,8 +1,8 @@
 import Experience from '../Experience'
 import Stencil from './Stencil'
-import Screen from './Screen'
 import { LAYERS } from '../Const/const'
 import { MeshBasicMaterial, PointLight, PointLightHelper } from 'three'
+import Screen from './Screen/Screen'
 
 export default class Terminal {
     constructor(_options) {

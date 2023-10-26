@@ -1,8 +1,9 @@
 import { EqualStencilFunc, Group, MeshPhongMaterial, Vector3 } from 'three'
-import Experience from '../Experience'
-import City from './City'
-import { LAYERS } from '../Const/const'
-import GrassFloor from './GrassFloor/GrassFloor'
+import Experience from '../../Experience'
+import City from '../City'
+import { LAYERS } from '../../Const/const'
+import GrassFloor from '../GrassFloor/GrassFloor'
+import ScreenInterface from './ScreenInterface'
 
 export default class Screen {
     constructor(_options = {}) {
@@ -12,6 +13,7 @@ export default class Screen {
         this.resources = this.experience.resources
         this.stencilRef = _options.stencilRef
         this.time = this.experience.time
+        this.interface = null;
 
         this.init()
     }
@@ -38,6 +40,10 @@ export default class Screen {
             _grassScale: 5,
         })
 
+        this.interface = new ScreenInterface({
+            stencilRef: this.stencilRef,
+        });
+        
         this.setStencil()
         this.scene.add(this.group)
     }

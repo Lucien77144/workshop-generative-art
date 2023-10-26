@@ -37,6 +37,7 @@ export default class Experience {
         this.setDateFactor()
         this.setStats()
         this.setScene()
+        this.setCssScene()
         this.setCamera()
         this.setRenderer()
         this.setResources()
@@ -176,6 +177,10 @@ export default class Experience {
 
     setScene() {
         this.scene = new THREE.Scene()
+    }
+
+    setCssScene() {
+        this.cssScene = new THREE.Scene()
     }
 
     setCamera() {

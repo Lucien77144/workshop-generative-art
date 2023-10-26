@@ -3,6 +3,7 @@ uniform sampler2D uBase;
 uniform sampler2D uScreen;
 uniform sampler2D uMask;
 uniform float uTime;
+uniform float uScene;
 varying vec2 vUv;
 
 float clampedSine(float t, float magnitude) {
@@ -62,9 +63,14 @@ void main() {
 
     vec4 base = texture2D(uBase, uv);
     vec4 screen = applyBlackAndWhite(texture2D(uScreen, screenUv), (noise(vec2(uTime * .01)) * .25 + .75) * (1. - uDateFactorMin));
+    // vec4 screen = texture2D(uScreen, screenUv);
     vec4 mask = texture2D(uMask, uv);
 
     vec4 col = mix(screen, light, base.r);
 
+    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.), col.b);
     gl_FragColor = mix(base, col, mask.r);
+    gl_FragColor.a = ((1. - mask.r) + (col.r + col.g));
+
+    gl_FragColor.a = mix(gl_FragColor.a, 1., 1. - mask.r * uScene);
 }
