@@ -157,7 +157,6 @@ export default class Experience {
                     this.dateFactor.update()
                     if (renderU?.uDateFactor) {
                         renderU.uDateFactorMin.value = this.dateFactor.min(90)
-                        renderU.uDateFactor.value = this.dateFactor.value
                     }
                     if (grassU?.uDateFactor) {
                         grassU.uDateFactor.value = this.dateFactor.value

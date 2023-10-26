@@ -16,7 +16,7 @@ export default class Camera {
         this.order = 'YXZ'
 
         // Set up
-        this.mode = 'debug'
+        this.mode = 'focus'
 
         if (this.debug) {
             this.debugCameraFolder = this.debug.addFolder('Camera')
