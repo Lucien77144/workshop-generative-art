@@ -1,4 +1,4 @@
-import { PerspectiveCamera } from 'three'
+import { PerspectiveCamera, Vector3 } from 'three'
 import Experience from './Experience.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
@@ -13,6 +13,15 @@ export default class Camera {
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
 
+        if (this.experience.world) {
+            console.log(this.experience.world.terminal.position)
+        }
+
+        this.cursor = {
+            x: 0,
+            y: 0,
+        }
+
         this.order = 'YXZ'
 
         // Set up
@@ -21,6 +30,11 @@ export default class Camera {
         if (this.debug) {
             this.debugCameraFolder = this.debug.addFolder('Camera')
         }
+
+        window.addEventListener('mousemove', (event) => {
+            this.cursor.x = event.clientX / this.config.width - 0.5
+            this.cursor.y = event.clientY / this.config.height - 0.5
+        })
 
         this.setInstance()
         this.setModes()
@@ -83,6 +97,8 @@ export default class Camera {
                     this.modes.debug.orbitControls.update()
                 })
         }
+
+        console.log();
     }
 
     resize() {
@@ -99,13 +115,23 @@ export default class Camera {
     }
 
     update() {
-        // Update debug orbit controls
-        this.modes.debug.orbitControls.update()
-
         // Apply coordinates
         this.instance.position.copy(this.modes[this.mode].instance.position)
         this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion)
         this.instance.updateMatrixWorld() // To be used in projection
+
+        const parallaxX = this.cursor.x
+        const parallaxY = this.cursor.y
+
+        if (this.mode === 'default') {
+            this.instance.position.x +=
+                parallaxX - this.instance.position.x * 0.1
+            this.instance.position.y +=
+                parallaxY - this.instance.position.y * 0.1
+
+            // TODO - Look at the terminal instead
+            this.instance.lookAt(new Vector3(0, 0, 0))
+        }
     }
 
     destroy() {
