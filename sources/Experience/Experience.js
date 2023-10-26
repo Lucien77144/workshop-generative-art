@@ -9,6 +9,7 @@ import Resources from './Resources.js'
 import Renderer from './Renderer.js'
 import Camera from './Camera.js'
 import World from './World.js'
+import AudioManager from './AudioManager.js'
 
 import assets from './assets.js'
 
@@ -38,6 +39,12 @@ export default class Experience {
         this.setCssScene()
         this.setCamera()
         this.setRenderer()
+
+        this.eventEmitter = this.renderer.instance.domElement
+        this.eventEmitter.addEventListener('playAmbient', () => {
+            this.renderer.clearColor = '#030303'
+        })
+
         this.setResources()
         this.setWorld()
 
@@ -45,26 +52,32 @@ export default class Experience {
             value: 0,
         }
 
-        this.eventEmitter = this.renderer.instance.domElement
+        this.setAudioManager()
 
         // DOM selectors
         const $$boot = document.querySelector('.c-experience-boot')
-        const $$bootInput = document.querySelector('.c-experience-boot-content__input')
+        const $$bootInput = document.querySelector(
+            '.c-experience-boot-content__input'
+        )
         const $$bootButton = document.querySelector(
             '.c-experience-boot-content__button'
         )
 
-        document.addEventListener(
-            'click',
-            (e) => {
+        this.eventEmitter.addEventListener('click', (e) => {
+            if (this.world) {
+                this.eventEmitter.dispatchEvent(new CustomEvent('playAmbient'))
+            }
+
+            if (this.world.spotLight.intensity !== 0) {
                 // $$boot.classList.add('-is-visible')
                 this.eventEmitter.dispatchEvent(new CustomEvent('goFocusMode'))
-            },
-            { once: true }
-        )
+            }
+        })
+
         this.eventEmitter.addEventListener('generate', (e) => {
             $$boot.classList.remove('-is-visible')
         })
+
         $$bootButton.addEventListener(
             'click',
             (e) => {
@@ -225,6 +238,10 @@ export default class Experience {
 
     setWorld() {
         this.world = new World()
+    }
+
+    setAudioManager() {
+        this.audioManager = new AudioManager()
     }
 
     update() {
