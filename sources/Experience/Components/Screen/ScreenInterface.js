@@ -46,7 +46,7 @@ export default class ScreenInterface {
             this.openInterface()
             setTimeout(() => {
                 this.openInterface()
-            }, 2000);
+            }, 10000);
         }, 2000);
     }
 
@@ -67,8 +67,6 @@ export default class ScreenInterface {
                     this.renderer.renderMesh.material.uniforms.uScene.value = 0
                 }
             })
-            // this.renderer.renderMesh.material.uniforms.uScene.value = 0
-            // this.mesh.material.opacity = 0
         } else {
             this.isOpened = true;
             gsap.to(this.mesh.material, {
@@ -85,8 +83,6 @@ export default class ScreenInterface {
                     this.renderer.renderMesh.material.uniforms.uScene.value = 1
                 }
             })
-            // this.renderer.renderMesh.material.uniforms.uScene.value = 1
-            // this.mesh.material.opacity = 1
         }
     }
 
