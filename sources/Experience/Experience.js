@@ -42,6 +42,22 @@ export default class Experience {
         this.setResources()
         this.setWorld()
 
+        this.eventEmitter = this.renderer.instance.domElement // or new EventTarget()
+
+        const $$experience = document.querySelector('.experience')
+        $$experience.addEventListener(
+            'click',
+            (e) => {
+                this.eventEmitter.dispatchEvent(new CustomEvent('generate'))
+            },
+            { once: true }
+        )
+
+        // Fire events from where i want
+        // setTimeout(() => {
+        //     this.eventEmitter.dispatchEvent(new CustomEvent("grow", { detail: { size: 10 } }))
+        // }, 1000);
+
         this.sizes.on('resize', () => {
             this.resize()
         })
