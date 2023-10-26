@@ -1,17 +1,30 @@
-import glsl from 'vite-plugin-glsl';
-import glslify from 'vite-plugin-glslify';
-import { defineConfig } from 'vite';
-import path from 'path';
+import glsl from 'vite-plugin-glsl'
+import glslify from 'vite-plugin-glslify'
+import { defineConfig } from 'vite'
+import path from 'path'
 
-const dirname = path.resolve();
+const dirname = path.resolve()
 
 export default defineConfig({
-  root: 'sources',
-  publicDir: '../public',
-  build: {
-    outDir: '../dist',
-    emptyOutDir: true,
-    sourcemap: true,
-  },
-  plugins: [glsl(), glslify()],
-});
+    root: 'sources',
+    publicDir: '../public',
+    build: {
+        outDir: '../dist',
+        emptyOutDir: true,
+        sourcemap: true,
+    },
+    css: {
+        postcss: null,
+        preprocessorOptions: {
+            scss: {
+                additionalData: `
+                @import "${path.resolve(
+                    __dirname,
+                    './sources/styles/variables'
+                )}";
+            `,
+            },
+        },
+    },
+    plugins: [glsl(), glslify()],
+})

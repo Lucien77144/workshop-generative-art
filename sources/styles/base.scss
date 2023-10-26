@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'Perfect DOS VGA 437';
+    src: url('./../../public/fonts/Perfect\ DOS\ VGA\ 437.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-size: 1.6rem;
+    font-family: $dos;
+}
