@@ -41,13 +41,14 @@ vec4 applyBlackAndWhite(vec4 c, float f) {
 void main() {
     vec2 uv = vUv;
     vec2 screenUv = vUv;
-    vec4 light = vec4(.5, .2, .2, 1.);
+    vec4 light = vec4(1.);
 
     applyCRT(screenUv, .001 + clampedSine(uTime, .001) / 10., uTime * .001, uDateFactorMin);
     applyGlass(screenUv, .005 * uDateFactorMin, 5. * uDateFactorMin);
 
     vec4 base = texture2D(uBase, uv);
     vec4 screen = applyBlackAndWhite(texture2D(uScreen, screenUv), clampedSine(uTime, uDateFactor));
+    // vec4 screen = texture2D(uScreen, uv);
     vec4 mask = texture2D(uMask, uv);
 
     vec4 col = mix(screen, light, base.r);

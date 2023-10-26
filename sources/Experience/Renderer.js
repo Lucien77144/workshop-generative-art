@@ -119,7 +119,9 @@ export default class Renderer {
                     },
                     uTime: { value: 0 },
                     uDateFactor: { value: this.experience.dateFactor.value },
-                    uDateFactorMin: { value: this.experience.dateFactor.min(90) },
+                    uDateFactorMin: {
+                        value: this.experience.dateFactor.min(90),
+                    },
                 },
                 vertexShader,
                 fragmentShader,
@@ -142,7 +144,7 @@ export default class Renderer {
                 o.material.colorWrite = true
             }
         })
-        this.experience.world?.terminal?.screenStencil.setMaterial('baseMat')
+        this.experience.world?.terminal?.screenStencil?.setMaterial('baseMat')
         this.camera.instance.layers.disableAll()
         this.camera.instance.layers.enable(LAYERS.DEFAULT)
         this.camera.instance.layers.enable(LAYERS.GLOBAL)
@@ -157,7 +159,7 @@ export default class Renderer {
         this.instance.render(this.scene, this.camera.instance)
 
         // Mask
-        this.experience.world?.terminal?.screenStencil.setMaterial('maskMat')
+        this.experience.world?.terminal?.screenStencil?.setMaterial('maskMat')
         this.scene?.traverse((o) => {
             if (o.material?.name == 'TerminalMaterial') {
                 o.material.colorWrite = false

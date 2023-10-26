@@ -4,6 +4,7 @@ export default [
         data: {},
         items: [
             { name: 'black', source: '/assets/grass/black.png' },
+            { name: 'screenDirt', source: '/assets/screen-dirt.png', type: 'texture' },
             { name: 'dirtTexture', source: '/assets/grass/dirt.jpg' },
             { name: 'mudTexture', source: '/assets/grass/mud.jpg' },
             {
