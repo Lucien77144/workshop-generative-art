@@ -4,11 +4,8 @@ import {
     Euler,
     MathUtils,
     Mesh,
-    MeshBasicMaterial,
     MeshLambertMaterial,
-    NoBlending,
     PlaneGeometry,
-    Vector2,
     Vector3,
 } from 'three'
 import Experience from '../../Experience'
@@ -16,8 +13,6 @@ import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
 import { LAYERS } from '../../Const/const'
 import gsap from 'gsap'
 
-// const IFRAME_PADDING = 32;
-const IFRAME_PADDING = 0
 let instance
 export default class ScreenInterface {
     constructor(_options = {}) {
@@ -27,6 +22,7 @@ export default class ScreenInterface {
         instance = this
 
         this.experience = new Experience()
+        this.experience.screenInterface = this
         this.renderer = this.experience.renderer
         this.sizes = this.experience.sizes
         this.config = this.experience.config
@@ -35,55 +31,70 @@ export default class ScreenInterface {
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.stencilRef = _options.stencilRef
+        this.world = this.experience.world
         this.isOpened = false
 
+        console.log(_options)
+
         // this.position = new Vector3(-0.164, .476, 0);
-        this.position = new Vector3(-0.15, 0.624, 0.032)
+        this.position = new Vector3(-0.15, 0.624, -0.032)
+        // this.position = new Vector3(-0.17, 0.65, 0)
+
         this.rotation = new Euler(-3 * MathUtils.DEG2RAD, 0, 0)
 
+        // debug :
+        this.debugFolder = this.debug.addFolder('ScreenInterface')
+        this.debugFolder.open()
+        this.debugFolder.add(this, 'toggleInterface')
+
         this.init()
-        setTimeout(() => {
-            this.openInterface()
-            setTimeout(() => {
-                this.openInterface()
-            }, 10000);
-        }, 2000);
+        // setTimeout(() => {
+        //     this.toggleInterface()
+        //     setTimeout(() => {
+        //         this.toggleInterface()
+        //     }, 10000);
+        // }, 2000);
     }
 
-    openInterface(duration = .25) {
-        if (this.isOpened) {
-            this.isOpened = false;
-            gsap.to(this.mesh.material, {
-                opacity: 0,
-                duration,
-                onComplete: () => {
-                    this.mesh.material.opacity = 0
-                }
-            })
-            gsap.to(this.renderer.renderMesh.material.uniforms.uScene, {
-                value: 0,
-                duration,
-                onComplete: () => {
-                    this.renderer.renderMesh.material.uniforms.uScene.value = 0
-                }
-            })
-        } else {
-            this.isOpened = true;
-            gsap.to(this.mesh.material, {
-                opacity: 1,
-                duration,
-                onComplete: () => {
-                    this.mesh.material.opacity = 1
-                }
-            })
-            gsap.to(this.renderer.renderMesh.material.uniforms.uScene, {
-                value: 1,
-                duration,
-                onComplete: () => {
-                    this.renderer.renderMesh.material.uniforms.uScene.value = 1
-                }
-            })
-        }
+    toggleInterface(duration = 0.25) {
+        console.log('toggleInterface')
+        this.renderer.renderMesh.material.uniforms.uScene.value = 1
+        this.mesh.material.opacity = 1
+        console.log(this.mesh)
+
+        // if (this.isOpened) {
+        //     this.isOpened = false
+        //     gsap.to(this.mesh.material, {
+        //         opacity: 0,
+        //         duration,
+        //         onComplete: () => {
+        //             this.mesh.material.opacity = 0
+        //         },
+        //     })
+        //     gsap.to(this.renderer.renderMesh.material.uniforms.uScene, {
+        //         value: 0,
+        //         duration,
+        //         onComplete: () => {
+        //             this.renderer.renderMesh.material.uniforms.uScene.value = 0
+        //         },
+        //     })
+        // } else {
+        //     this.isOpened = true
+        //     gsap.to(this.mesh.material, {
+        //         opacity: 1,
+        //         duration,
+        //         onComplete: () => {
+        //             this.mesh.material.opacity = 1
+        //         },
+        //     })
+        //     gsap.to(this.renderer.renderMesh.material.uniforms.uScene, {
+        //         value: 1,
+        //         duration,
+        //         onComplete: () => {
+        //             this.renderer.renderMesh.material.uniforms.uScene.value = 1
+        //         },
+        //     })
+        // }
     }
 
     init() {
@@ -98,49 +109,12 @@ export default class ScreenInterface {
         container.style.width = this.sizes.width + 'px'
         container.style.height = this.sizes.height + 'px'
         container.style.opacity = '1'
-        const iframe = document.createElement('iframe')
-        if (iframe.contentWindow) {
-            window.addEventListener('message', (event) => {
-                var evt = new CustomEvent(event.data.type, {
-                    bubbles: true,
-                    cancelable: false,
-                })
-                // @ts-ignore
-                evt.inComputer = true
-                if (event.data.type === 'mousemove') {
-                    var clRect = iframe.getBoundingClientRect()
-                    const { top, left, width, height } = clRect
-                    const widthRatio = width / IFRAME_SIZE.w
-                    const heightRatio = height / IFRAME_SIZE.h
-                    // @ts-ignore
-                    evt.clientX = Math.round(
-                        event.data.clientX * widthRatio + left
-                    )
-                    //@ts-ignore
-                    evt.clientY = Math.round(
-                        event.data.clientY * heightRatio + top
-                    )
-                } else if (event.data.type === 'keydown') {
-                    // @ts-ignore
-                    evt.key = event.data.key
-                } else if (event.data.type === 'keyup') {
-                    // @ts-ignore
-                    evt.key = event.data.key
-                }
-                iframe.dispatchEvent(evt)
-            })
-        }
 
-        iframe.src = 'https://henryheffernan-os.vercel.app/'
-        iframe.style.width = this.sizes.width + 'px'
-        iframe.style.height = this.sizes.height + 'px'
-        iframe.style.padding = IFRAME_PADDING + 'px'
-        iframe.style.boxSizing = 'border-box'
-        iframe.style.opacity = '1'
-        iframe.className = 'jitter'
-        iframe.id = 'computer-screen'
-        iframe.frameBorder = '0'
-        container.appendChild(iframe)
+        const content = document.getElementById('panel')
+        container.innerHTML = content.innerHTML
+        setTimeout(() => {
+            content.remove()
+        })
 
         this.createCssPlane(container)
     }
@@ -154,19 +128,27 @@ export default class ScreenInterface {
         const object = new CSS3DObject(element)
         object.position.copy(this.position)
         object.rotation.copy(this.rotation)
-        object.scale.setScalar(0.0007558754)
+        // object.scale.setScalar(0.0007558754)
+        object.scale.setScalar(0.0005)
         object.layers.set(LAYERS.SCREEN)
         this.cssScene.add(object)
 
+        this.debugFolder.add(object.position, 'x').min(-1).max(1).step(0.001)
+        this.debugFolder.add(object.position, 'y').min(-1).max(1).step(0.001)
+        this.debugFolder.add(object.position, 'z').min(-1).max(1).step(0.001)
+
         this.material = new MeshLambertMaterial({
             side: DoubleSide,
-            color: '#00f',
+            color: '#0000ff',
             transparent: true,
-            opacity: 0,
+            opacity: this.isOpened ? 1 : 0,
         })
         this.material.stencilWrite = true
         this.material.stencilRef = this.stencilRef
         this.material.stencilFunc = EqualStencilFunc
+        this.renderer.renderMesh.material.uniforms.uScene.value = this.isOpened
+            ? 1
+            : 0
 
         const geometry = new PlaneGeometry(this.sizes.width, this.sizes.height)
 
@@ -175,6 +157,10 @@ export default class ScreenInterface {
         this.mesh.rotation.copy(object.rotation)
         this.mesh.scale.copy(object.scale)
         this.mesh.layers.set(LAYERS.SCREEN)
+
+        this.debugFolder.add(this.mesh.position, 'x').min(-1).max(1).step(0.001)
+        this.debugFolder.add(this.mesh.position, 'y').min(-1).max(1).step(0.001)
+        this.debugFolder.add(this.mesh.position, 'z').min(-1).max(1).step(0.001)
 
         this.scene.add(this.mesh)
     }

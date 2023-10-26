@@ -57,7 +57,7 @@ export default class Experience {
         document.addEventListener(
             'click',
             (e) => {
-                $$boot.classList.add('-is-visible')
+                // $$boot.classList.add('-is-visible')
                 this.eventEmitter.dispatchEvent(new CustomEvent('goFocusMode'))
             },
             { once: true }

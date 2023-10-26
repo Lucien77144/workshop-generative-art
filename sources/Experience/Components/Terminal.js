@@ -1,7 +1,7 @@
 import Experience from '../Experience'
 import Stencil from './Stencil'
 import { LAYERS } from '../Const/const'
-import { MeshBasicMaterial, PointLight, PointLightHelper } from 'three'
+import { MeshBasicMaterial, PointLight } from 'three'
 import Screen from './Screen/Screen'
 
 export default class Terminal {
@@ -35,7 +35,7 @@ export default class Terminal {
         this.screen = this.screenStencil.instance
         this.terminal.position.set(0, 0, 0)
         this.scene.add(this.terminal)
-
+        
         this.light = new PointLight('#ddf', 2, 200)
         this.light.position.clone(this.terminal.position)
         this.light.position.x -= 0.1
@@ -43,21 +43,7 @@ export default class Terminal {
         this.light.position.y += this.terminal.scale.y / 1.75
         this.light.rotation.x = Math.PI / 2
         this.light.layers.set(LAYERS.DEFAULT)
-        this.scene.add( this.light );
-
-        if (this.debug) {
-            this.debugFolder = this.debug.addFolder('Terminal Light')
-            this.debugFolder.add(this.light.rotation, 'x', 0, Math.PI * 2)
-            this.debugFolder.add(this.light.rotation, 'y', 0, Math.PI * 2)
-            this.debugFolder.add(this.light.rotation, 'z', 0, Math.PI * 2)
-
-            this.debugFolder.add(this.light.position, 'x', -3, 3)
-            this.debugFolder.add(this.light.position, 'y', -3, 3)
-            this.debugFolder.add(this.light.position, 'z', -3, 3)
-
-            // const helper = new PointLightHelper(this.light, 1)
-            // this.scene.add( helper );
-        }
+        this.scene.add(this.light)
     }
 
     resize() {}

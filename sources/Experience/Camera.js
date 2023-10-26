@@ -15,6 +15,7 @@ export default class Camera {
         this.sizes = this.experience.sizes
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
+        this.screenInterface = null
 
         this.cursor = {
             x: 0,
@@ -117,12 +118,13 @@ export default class Camera {
         }
 
         if (this.experience.eventEmitter && this.hasListener === false) {
-            console.log('listen')
             this.hasListener = true
             this.experience.eventEmitter.addEventListener(
                 'goFocusMode',
                 (e) => {
                     this.mode = 'focus'
+                    this.screenInterface ??= this.experience.screenInterface;
+                    this.experience.screenInterface.toggleInterface();
 
                     this.cameraPosition.copy(this.instance.position)
                     this.cameraRotation.copy(this.instance.rotation)

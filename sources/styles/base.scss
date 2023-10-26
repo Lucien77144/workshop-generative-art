@@ -5,6 +5,10 @@
     font-style: normal;
 }
 
+canvas {
+    pointer-events: none;
+}
+
 html {
     font-size: 62.5%;
 }
