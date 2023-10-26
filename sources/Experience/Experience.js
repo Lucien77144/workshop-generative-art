@@ -48,9 +48,9 @@ export default class Experience {
 
         // DOM selectors
         const $$boot = document.querySelector('.c-experience-boot')
-        const $$bootInput = document.querySelector('.c-experience-boot__input')
+        const $$bootInput = document.querySelector('.c-experience-boot-content__input')
         const $$bootButton = document.querySelector(
-            '.c-experience-boot__button'
+            '.c-experience-boot-content__button'
         )
 
         document.addEventListener(
