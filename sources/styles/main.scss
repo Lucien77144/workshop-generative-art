@@ -16,7 +16,7 @@
     &.-is-visible {
         opacity: 1;
         visibility: visible;
-        animation: popUp 0.5s none;
+        animation: popUp 3s;
     }
 
     &-header {
@@ -120,10 +120,12 @@
 }
 
 @keyframes popUp {
-    0% {
-        transform: scale(0);
+    0%, 98% {
+        opacity: 0;
+        visibility: hidden;
     }
-    100% {
-        transform: scale(1);
+    99% {
+        opacity: 1;
+        visibility: visible;
     }
 }
