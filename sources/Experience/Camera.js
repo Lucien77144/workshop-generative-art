@@ -13,10 +13,6 @@ export default class Camera {
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
 
-        if (this.experience.world) {
-            console.log(this.experience.world.terminal.position)
-        }
-
         this.cursor = {
             x: 0,
             y: 0,
@@ -25,7 +21,7 @@ export default class Camera {
         this.order = 'YXZ'
 
         // Set up
-        this.mode = 'focus'
+        this.mode = 'default'
 
         if (this.debug) {
             this.debugCameraFolder = this.debug.addFolder('Camera')
@@ -74,17 +70,6 @@ export default class Camera {
         this.modes.debug.instance = this.instance.clone()
         this.modes.debug.instance.position.set(-7, 6, 10)
         this.modes.debug.instance.rotation.set(-0.43, -0.6, 0)
-        this.modes.debug.orbitControls = new OrbitControls(
-            this.modes.debug.instance,
-            this.targetElement
-        )
-        this.modes.debug.orbitControls.enabled = this.modes.debug.active
-        this.modes.debug.orbitControls.screenSpacePanning = true
-        this.modes.debug.orbitControls.enableKeys = false
-        this.modes.debug.orbitControls.maxPolarAngle = Math.PI * 0.4
-        this.modes.debug.orbitControls.zoomSpeed = 0.25
-        this.modes.debug.orbitControls.enableDamping = true
-        this.modes.debug.orbitControls.update()
 
         /**
          * Debug options
@@ -94,11 +79,9 @@ export default class Camera {
             this.debugCameraFolder
                 .add(this, 'mode', ['default', 'focus', 'debug'])
                 .onFinishChange(() => {
-                    this.modes.debug.orbitControls.update()
+                    this.modes.debug.orbitControls?.update()
                 })
         }
-
-        console.log();
     }
 
     resize() {
@@ -115,6 +98,22 @@ export default class Camera {
     }
 
     update() {
+        if (
+            this.experience.renderer.instance.domElement &&
+            !this.modes.debug.orbitControls
+        ) {
+            this.createOrbitControls()
+        }
+
+        if (
+            this.experience.renderer.instance.domElement &&
+            !this.mode !== 'focus'
+        ) {
+            this.experience.eventEmitter.addEventListener('goFocusMode', (e) => {
+                this.mode = 'focus'
+            })
+        }
+
         // Apply coordinates
         this.instance.position.copy(this.modes[this.mode].instance.position)
         this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion)
@@ -135,6 +134,21 @@ export default class Camera {
     }
 
     destroy() {
-        this.modes.debug.orbitControls.destroy()
+        this.modes.debug.orbitControls?.destroy()
+    }
+
+    createOrbitControls() {
+        this.modes.debug.orbitControls = new OrbitControls(
+            this.modes.debug.instance,
+            this.experience.renderer.instance.domElement
+        )
+
+        this.modes.debug.orbitControls.enabled = this.modes.debug.active
+        this.modes.debug.orbitControls.screenSpacePanning = true
+        this.modes.debug.orbitControls.enableKeys = false
+        this.modes.debug.orbitControls.maxPolarAngle = Math.PI * 0.4
+        this.modes.debug.orbitControls.zoomSpeed = 0.25
+        this.modes.debug.orbitControls.enableDamping = true
+        this.modes.debug.orbitControls.update()
     }
 }
