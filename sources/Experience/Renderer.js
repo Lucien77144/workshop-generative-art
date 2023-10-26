@@ -127,9 +127,9 @@ export default class Renderer {
                         value: this.rt2.texture,
                     },
                     uTime: { value: 0 },
-                    uScene: { value: 0 },
+                    uDateFactor: { value: this.experience.dateFactor?.value },
                     uDateFactorMin: {
-                        value: this.experience.dateFactor.min(90),
+                        value: this.experience.dateFactor?.min(90),
                     },
                 },
                 vertexShader,

@@ -20,9 +20,9 @@ export default class Screen {
 
     init() {
         this.group = new Group() // group for screen
-        this.group.position.set(-0.15, 0.65, -5)
+        this.group.position.set(-0.5, 0.65, -5)
         this.group.rotation.set(0.5, 0.5, -0)
-        this.group.scale.set(0.18, 0.18, 0.18)
+        this.group.scale.set(0.25, 0.25, 0.25)
 
         this.city = new City({ group: this.group })
 

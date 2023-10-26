@@ -45,18 +45,19 @@ export default class Terminal {
         this.light.layers.set(LAYERS.DEFAULT)
         this.scene.add( this.light );
 
-        // add debug for rotation :
-        this.debugFolder = this.debug.addFolder('Terminal Light')
-        this.debugFolder.add(this.light.rotation, 'x', 0, Math.PI * 2)
-        this.debugFolder.add(this.light.rotation, 'y', 0, Math.PI * 2)
-        this.debugFolder.add(this.light.rotation, 'z', 0, Math.PI * 2)
+        if (this.debug) {
+            this.debugFolder = this.debug.addFolder('Terminal Light')
+            this.debugFolder.add(this.light.rotation, 'x', 0, Math.PI * 2)
+            this.debugFolder.add(this.light.rotation, 'y', 0, Math.PI * 2)
+            this.debugFolder.add(this.light.rotation, 'z', 0, Math.PI * 2)
 
-        this.debugFolder.add(this.light.position, 'x', -3, 3)
-        this.debugFolder.add(this.light.position, 'y', -3, 3)
-        this.debugFolder.add(this.light.position, 'z', -3, 3)
+            this.debugFolder.add(this.light.position, 'x', -3, 3)
+            this.debugFolder.add(this.light.position, 'y', -3, 3)
+            this.debugFolder.add(this.light.position, 'z', -3, 3)
 
-        const helper = new PointLightHelper(this.light, 1)
-        // this.scene.add( helper );
+            // const helper = new PointLightHelper(this.light, 1)
+            // this.scene.add( helper );
+        }
     }
 
     resize() {}

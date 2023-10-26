@@ -30,9 +30,9 @@ export default class Flowers {
         for (let i = 0; i < dateFactor; i++) {
             let flowerToAdd = null
 
-            // Chance factor to have a blue flower
+            // Chance factor to have a blue or pink flower
             if (this.prng() < chanceFactor) {
-                flowerToAdd = this.prng() < 0.1 ? pinkFlower : blueFlower
+                flowerToAdd = this.prng() < 0.05 ? pinkFlower : blueFlower
             } else {
                 flowerToAdd = redFlower
             }
@@ -136,10 +136,10 @@ export default class Flowers {
             })
         }
 
-        if (this.experience.time.elapsed < 6000) {
+        if (this.experience.dateFactor.value) {
             StemMaterial.update()
-        } else {
-            return
+
+            // TODO - Stop ticking after a render
         }
     }
 

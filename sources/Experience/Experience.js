@@ -11,7 +11,6 @@ import Camera from './Camera.js'
 import World from './World.js'
 
 import assets from './assets.js'
-import Crack from './Components/Cracks.js'
 
 export default class Experience {
     static instance
@@ -34,7 +33,6 @@ export default class Experience {
         this.sizes = new Sizes()
         this.setConfig()
         this.setDebug()
-        this.setDateFactor()
         this.setStats()
         this.setScene()
         this.setCssScene()
@@ -43,21 +41,39 @@ export default class Experience {
         this.setResources()
         this.setWorld()
 
-        this.eventEmitter = this.renderer.instance.domElement // or new EventTarget()
+        this.dateFactor = {
+            value: 0,
+        }
 
-        const $$experience = document.querySelector('.experience')
-        $$experience.addEventListener(
+        this.eventEmitter = this.renderer.instance.domElement
+
+        // DOM selectors
+        const $$boot = document.querySelector('.c-experience-boot')
+        const $$bootInput = document.querySelector('.c-experience-boot-content__input')
+        const $$bootButton = document.querySelector(
+            '.c-experience-boot-content__button'
+        )
+
+        document.addEventListener(
             'click',
             (e) => {
-                this.eventEmitter.dispatchEvent(new CustomEvent('generate'))
+                $$boot.classList.add('-is-visible')
+                this.eventEmitter.dispatchEvent(new CustomEvent('goFocusMode'))
             },
             { once: true }
         )
-
-        // Fire events from where i want
-        // setTimeout(() => {
-        //     this.eventEmitter.dispatchEvent(new CustomEvent("grow", { detail: { size: 10 } }))
-        // }, 1000);
+        this.eventEmitter.addEventListener('generate', (e) => {
+            $$boot.classList.remove('-is-visible')
+        })
+        $$bootButton.addEventListener(
+            'click',
+            (e) => {
+                this.setDateFactor($$bootInput.value)
+            },
+            {
+                once: true,
+            }
+        )
 
         this.sizes.on('resize', () => {
             this.resize()
@@ -65,12 +81,6 @@ export default class Experience {
 
         this.update()
     }
-
-    // makeCracks() {
-    //     this.cracks = new Crack()
-    //     this.cracks.setup()
-    //     this.cracks.render()
-    // }
 
     setConfig() {
         this.config = {}
@@ -96,24 +106,12 @@ export default class Experience {
         }
     }
 
-    setDateFactor() {
+    setDateFactor(value) {
         // User input
-        const USER_INPUT = parseInt(
-            new URLSearchParams(window.location.search).get('date')
-        )
         const MIN_INPUT = 2000
         const MAX_INPUT = 3000
+        const USER_INPUT = parseInt(value)
         const RANGE = MAX_INPUT - MIN_INPUT
-
-        // if 'date' is < MIN_INPUT, force it to be set at MIN_INPUT
-        if (USER_INPUT < MIN_INPUT || !USER_INPUT) {
-            window.location.search = `date=${MIN_INPUT}`
-        }
-
-        // if 'date' is > MAX_INPUT, force it to bet set at MAX_INPUT
-        if (USER_INPUT > MAX_INPUT) {
-            window.location.search = `date=${MAX_INPUT}`
-        }
 
         // Makes the final value easier to use
         this.dateFactor = {
@@ -154,6 +152,16 @@ export default class Experience {
                 return Math.floor(this.dateFactor.value / offset) * offset
             },
         }
+
+        // TODO - Don't return and let the terminal go crazy
+        if (USER_INPUT < MIN_INPUT || !USER_INPUT) {
+            return
+        }
+        if (USER_INPUT > MAX_INPUT) {
+            return
+        }
+
+        this.eventEmitter.dispatchEvent(new CustomEvent('generate'))
 
         if (this.debug) {
             this.debugRendererFolder = this.debug.addFolder('Experience')
