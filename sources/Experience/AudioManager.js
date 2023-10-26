@@ -1,5 +1,6 @@
 import Experience from './Experience.js'
 import { Wait } from './Utils/Wait.js'
+import gsap from 'gsap'
 
 const w = new Wait()
 
@@ -17,7 +18,7 @@ export default class AudioManager {
         // Set up
         const ambientSound = new Audio()
         ambientSound.src = './assets/sounds/synth-unease.mp3'
-        ambientSound.volume = 0.05
+        ambientSound.volume = 0.02
         ambientSound.loop = true
 
         const lightSound = new Audio()
@@ -60,6 +61,11 @@ export default class AudioManager {
         this.experience.eventEmitter.addEventListener(
             'goFocusMode',
             async () => {
+                gsap.to(ambientSound, {
+                    volume: 0.2,
+                    duration: 2,
+                    ease: 'power3.out',
+                })
                 await w.delay(2500)
                 bootSound.play()
                 w.kill()
