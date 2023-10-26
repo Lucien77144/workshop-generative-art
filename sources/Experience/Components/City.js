@@ -16,7 +16,10 @@ export default class City {
         this.screen = null
 
         this.init()
-        this.destroyBuildings()
+
+        this.experience.eventEmitter.addEventListener('generate', (e) => {
+            this.destroyBuildings()
+        })
     }
 
     init() {
@@ -47,7 +50,7 @@ export default class City {
                 }
             }
 
-            await w.delay(0)
+            await w.delay(1000)
             this.generateFlowers()
         }
     }
@@ -58,14 +61,6 @@ export default class City {
             scene: this.group,
         })
         this.screen.setStencil()
-    }
-
-    generateTrees() {
-        // ...
-    }
-
-    generateGrass() {
-        // ...
     }
 
     resize() {}

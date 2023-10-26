@@ -52,6 +52,12 @@ export default class GrassFloor {
         this.time = this.experience.time
         this.debug = this.experience.debug
 
+        this.startTime = null
+
+        this.experience.eventEmitter.addEventListener('generate', (e) => {
+            this.generateGrass()
+        })
+
         this.count = _count
         this.target = _target
         this.position = _position
@@ -184,12 +190,18 @@ export default class GrassFloor {
         })
     }
 
+    generateGrass() {
+        this.startTime = this.time.elapsed
+    }
+
     update() {
+        const delta = this.time.elapsed - (this.startTime ?? this.time.elapsed)
+
         if (this.grass?.material?.uniforms?.uTime) {
-            this.grass.material.uniforms.uTime.value = this.time.elapsed
+            this.grass.material.uniforms.uTime.value = delta * 0.5
         }
         if (this.ground?.material?.uniforms?.uTime) {
-            this.ground.material.uniforms.uTime.value = this.time.elapsed
+            this.ground.material.uniforms.uTime.value = delta * 0.5
         }
         if (this.fireflies?.instance) this.fireflies.instance.update()
     }
