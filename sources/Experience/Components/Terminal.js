@@ -36,14 +36,14 @@ export default class Terminal {
         this.terminal.position.set(0, 0, 0)
         this.scene.add(this.terminal)
 
-        this.light = new PointLight(0xff0000, 2, 200)
+        this.light = new PointLight('#ddf', 2, 200)
         this.light.position.clone(this.terminal.position)
         this.light.position.x -= 0.1
         this.light.position.z += this.terminal.scale.z / 2
         this.light.position.y += this.terminal.scale.y / 1.75
         this.light.rotation.x = Math.PI / 2
         this.light.layers.set(LAYERS.DEFAULT)
-        // this.scene.add( this.light );
+        this.scene.add( this.light );
 
         // add debug for rotation :
         this.debugFolder = this.debug.addFolder('Terminal Light')
