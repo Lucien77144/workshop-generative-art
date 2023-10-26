@@ -83,9 +83,11 @@ export default class GrassFloor {
             grassScale: this.grassScale,
         }
 
-        this.setGround()
-        this.setGrass()
-        this.fireflies.status && this.setFireflies()
+        this.experience.eventEmitter.addEventListener('generate', (e) => {
+            this.setGround()
+            this.setGrass()
+            this.fireflies.status && this.setFireflies()
+        })
     }
 
     setGroundGeometry() {

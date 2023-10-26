@@ -136,10 +136,10 @@ export default class Flowers {
             })
         }
 
-        if (this.experience.time.elapsed < 6000) {
+        if (this.experience.dateFactor.value) {
             StemMaterial.update()
-        } else {
-            return
+
+            // TODO - Stop ticking after a render
         }
     }
 

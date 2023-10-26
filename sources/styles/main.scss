@@ -1,0 +1,32 @@
+
+.c-experience-boot {
+    position: absolute;
+    padding: 2rem;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 30rem;
+    min-height: 20rem;
+    background-color: $white;
+    z-index: 100;
+    cursor: pointer;
+    pointer-events: all;
+    display: none;
+    background-color: $grey;
+    
+    &.-is-visible {
+        display: block;
+    }
+
+    &__input {
+        margin-top: 2rem;
+        border-bottom: .2rem solid $black;
+    }
+
+    &__button {
+        margin-top: 2rem;
+        background-color: $black;
+        color: $white;
+        cursor: pointer;
+    } 
+}
