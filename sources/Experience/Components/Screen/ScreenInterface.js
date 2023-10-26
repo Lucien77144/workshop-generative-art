@@ -42,11 +42,6 @@ export default class ScreenInterface {
 
         this.rotation = new Euler(-3 * MathUtils.DEG2RAD, 0, 0)
 
-        // debug :
-        this.debugFolder = this.debug.addFolder('ScreenInterface')
-        this.debugFolder.open()
-        this.debugFolder.add(this, 'toggleInterface')
-
         this.init()
         // setTimeout(() => {
         //     this.toggleInterface()
@@ -57,44 +52,39 @@ export default class ScreenInterface {
     }
 
     toggleInterface(duration = 0.25) {
-        console.log('toggleInterface')
-        this.renderer.renderMesh.material.uniforms.uScene.value = 1
-        this.mesh.material.opacity = 1
-        console.log(this.mesh)
-
-        // if (this.isOpened) {
-        //     this.isOpened = false
-        //     gsap.to(this.mesh.material, {
-        //         opacity: 0,
-        //         duration,
-        //         onComplete: () => {
-        //             this.mesh.material.opacity = 0
-        //         },
-        //     })
-        //     gsap.to(this.renderer.renderMesh.material.uniforms.uScene, {
-        //         value: 0,
-        //         duration,
-        //         onComplete: () => {
-        //             this.renderer.renderMesh.material.uniforms.uScene.value = 0
-        //         },
-        //     })
-        // } else {
-        //     this.isOpened = true
-        //     gsap.to(this.mesh.material, {
-        //         opacity: 1,
-        //         duration,
-        //         onComplete: () => {
-        //             this.mesh.material.opacity = 1
-        //         },
-        //     })
-        //     gsap.to(this.renderer.renderMesh.material.uniforms.uScene, {
-        //         value: 1,
-        //         duration,
-        //         onComplete: () => {
-        //             this.renderer.renderMesh.material.uniforms.uScene.value = 1
-        //         },
-        //     })
-        // }
+        if (this.isOpened) {
+            this.isOpened = false
+            gsap.to(this.mesh.material, {
+                opacity: 0,
+                duration,
+                onComplete: () => {
+                    this.mesh.material.opacity = 0
+                },
+            })
+            gsap.to(this.renderer.renderMesh.material.uniforms.uScene, {
+                value: 0,
+                duration,
+                onComplete: () => {
+                    this.renderer.renderMesh.material.uniforms.uScene.value = 0
+                },
+            })
+        } else {
+            this.isOpened = true
+            gsap.to(this.mesh.material, {
+                opacity: 1,
+                duration,
+                onComplete: () => {
+                    this.mesh.material.opacity = 1
+                },
+            })
+            gsap.to(this.renderer.renderMesh.material.uniforms.uScene, {
+                value: 1,
+                duration,
+                onComplete: () => {
+                    this.renderer.renderMesh.material.uniforms.uScene.value = 1
+                },
+            })
+        }
     }
 
     init() {
@@ -133,10 +123,6 @@ export default class ScreenInterface {
         object.layers.set(LAYERS.SCREEN)
         this.cssScene.add(object)
 
-        this.debugFolder.add(object.position, 'x').min(-1).max(1).step(0.001)
-        this.debugFolder.add(object.position, 'y').min(-1).max(1).step(0.001)
-        this.debugFolder.add(object.position, 'z').min(-1).max(1).step(0.001)
-
         this.material = new MeshLambertMaterial({
             side: DoubleSide,
             color: '#0000ff',
@@ -157,10 +143,6 @@ export default class ScreenInterface {
         this.mesh.rotation.copy(object.rotation)
         this.mesh.scale.copy(object.scale)
         this.mesh.layers.set(LAYERS.SCREEN)
-
-        this.debugFolder.add(this.mesh.position, 'x').min(-1).max(1).step(0.001)
-        this.debugFolder.add(this.mesh.position, 'y').min(-1).max(1).step(0.001)
-        this.debugFolder.add(this.mesh.position, 'z').min(-1).max(1).step(0.001)
 
         this.scene.add(this.mesh)
     }

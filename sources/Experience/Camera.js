@@ -123,8 +123,7 @@ export default class Camera {
                 'goFocusMode',
                 (e) => {
                     this.mode = 'focus'
-                    this.screenInterface ??= this.experience.screenInterface;
-                    this.experience.screenInterface.toggleInterface();
+                    this.screenInterface ??= this.experience.screenInterface;;
 
                     this.cameraPosition.copy(this.instance.position)
                     this.cameraRotation.copy(this.instance.rotation)
@@ -135,6 +134,9 @@ export default class Camera {
                         z: this.modes.focus.instance.position.z,
                         duration: 2,
                         ease: 'power3.inOut',
+                        onComplete: () => {
+                            this.experience.screenInterface.toggleInterface()
+                        }
                     })
 
                     gsap.to(this.cameraRotation, {

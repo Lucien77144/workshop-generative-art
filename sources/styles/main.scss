@@ -7,31 +7,34 @@
     background-color: $grey;
     overflow: hidden;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
     flex-direction: column;
 
     &-header {
-        background-color: $aqua;
-        padding: 0.25rem 0.5rem;
         width: 100%;
-        text-align: center;
-    }
-
-    &-tabs {
-        background-color: $blue;
-        display: flex;
-        color: $grey;
-
-        &__item {
+        .title {
+            background-color: $aqua;
             padding: 0.25rem 0.5rem;
+            width: 100%;
+            text-align: center;
+        }
+        .tabs {
+            background-color: $blue;
+            display: flex;
+            color: $grey;
 
-            &:first-child {
-                background-color: $grey;
-                color: $blue;
-            }
+            &__item {
+                padding: 0.25rem 0.5rem;
 
-            &:not(:first-child) {
-                margin-left: 5rem;
+                &:first-child {
+                    background-color: $grey;
+                    color: $blue;
+                }
+
+                &:not(:first-child) {
+                    margin-left: 5rem;
+                }
             }
         }
     }
@@ -88,8 +91,6 @@
         padding: 0.25rem 0.5rem;
         width: 100%;
         text-align: center;
-        position: absolute;
-        bottom: 0;
         display: flex;
         align-items: center;
         justify-content: space-around;
