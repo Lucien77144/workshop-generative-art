@@ -1,7 +1,7 @@
 import Experience from './../../Experience'
 import { Mesh, CatmullRomCurve3, Vector3, TubeGeometry, Group } from 'three'
 import Alea from 'alea'
-import StemMaterial from './shaders/StemMaterial'
+import StemMaterial from './StemMaterial'
 import gsap from 'gsap'
 
 export default class Flowers {
@@ -104,9 +104,9 @@ export default class Flowers {
                 x: stem.random * (0.5 - 0.2) + 0.2,
                 y: stem.random * (0.5 - 0.2) + 0.2,
                 z: stem.random * (0.5 - 0.2) + 0.2,
-                delay: 0.25 + random,
-                duration: 2,
-                ease: 'power3.inOut',
+                delay: 0.15 + random,
+                duration: 1.25,
+                ease: 'ease.inOut',
                 onComplete: () => {
                     // Animate the flower
                     gsap.to(flowerGroup.children[0].children[0].scale, {

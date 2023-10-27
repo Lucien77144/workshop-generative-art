@@ -7,6 +7,7 @@ export default [
             { name: 'screenDirt', source: '/assets/screen-dirt.png', type: 'texture' },
             { name: 'dirtTexture', source: '/assets/grass/dirt.jpg' },
             { name: 'mudTexture', source: '/assets/grass/mud.jpg' },
+            { name: 'cityMatcap', source: '/assets/city-matcap.png', type: 'texture' },
             {
                 name: 'displacementMap',
                 source: '/assets/grass/displacement.jpg',

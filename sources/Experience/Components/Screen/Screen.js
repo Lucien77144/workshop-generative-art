@@ -1,6 +1,6 @@
-import { EqualStencilFunc, Group, MeshPhongMaterial, Vector3 } from 'three'
+import { EqualStencilFunc, Group } from 'three'
 import Experience from '../../Experience'
-import City from '../City'
+import City from './../City/City'
 import { LAYERS } from '../../Const/const'
 import GrassFloor from '../GrassFloor/GrassFloor'
 import ScreenInterface from './ScreenInterface'

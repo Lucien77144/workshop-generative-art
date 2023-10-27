@@ -1,7 +1,9 @@
-import Experience from './../Experience'
-import { AnimationMixer, MeshMatcapMaterial } from 'three'
-import Flowers from './Flowers/Flowers'
-import { Wait } from '../Utils/Wait'
+import Experience from './../../Experience'
+import { AnimationMixer, ShaderMaterial, MeshPhongMaterial } from 'three'
+import Flowers from './../Flowers/Flowers'
+import { Wait } from './../../Utils/Wait'
+import fragment from './shaders/fragment.glsl?raw'
+import vertex from './shaders/vertex.glsl?raw'
 
 const w = new Wait()
 
@@ -19,6 +21,23 @@ export default class City {
 
         this.experience.eventEmitter.addEventListener('generate', (e) => {
             this.destroyBuildings()
+        })
+
+        // this.instance.traverse((child) => {
+        //     if (child.isMesh) {
+        //         child.material = new ShaderMaterial({
+        //             vertexShader: vertex,
+        //             fragmentShader: fragment,
+        //         })
+        //     }
+        // })
+
+        this.instance.traverse((child) => {
+            if (child.isMesh) {
+                child.material = new MeshPhongMaterial({
+                    color: 0xC1C1C1,
+                })
+            }
         })
     }
 
