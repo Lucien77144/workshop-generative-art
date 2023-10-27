@@ -18,6 +18,7 @@ export default class StemMaterial extends MeshToonMaterial {
             ...params,
         })
         this.time = time
+        this.startTime = this.time
         StemMaterial.materials.push(this)
     }
 
@@ -75,9 +76,8 @@ export default class StemMaterial extends MeshToonMaterial {
 
     update() {
         if (this.userData && this.userData.shader) {
-            let progress = this.userData.shader.uniforms.uProgress.value + 0.005
-            progress = Math.min(progress, 1)
-            this.userData.shader.uniforms.uProgress.value = progress
+            const d = Math.max((this.time - this.startTime) * 0.01, 1)
+            this.userData.shader.uniforms.uProgress.value = d
         }
     }
 }
