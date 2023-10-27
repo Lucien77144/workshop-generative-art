@@ -34,8 +34,6 @@ export default class ScreenInterface {
         this.world = this.experience.world
         this.isOpened = false
 
-        console.log(_options)
-
         // this.position = new Vector3(-0.164, .476, 0);
         this.position = new Vector3(-0.15, 0.624, -0.032)
         // this.position = new Vector3(-0.17, 0.65, 0)
@@ -51,9 +49,11 @@ export default class ScreenInterface {
         // }, 2000);
     }
 
-    toggleInterface(duration = 0.25) {
+    // toggleInterface(duration = 0.25) {
+    toggleInterface(duration = 0) {
         if (this.isOpened) {
             this.isOpened = false
+            this.world.terminal.screen.group.visible = true
             gsap.to(this.mesh.material, {
                 opacity: 0,
                 duration,
@@ -70,6 +70,7 @@ export default class ScreenInterface {
             })
         } else {
             this.isOpened = true
+            this.world.terminal.screen.group.visible = false
             gsap.to(this.mesh.material, {
                 opacity: 1,
                 duration,

@@ -136,6 +136,11 @@ export default class Camera {
                         ease: 'power3.inOut',
                         onComplete: () => {
                             this.experience.screenInterface.toggleInterface()
+
+                            setTimeout(() => {
+                                this.experience.screenInterface.toggleInterface()
+                                console.log('toggle');
+                            }, 3000)
                         }
                     })
 

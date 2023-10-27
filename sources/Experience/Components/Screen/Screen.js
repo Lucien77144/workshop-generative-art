@@ -20,6 +20,7 @@ export default class Screen {
 
     init() {
         this.group = new Group() // group for screen
+        this.group.visible = false;
         this.group.position.set(-0.5, 0.65, -5)
         this.group.rotation.set(0.5, 0.5, -0)
         this.group.scale.set(0.25, 0.25, 0.25)
