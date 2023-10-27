@@ -1,7 +1,7 @@
 import Experience from './../../Experience'
 import { Mesh, CatmullRomCurve3, Vector3, TubeGeometry, Group } from 'three'
 import Alea from 'alea'
-import StemMaterial from './shaders/StemMaterial'
+import StemMaterial from './StemMaterial'
 import gsap from 'gsap'
 
 export default class Flowers {
@@ -104,8 +104,8 @@ export default class Flowers {
                 x: stem.random * (0.5 - 0.2) + 0.2,
                 y: stem.random * (0.5 - 0.2) + 0.2,
                 z: stem.random * (0.5 - 0.2) + 0.2,
-                delay: 0.5 + random * 3,
-                duration: 1,
+                delay: 0.15 + random,
+                duration: 1.25,
                 ease: 'ease.inOut',
                 onComplete: () => {
                     // Animate the flower
@@ -143,5 +143,7 @@ export default class Flowers {
         }
     }
 
-    destroy() {}
+    destroy() {
+        this.scene.remove(this.flowers)
+    }
 }

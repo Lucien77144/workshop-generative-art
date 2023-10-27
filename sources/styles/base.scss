@@ -6,11 +6,13 @@
 }
 
 canvas {
-    pointer-events: none;
+    &.-is-not-clickable {
+        pointer-events: none;
+    }
 }
 
 html {
-    font-size: 62.5%;
+    font-size: 80%;
 }
 
 body {

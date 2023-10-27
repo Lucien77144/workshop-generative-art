@@ -69,10 +69,6 @@ export default class ScreenInterface {
             })
         }
     }
-
-    init() {
-        this.createIframe()
-    }
     /**
      * Creates the iframe for the computer screen
      */
@@ -87,6 +83,47 @@ export default class ScreenInterface {
         container.innerHTML = content.innerHTML
         setTimeout(() => {
             content.remove()
+
+            const $$boot = container.querySelector('.c-experience-boot')
+            const $$bootInput = container.querySelector(
+                '.c-experience-boot-content__input'
+            )
+            const $$bootButton = container.querySelector(
+                '.c-experience-boot-content__button'
+            )
+
+            $$bootButton.addEventListener('click', (e) => {
+                this.experience.eventEmitter.dispatchEvent(
+                    new CustomEvent('setDateFactor', {
+                        detail: $$bootInput.value,
+                    })
+                )
+                this.toggleInterface()
+            })
+
+            /**
+             * Move this to audio manager later
+             */
+            const clickSound = new Audio()
+            clickSound.src = './assets/sounds/click.mp3'
+
+            $$boot.addEventListener('click', async () => {
+                clickSound.play()
+            })
+
+            const keyboardSounds = []
+
+            for (let i = 0; i <= 3; i++) {
+                keyboardSounds.push(new Audio())
+                keyboardSounds[i].src = `./assets/sounds/key-${i}.mp3`
+                keyboardSounds[i].volume = 1
+            }
+
+            $$bootInput.addEventListener('input', () => {
+                keyboardSounds[
+                    Math.floor(Math.random() * keyboardSounds.length)
+                ].play()
+            })
         })
 
         this.createCssPlane(container)
@@ -123,6 +160,10 @@ export default class ScreenInterface {
         this.mesh.layers.set(LAYERS.SCREEN)
 
         this.scene.add(this.mesh)
+    }
+
+    init() {
+        this.createIframe()
     }
 
     resize() {}

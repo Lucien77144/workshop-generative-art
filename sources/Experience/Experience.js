@@ -9,6 +9,7 @@ import Resources from './Resources.js'
 import Renderer from './Renderer.js'
 import Camera from './Camera.js'
 import World from './World.js'
+import AudioManager from './AudioManager.js'
 
 import assets from './assets.js'
 
@@ -38,6 +39,13 @@ export default class Experience {
         this.setCssScene()
         this.setCamera()
         this.setRenderer()
+
+        this.eventEmitter = this.renderer.instance.domElement
+
+        this.eventEmitter.addEventListener('playAmbient', () => {
+            this.renderer.clearColor = '#030303'
+        })
+
         this.setResources()
         this.setWorld()
 
@@ -45,34 +53,25 @@ export default class Experience {
             value: 0,
         }
 
-        this.eventEmitter = this.renderer.instance.domElement
+        this.setAudioManager()
 
-        // DOM selectors
-        const $$boot = document.querySelector('.c-experience-boot')
-        const $$bootInput = document.querySelector('.c-experience-boot-content__input')
-        const $$bootButton = document.querySelector(
-            '.c-experience-boot-content__button'
-        )
+        this.eventEmitter.addEventListener('click', (e) => {
+            if (this.world) {
+                this.eventEmitter.dispatchEvent(new CustomEvent('playAmbient'))
+            }
 
-        document.addEventListener(
-            'click',
-            (e) => {
-                // $$boot.classList.add('-is-visible')
+            if (this.world.spotLight.intensity !== 0) {
                 this.eventEmitter.dispatchEvent(new CustomEvent('goFocusMode'))
+                this.eventEmitter.classList.add('-is-not-clickable')
+            }
+        })
+
+        this.eventEmitter.addEventListener(
+            'setDateFactor',
+            (e) => {
+                this.setDateFactor(e.detail)
             },
             { once: true }
-        )
-        this.eventEmitter.addEventListener('generate', (e) => {
-            $$boot.classList.remove('-is-visible')
-        })
-        $$bootButton.addEventListener(
-            'click',
-            (e) => {
-                this.setDateFactor($$bootInput.value)
-            },
-            {
-                once: true,
-            }
         )
 
         this.sizes.on('resize', () => {
@@ -107,18 +106,16 @@ export default class Experience {
     }
 
     setDateFactor(value) {
-        // User input
         const MIN_INPUT = 2000
         const MAX_INPUT = 3000
         const USER_INPUT = parseInt(value)
         const RANGE = MAX_INPUT - MIN_INPUT
 
-        // Makes the final value easier to use
         this.dateFactor = {
             date: USER_INPUT,
             value: (USER_INPUT - MIN_INPUT) / RANGE,
-            update: () => {
-                // this.dateFactor.date = this.dateFactor.value() * RANGE + MIN_INPUT
+            update: (date) => {
+                date && (this.dateFactor.date = date)
                 if (this.dateFactor.date < MIN_INPUT || !this.dateFactor.date) {
                     this.dateFactor.date = MIN_INPUT
                 } else if (this.dateFactor.date > MAX_INPUT) {
@@ -127,10 +124,8 @@ export default class Experience {
 
                 this.dateFactor.value =
                     (this.dateFactor.date - MIN_INPUT) / RANGE
-            }, // value between 0 and 1
+            },
             min: (offset) => {
-                // min value by offset (offset between 0 and 1)
-
                 const DATE = this.dateFactor.date
                 const LIMIT = offset * RANGE * 0.01 + MIN_INPUT
                 const USER = DATE < LIMIT ? LIMIT : DATE
@@ -138,8 +133,6 @@ export default class Experience {
                 return (USER - LIMIT) / (MAX_INPUT - LIMIT)
             },
             max: (offset) => {
-                // max value by offset (offset between 0 and 1)
-
                 const DATE = this.dateFactor.date
                 const LIMIT = offset * RANGE * 0.01 + MIN_INPUT
                 const USER = DATE > LIMIT ? LIMIT : DATE
@@ -147,50 +140,14 @@ export default class Experience {
                 return (USER - MIN_INPUT) / (LIMIT - MIN_INPUT)
             },
             step: (offset) => {
-                // Steped value by offset
-
                 return Math.floor(this.dateFactor.value / offset) * offset
             },
         }
 
-        // TODO - Don't return and let the terminal go crazy
         if (USER_INPUT < MIN_INPUT || !USER_INPUT) {
             return
         }
-        if (USER_INPUT > MAX_INPUT) {
-            return
-        }
-
         this.eventEmitter.dispatchEvent(new CustomEvent('generate'))
-
-        if (this.debug) {
-            this.debugRendererFolder = this.debug.addFolder('Experience')
-
-            this.debugRendererFolder
-                .add(this.dateFactor, 'date')
-                .name('Date')
-                .min(MIN_INPUT)
-                .max(MAX_INPUT)
-                .onChange((e) => {
-                    e = parseInt(e)
-                    const renderU =
-                        this.renderer?.renderMesh?.material?.uniforms
-                    const grassFloor = this.world?.terminal?.screen?.grassFloor
-                    const grassU = grassFloor?.grass?.material?.uniforms
-                    const groundU = grassFloor?.ground?.material?.uniforms
-
-                    this.dateFactor.update()
-                    if (renderU?.uDateFactor) {
-                        renderU.uDateFactorMin.value = this.dateFactor.min(90)
-                    }
-                    if (grassU?.uDateFactor) {
-                        grassU.uDateFactor.value = this.dateFactor.value
-                    }
-                    if (groundU?.uDateFactor) {
-                        groundU.uDateFactor.value = this.dateFactor.value
-                    }
-                })
-        }
     }
 
     setStats() {
@@ -225,6 +182,10 @@ export default class Experience {
 
     setWorld() {
         this.world = new World()
+    }
+
+    setAudioManager() {
+        this.audioManager = new AudioManager()
     }
 
     update() {
