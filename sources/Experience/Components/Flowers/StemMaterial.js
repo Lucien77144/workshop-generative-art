@@ -1,6 +1,6 @@
-import { MeshPhongMaterial } from 'three'
+import { MeshStandardMaterial, MeshToonMaterial } from 'three'
 
-export default class StemMaterial extends MeshPhongMaterial {
+export default class StemMaterial extends MeshToonMaterial {
     static materials = []
 
     static update() {
@@ -66,7 +66,7 @@ export default class StemMaterial extends MeshPhongMaterial {
                 'if(isVisible == 1.) {',
                 '     discard;',
                 '};',
-                'diffuseColor.rgb = vec3(0.35, 0.84, 0.6);',
+                'diffuseColor.rgb = vec3(0.376,0.757,0.373) * 0.9;',
             ].join('\n')
         )
 

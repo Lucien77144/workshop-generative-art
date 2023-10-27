@@ -29,10 +29,14 @@ export default class World {
         // this.scene.fog = this.fog
 
         this.ambientLight = new AmbientLight(0xffffff, 0)
-        this.ambientLight.layers.set(LAYERS.GLOBAL)
+        this.ambientLight.layers.set(LAYERS.DEFAULT)
         this.scene.add(this.ambientLight)
 
-        this.directionalLight = new DirectionalLight(0xffffff, 5)
+        this.ambientLight2 = new AmbientLight(0x00E4FF, 1)
+        this.ambientLight2.layers.set(LAYERS.SCREEN)
+        this.scene.add(this.ambientLight2)
+
+        this.directionalLight = new DirectionalLight(0xffffff, 2)
         this.directionalLight.position.set(0, 5, 5)
         this.directionalLight.layers.set(LAYERS.SCREEN)
         this.scene.add(this.directionalLight)
