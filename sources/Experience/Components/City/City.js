@@ -96,7 +96,7 @@ export default class City {
     }
 
     destroy() {
-        // this.group.remove(this.scene)
+        this.group.remove(this.scene)
         w.kill()
     }
 }

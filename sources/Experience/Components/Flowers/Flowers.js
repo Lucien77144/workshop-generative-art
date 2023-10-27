@@ -143,5 +143,7 @@ export default class Flowers {
         }
     }
 
-    destroy() {}
+    destroy() {
+        this.scene.remove(this.flowers)
+    }
 }
