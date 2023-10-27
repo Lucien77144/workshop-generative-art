@@ -75,7 +75,7 @@ export default class StemMaterial extends MeshPhongMaterial {
 
     update() {
         if (this.userData && this.userData.shader) {
-            let progress = this.userData.shader.uniforms.uProgress.value + 0.008
+            let progress = this.userData.shader.uniforms.uProgress.value + 0.005
             progress = Math.min(progress, 1)
             this.userData.shader.uniforms.uProgress.value = progress
         }

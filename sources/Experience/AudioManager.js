@@ -52,8 +52,13 @@ export default class AudioManager {
         processSound.src = './assets/sounds/process.mp3'
         processSound.volume = 0.1
 
-        this.experience.eventEmitter.addEventListener('generate', async () => {
+        const themeSound = new Audio()
+        themeSound.src = './assets/sounds/theme.mp3'
+        themeSound.volume = 0.35
+
+        this.experience.eventEmitter.addEventListener('generate', () => {
             processSound.play()
+            themeSound.play()
         })
     }
 

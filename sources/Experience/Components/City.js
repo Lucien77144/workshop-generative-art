@@ -50,8 +50,9 @@ export default class City {
                 }
             }
 
-            await w.delay(1000)
+            await w.delay(3000)
             this.generateFlowers()
+            w.kill()
         }
     }
 

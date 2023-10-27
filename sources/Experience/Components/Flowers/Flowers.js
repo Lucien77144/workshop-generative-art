@@ -104,9 +104,9 @@ export default class Flowers {
                 x: stem.random * (0.5 - 0.2) + 0.2,
                 y: stem.random * (0.5 - 0.2) + 0.2,
                 z: stem.random * (0.5 - 0.2) + 0.2,
-                delay: 0.5 + random * 3,
-                duration: 1,
-                ease: 'ease.inOut',
+                delay: 0.25 + random,
+                duration: 2,
+                ease: 'power3.inOut',
                 onComplete: () => {
                     // Animate the flower
                     gsap.to(flowerGroup.children[0].children[0].scale, {

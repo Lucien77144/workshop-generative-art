@@ -14,6 +14,9 @@ import grassFragment from './shaders/Grass/fragmentShader.frag?raw'
 import GrassGeometry from './GrassGeometry'
 import Fireflies from '../Fireflies/Fireflies'
 import Experience from '../../Experience'
+import { Wait } from '../../Utils/Wait'
+
+const w = new Wait()
 
 export default class GrassFloor {
     constructor({
@@ -54,8 +57,10 @@ export default class GrassFloor {
 
         this.startTime = null
 
-        this.experience.eventEmitter.addEventListener('generate', (e) => {
+        this.experience.eventEmitter.addEventListener('generate', async () => {
+            await w.delay(1000)
             this.generateGrass()
+            w.kill()
         })
 
         this.count = _count
