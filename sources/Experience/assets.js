@@ -14,7 +14,7 @@ export default [
             },
             { name: 'grassMask', source: '/assets/grass/mask.jpg' },
             { name: 'terminal', source: '/assets/terminal.glb' },
-            { name: 'city', source: '/assets/city.glb' },
+            { name: 'city', source: '/assets/new-city.glb' },
             { name: 'redFlower', source: '/assets/red-flower.glb' },
             { name: 'blueFlower', source: '/assets/blue-flower.glb' },
             { name: 'pinkFlower', source: '/assets/pink-flower.glb' },
