@@ -3,7 +3,6 @@ uniform sampler2D uBase;
 uniform sampler2D uScreen;
 uniform sampler2D uMask;
 uniform float uTime;
-uniform float uScene;
 varying vec2 vUv;
 
 float clampedSine(float t, float magnitude) {
