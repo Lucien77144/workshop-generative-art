@@ -35,8 +35,6 @@ export default class ScreenInterface {
         this.world = this.experience.world
         this.isOpened = false
 
-        this.container = null
-
         console.log(_options)
 
         // this.position = new Vector3(-0.164, .476, 0);

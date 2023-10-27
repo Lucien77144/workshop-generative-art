@@ -112,7 +112,7 @@ export default class Experience {
                 this.eventEmitter.dispatchEvent(new CustomEvent('setError'))
                 return MAX_INPUT
             } else {
-                this.experience.screenInterface.toggleInterface()
+                this.screenInterface.toggleInterface()
                 return date
             }
         }
