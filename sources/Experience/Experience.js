@@ -107,8 +107,8 @@ export default class Experience {
         const MIN_INPUT = 2000
         const MAX_INPUT = 3000
 
-        const clampDate = (date) => {
-            if (date < MIN_INPUT || !date) {
+        const clampDate = (date = MIN_INPUT + (MAX_INPUT - MIN_INPUT) * .5) => {
+            if (date < MIN_INPUT) {
                 this.screenInterface.toggleInterface()
                 return MIN_INPUT
             } else if (date > MAX_INPUT) {
