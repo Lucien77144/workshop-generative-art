@@ -41,6 +41,7 @@ export default class Experience {
         this.setRenderer()
 
         this.eventEmitter = this.renderer.instance.domElement
+
         this.eventEmitter.addEventListener('playAmbient', () => {
             this.renderer.clearColor = '#030303'
         })
@@ -54,38 +55,23 @@ export default class Experience {
 
         this.setAudioManager()
 
-        // DOM selectors
-        const $$boot = document.querySelector('.c-experience-boot')
-        const $$bootInput = document.querySelector(
-            '.c-experience-boot-content__input'
-        )
-        const $$bootButton = document.querySelector(
-            '.c-experience-boot-content__button'
-        )
-
         this.eventEmitter.addEventListener('click', (e) => {
             if (this.world) {
                 this.eventEmitter.dispatchEvent(new CustomEvent('playAmbient'))
             }
 
             if (this.world.spotLight.intensity !== 0) {
-                // $$boot.classList.add('-is-visible')
                 this.eventEmitter.dispatchEvent(new CustomEvent('goFocusMode'))
+                this.eventEmitter.classList.add('-is-not-clickable')
             }
         })
 
-        this.eventEmitter.addEventListener('generate', (e) => {
-            $$boot.classList.remove('-is-visible')
-        })
-
-        $$bootButton.addEventListener(
-            'click',
+        this.eventEmitter.addEventListener(
+            'setDateFactor',
             (e) => {
-                this.setDateFactor($$bootInput.value)
+                this.setDateFactor(e.detail)
             },
-            {
-                once: true,
-            }
+            { once: true }
         )
 
         this.sizes.on('resize', () => {

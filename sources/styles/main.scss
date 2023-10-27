@@ -12,12 +12,14 @@
 
     &-header {
         width: 100%;
+
         .title {
             background-color: $aqua;
             padding: 0.25rem 0.5rem;
             width: 100%;
             text-align: center;
         }
+
         .tabs {
             background-color: $blue;
             display: flex;
@@ -43,7 +45,6 @@
         border: 0.2rem solid $black;
         margin-top: 1rem;
         width: 50%;
-        // height: 100%;
 
         &__list {
             &:not(:first-child) {

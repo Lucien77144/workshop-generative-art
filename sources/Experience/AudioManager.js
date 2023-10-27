@@ -66,7 +66,7 @@ export default class AudioManager {
                     duration: 2,
                     ease: 'power3.out',
                 })
-                await w.delay(2500)
+                await w.delay(2000)
                 bootSound.play()
                 w.kill()
             }

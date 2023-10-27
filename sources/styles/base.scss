@@ -6,7 +6,9 @@
 }
 
 canvas {
-    pointer-events: none;
+    &.-is-not-clickable {
+        pointer-events: none;
+    }
 }
 
 html {
