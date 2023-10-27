@@ -109,8 +109,10 @@ export default class Experience {
             if (date < MIN_INPUT || !date) {
                 return MIN_INPUT
             } else if (date > MAX_INPUT) {
+                this.eventEmitter.dispatchEvent(new CustomEvent('setError'))
                 return MAX_INPUT
             } else {
+                this.experience.screenInterface.toggleInterface()
                 return date
             }
         }
