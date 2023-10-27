@@ -69,7 +69,6 @@ export default class Experience {
         this.eventEmitter.addEventListener(
             'setDateFactor',
             (e) => {
-                console.log('listening');
                 this.setDateFactor(e.detail)
             },
             { once: true }
@@ -107,18 +106,16 @@ export default class Experience {
     }
 
     setDateFactor(value) {
-        // User input
         const MIN_INPUT = 2000
         const MAX_INPUT = 3000
         const USER_INPUT = parseInt(value)
         const RANGE = MAX_INPUT - MIN_INPUT
 
-        // Makes the final value easier to use
         this.dateFactor = {
             date: USER_INPUT,
             value: (USER_INPUT - MIN_INPUT) / RANGE,
-            update: () => {
-                // this.dateFactor.date = this.dateFactor.value() * RANGE + MIN_INPUT
+            update: (date) => {
+                date && (this.dateFactor.date = date)
                 if (this.dateFactor.date < MIN_INPUT || !this.dateFactor.date) {
                     this.dateFactor.date = MIN_INPUT
                 } else if (this.dateFactor.date > MAX_INPUT) {
@@ -127,10 +124,8 @@ export default class Experience {
 
                 this.dateFactor.value =
                     (this.dateFactor.date - MIN_INPUT) / RANGE
-            }, // value between 0 and 1
+            },
             min: (offset) => {
-                // min value by offset (offset between 0 and 1)
-
                 const DATE = this.dateFactor.date
                 const LIMIT = offset * RANGE * 0.01 + MIN_INPUT
                 const USER = DATE < LIMIT ? LIMIT : DATE
@@ -138,8 +133,6 @@ export default class Experience {
                 return (USER - LIMIT) / (MAX_INPUT - LIMIT)
             },
             max: (offset) => {
-                // max value by offset (offset between 0 and 1)
-
                 const DATE = this.dateFactor.date
                 const LIMIT = offset * RANGE * 0.01 + MIN_INPUT
                 const USER = DATE > LIMIT ? LIMIT : DATE
@@ -147,8 +140,6 @@ export default class Experience {
                 return (USER - MIN_INPUT) / (LIMIT - MIN_INPUT)
             },
             step: (offset) => {
-                // Steped value by offset
-
                 return Math.floor(this.dateFactor.value / offset) * offset
             },
         }
@@ -156,40 +147,7 @@ export default class Experience {
         if (USER_INPUT < MIN_INPUT || !USER_INPUT) {
             return
         }
-        // if (USER_INPUT > MAX_INPUT) {
-        //     return
-        // }
-
         this.eventEmitter.dispatchEvent(new CustomEvent('generate'))
-
-        if (this.debug) {
-            this.debugRendererFolder = this.debug.addFolder('Experience')
-
-            this.debugRendererFolder
-                .add(this.dateFactor, 'date')
-                .name('Date')
-                .min(MIN_INPUT)
-                .max(MAX_INPUT)
-                .onChange((e) => {
-                    e = parseInt(e)
-                    const renderU =
-                        this.renderer?.renderMesh?.material?.uniforms
-                    const grassFloor = this.world?.terminal?.screen?.grassFloor
-                    const grassU = grassFloor?.grass?.material?.uniforms
-                    const groundU = grassFloor?.ground?.material?.uniforms
-
-                    this.dateFactor.update()
-                    if (renderU?.uDateFactor) {
-                        renderU.uDateFactorMin.value = this.dateFactor.min(90)
-                    }
-                    if (grassU?.uDateFactor) {
-                        grassU.uDateFactor.value = this.dateFactor.value
-                    }
-                    if (groundU?.uDateFactor) {
-                        groundU.uDateFactor.value = this.dateFactor.value
-                    }
-                })
-        }
     }
 
     setStats() {

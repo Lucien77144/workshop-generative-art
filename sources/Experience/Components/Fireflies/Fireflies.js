@@ -18,6 +18,7 @@ export default class Fireflies {
         _size = new Vector3(100, 100, 100),
         _fliesSize = 100,
         _position = new Vector3(0, 0, 0),
+        _startTime = null,
     } = {}) {
         this.experience = new Experience()
         this.scene = _scene ?? this.experience.scene
@@ -26,6 +27,7 @@ export default class Fireflies {
         this.size = _size
         this.position = _position
         this.FliesSize = _fliesSize
+        this.startTime = _startTime
 
         this.setGeometry()
         this.setMaterial()
@@ -96,5 +98,11 @@ export default class Fireflies {
 
     update() {
         this.firefliesMaterial.uniforms.uTime.value = this.time.elapsed
+        const sizeF = Math.max((this.time.elapsed - this.startTime) * 0.01, 1)
+        this.firefliesMaterial.uniforms.uSize.value = new Vector3(
+            this.size.x * sizeF,
+            this.size.y * sizeF,
+            this.size.z * sizeF
+        )
     }
 }

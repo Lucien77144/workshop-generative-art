@@ -10,11 +10,6 @@
     align-items: center;
     flex-direction: column;
 
-    &.-is-hidden {
-        opacity: 0;
-        visibility: hidden;
-    }
-
     &-header {
         width: 100%;
 

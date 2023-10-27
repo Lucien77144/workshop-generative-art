@@ -13,13 +13,14 @@ export default class Screen {
         this.resources = this.experience.resources
         this.stencilRef = _options.stencilRef
         this.time = this.experience.time
-        this.interface = null;
+        this.interface = null
 
         this.init()
     }
 
     init() {
         this.group = new Group() // group for screen
+        this.group.visible = false
         this.group.position.set(-0.5, 0.65, -5)
         this.group.rotation.set(0.5, 0.5, -0)
         this.group.scale.set(0.25, 0.25, 0.25)
@@ -43,8 +44,8 @@ export default class Screen {
 
         this.interface = new ScreenInterface({
             stencilRef: this.stencilRef,
-        });
-        
+        })
+
         this.setStencil()
         this.scene.add(this.group)
     }

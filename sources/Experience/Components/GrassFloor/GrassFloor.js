@@ -54,28 +54,20 @@ export default class GrassFloor {
         this.resources = this.experience.resources
         this.time = this.experience.time
         this.debug = this.experience.debug
-
         this.startTime = null
-
-        this.experience.eventEmitter.addEventListener('generate', async () => {
-            await w.delay(1000)
-            this.generateGrass()
-            w.kill()
-        })
 
         this.count = _count
         this.target = _target
         this.position = _position
         this.grassScale = _grassScale
-        this.size =
-            this.target?.geometry.boundingBox.getSize(new Vector3()) ?? _size
+        this.colors = _colors
+        this.fireflies = _fireflies
+        this.size = this.target?.geometry.boundingBox.getSize(new Vector3()) ?? _size
         this.name = `grassFloor-${
             this.experience.scene.children.filter((child) =>
                 child.name.includes('grassFloor')
             ).length
         }`
-        this.colors = _colors
-        this.fireflies = _fireflies
 
         this.grassParameters = {
             count: this.count,
@@ -88,11 +80,15 @@ export default class GrassFloor {
             grassScale: this.grassScale,
         }
 
-        this.experience.eventEmitter.addEventListener('generate', (e) => {
-            this.setGround()
-            this.setGrass()
+        this.experience.eventEmitter.addEventListener('generate', async () => {
+            await w.delay(1000)
+            this.generateGrass()
             this.fireflies.status && this.setFireflies()
+            w.kill()
         })
+
+        this.setGround()
+        this.setGrass()
     }
 
     setGroundGeometry() {
@@ -194,11 +190,14 @@ export default class GrassFloor {
             _position: this.position,
             _size: this.size,
             _fliesSize: 10,
+            _startTime: this.startTime,
         })
     }
 
     generateGrass() {
         this.startTime = this.time.elapsed
+        this.grass.material.uniforms.uDateFactor.value = this.experience.dateFactor.value
+        this.ground.material.uniforms.uDateFactor.value = this.experience.dateFactor.value
     }
 
     update() {

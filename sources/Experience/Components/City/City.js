@@ -1,12 +1,9 @@
 import Experience from './../../Experience'
-import { AnimationMixer, ShaderMaterial, MeshPhongMaterial } from 'three'
+import { AnimationMixer, MeshPhongMaterial } from 'three'
 import Flowers from './../Flowers/Flowers'
 import { Wait } from './../../Utils/Wait'
-import fragment from './shaders/fragment.glsl?raw'
-import vertex from './shaders/vertex.glsl?raw'
 
 const w = new Wait()
-
 export default class City {
     constructor(_options) {
         this.experience = new Experience()
@@ -35,7 +32,7 @@ export default class City {
         this.instance.traverse((child) => {
             if (child.isMesh) {
                 child.material = new MeshPhongMaterial({
-                    color: 0xC1C1C1,
+                    color: 0xc1c1c1,
                 })
             }
         })
@@ -46,33 +43,31 @@ export default class City {
     }
 
     async destroyBuildings() {
-        if (this.group.visible) {
-            this.mixer = new AnimationMixer(this.group)
+        this.mixer = new AnimationMixer(this.group)
 
-            for (const animation of this.animations) {
-                const action = this.mixer.clipAction(animation)
-                action.repetitions = 0
-                action.clampWhenFinished = true
+        for (const animation of this.animations) {
+            const action = this.mixer.clipAction(animation)
+            action.repetitions = 0
+            action.clampWhenFinished = true
 
-                const dateFactor = this.experience.dateFactor.value
+            const dateFactor = this.experience.dateFactor.value
 
-                if (dateFactor >= 0.2 && animation.name.includes('Cube.009')) {
-                    action.play()
-                }
-
-                if (dateFactor >= 0.4 && animation.name.includes('Cube.010')) {
-                    action.play()
-                }
-
-                if (dateFactor >= 0.75 && animation.name.includes('Cube.003')) {
-                    action.play()
-                }
+            if (dateFactor >= 0.2 && animation.name.includes('Cube.009')) {
+                action.play()
             }
 
-            await w.delay(3000)
-            this.generateFlowers()
-            w.kill()
+            if (dateFactor >= 0.4 && animation.name.includes('Cube.010')) {
+                action.play()
+            }
+
+            if (dateFactor >= 0.75 && animation.name.includes('Cube.003')) {
+                action.play()
+            }
         }
+
+        await w.delay(3000)
+        this.generateFlowers()
+        w.kill()
     }
 
     generateFlowers() {

@@ -13,6 +13,7 @@ import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
 import { LAYERS } from '../../Const/const'
 import gsap from 'gsap'
 
+const SCALE = 0.0005
 let instance
 export default class ScreenInterface {
     constructor(_options = {}) {
@@ -34,61 +35,39 @@ export default class ScreenInterface {
         this.world = this.experience.world
         this.isOpened = false
 
-        console.log(_options)
-
-        // this.position = new Vector3(-0.164, .476, 0);
         this.position = new Vector3(-0.15, 0.624, -0.032)
-        // this.position = new Vector3(-0.17, 0.65, 0)
-
         this.rotation = new Euler(-3 * MathUtils.DEG2RAD, 0, 0)
 
         this.init()
-        // setTimeout(() => {
-        //     this.toggleInterface()
-        //     setTimeout(() => {
-        //         this.toggleInterface()
-        //     }, 10000);
-        // }, 2000);
     }
 
+    // toggleInterface(duration = 0.25) {
     toggleInterface(duration = 0.25) {
         if (this.isOpened) {
             this.isOpened = false
-            gsap.to(this.mesh.material, {
-                opacity: 0,
+            this.world.terminal.screen.group.visible = true
+            gsap.to([this.mesh.scale, this.object.scale], {
+                x: 0,
+                y: 0,
+                z: 0,
                 duration,
                 onComplete: () => {
-                    this.mesh.material.opacity = 0
-                },
-            })
-            gsap.to(this.renderer.renderMesh.material.uniforms.uScene, {
-                value: 0,
-                duration,
-                onComplete: () => {
-                    this.renderer.renderMesh.material.uniforms.uScene.value = 0
+                    this.object.scale.setScalar(0)
                 },
             })
         } else {
             this.isOpened = true
-            gsap.to(this.mesh.material, {
-                opacity: 1,
+            this.world.terminal.screen.group.visible = false
+            gsap.to([this.mesh.scale, this.object.scale], {
+                x: SCALE,
+                y: SCALE,
+                z: SCALE,
                 duration,
                 onComplete: () => {
-                    this.mesh.material.opacity = 1
-                },
-            })
-            gsap.to(this.renderer.renderMesh.material.uniforms.uScene, {
-                value: 1,
-                duration,
-                onComplete: () => {
-                    this.renderer.renderMesh.material.uniforms.uScene.value = 1
+                    this.object.scale.setScalar(SCALE)
                 },
             })
         }
-    }
-
-    init() {
-        this.createIframe()
     }
     /**
      * Creates the iframe for the computer screen
@@ -119,7 +98,6 @@ export default class ScreenInterface {
                         detail: $$bootInput.value,
                     })
                 )
-                $$boot.classList.add('-is-hidden')
                 this.toggleInterface()
             })
 
@@ -157,36 +135,35 @@ export default class ScreenInterface {
      */
     createCssPlane(element) {
         // Create CSS3D object
-        const object = new CSS3DObject(element)
-        object.position.copy(this.position)
-        object.rotation.copy(this.rotation)
-        // object.scale.setScalar(0.0007558754)
-        object.scale.setScalar(0.0005)
-        object.layers.set(LAYERS.SCREEN)
-        this.cssScene.add(object)
+        this.object = new CSS3DObject(element)
+        this.object.position.copy(this.position)
+        this.object.rotation.copy(this.rotation)
+        this.object.scale.setScalar(0)
+        this.object.layers.set(LAYERS.SCREEN)
+        this.cssScene.add(this.object)
 
         this.material = new MeshLambertMaterial({
             side: DoubleSide,
             color: '#0000ff',
             transparent: true,
-            opacity: this.isOpened ? 1 : 0,
         })
         this.material.stencilWrite = true
         this.material.stencilRef = this.stencilRef
         this.material.stencilFunc = EqualStencilFunc
-        this.renderer.renderMesh.material.uniforms.uScene.value = this.isOpened
-            ? 1
-            : 0
 
         const geometry = new PlaneGeometry(this.sizes.width, this.sizes.height)
 
         this.mesh = new Mesh(geometry, this.material)
-        this.mesh.position.copy(object.position)
-        this.mesh.rotation.copy(object.rotation)
-        this.mesh.scale.copy(object.scale)
+        this.mesh.position.copy(this.object.position)
+        this.mesh.rotation.copy(this.object.rotation)
+        this.mesh.scale.copy(this.object.scale)
         this.mesh.layers.set(LAYERS.SCREEN)
 
         this.scene.add(this.mesh)
+    }
+
+    init() {
+        this.createIframe()
     }
 
     resize() {}
