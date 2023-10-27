@@ -105,6 +105,7 @@ export default class ScreenInterface {
         setTimeout(() => {
             content.remove()
 
+            const $$boot = container.querySelector('.c-experience-boot')
             const $$bootInput = container.querySelector(
                 '.c-experience-boot-content__input'
             )
@@ -118,7 +119,32 @@ export default class ScreenInterface {
                         detail: $$bootInput.value,
                     })
                 )
+                $$boot.classList.add('-is-hidden')
                 this.toggleInterface()
+            })
+
+            /**
+             * Move this to audio manager later
+             */
+            const clickSound = new Audio()
+            clickSound.src = './assets/sounds/click.mp3'
+
+            $$boot.addEventListener('click', async () => {
+                clickSound.play()
+            })
+
+            const keyboardSounds = []
+
+            for (let i = 0; i <= 3; i++) {
+                keyboardSounds.push(new Audio())
+                keyboardSounds[i].src = `./assets/sounds/key-${i}.mp3`
+                keyboardSounds[i].volume = 1
+            }
+
+            $$bootInput.addEventListener('input', () => {
+                keyboardSounds[
+                    Math.floor(Math.random() * keyboardSounds.length)
+                ].play()
             })
         })
 

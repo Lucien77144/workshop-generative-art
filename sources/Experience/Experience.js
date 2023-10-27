@@ -153,13 +153,12 @@ export default class Experience {
             },
         }
 
-        // TODO - Don't return and let the terminal go crazy
         if (USER_INPUT < MIN_INPUT || !USER_INPUT) {
             return
         }
-        if (USER_INPUT > MAX_INPUT) {
-            return
-        }
+        // if (USER_INPUT > MAX_INPUT) {
+        //     return
+        // }
 
         this.eventEmitter.dispatchEvent(new CustomEvent('generate'))
 

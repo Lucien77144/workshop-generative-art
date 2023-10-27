@@ -25,30 +25,6 @@ export default class AudioManager {
         lightSound.src = './assets/sounds/light-on.mp3'
         lightSound.volume = 1
 
-        const clickSound = new Audio()
-        clickSound.src = './assets/sounds/click.mp3'
-
-        const $$boot = document.querySelector('.c-experience-boot')
-        const $$bootInput = document.querySelector('.c-experience-boot-content__input')
-
-        $$boot.addEventListener('click', async () => {
-            clickSound.play()
-        })
-
-        const keyboardSounds = []
-
-        for (let i = 0; i <= 3; i++) {
-            keyboardSounds.push(new Audio())
-            keyboardSounds[i].src = `./assets/sounds/key-${i}.mp3`
-            keyboardSounds[i].volume = 1
-        }
-
-        $$bootInput.addEventListener('input', () => {
-            keyboardSounds[
-                Math.floor(Math.random() * keyboardSounds.length)
-            ].play()
-        })
-
         this.experience.eventEmitter.addEventListener('playAmbient', () => {
             ambientSound.play()
             lightSound.play()
