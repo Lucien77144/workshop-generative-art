@@ -131,10 +131,8 @@ export default class ScreenInterface {
 
     /**
      * Creates a CSS plane and GL plane to properly occlude the CSS plane
-     * @param element the element to create the css plane for
      */
     createCssPlane(element) {
-        // Create CSS3D object
         this.object = new CSS3DObject(element)
         this.object.position.copy(this.position)
         this.object.rotation.copy(this.rotation)

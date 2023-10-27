@@ -108,22 +108,26 @@ export default class Experience {
     setDateFactor(value) {
         const MIN_INPUT = 2000
         const MAX_INPUT = 3000
-        const USER_INPUT = parseInt(value)
+
+        const clampDate = (date) => {
+            if (date < MIN_INPUT || !date) {
+                return MIN_INPUT
+            } else if (date > MAX_INPUT) {
+                return MAX_INPUT
+            } else {
+                return date
+            }
+        }
+        const USER_INPUT = clampDate(parseInt(value))
         const RANGE = MAX_INPUT - MIN_INPUT
 
         this.dateFactor = {
             date: USER_INPUT,
             value: (USER_INPUT - MIN_INPUT) / RANGE,
             update: (date) => {
-                date && (this.dateFactor.date = date)
-                if (this.dateFactor.date < MIN_INPUT || !this.dateFactor.date) {
-                    this.dateFactor.date = MIN_INPUT
-                } else if (this.dateFactor.date > MAX_INPUT) {
-                    this.dateFactor.date = MAX_INPUT
-                }
+                date && (this.dateFactor.date = clampDate(date))
 
-                this.dateFactor.value =
-                    (this.dateFactor.date - MIN_INPUT) / RANGE
+                this.dateFactor.value = (this.dateFactor.date - MIN_INPUT) / RANGE
             },
             min: (offset) => {
                 const DATE = this.dateFactor.date
@@ -144,9 +148,6 @@ export default class Experience {
             },
         }
 
-        if (USER_INPUT < MIN_INPUT || !USER_INPUT) {
-            return
-        }
         this.eventEmitter.dispatchEvent(new CustomEvent('generate'))
     }
 
