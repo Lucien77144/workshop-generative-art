@@ -53,11 +53,11 @@ export default class Renderer {
         this.instance.toneMapping = THREE.NoToneMapping
         this.instance.toneMappingExposure = 1
 
-        this.cssInstance = new CSS3DRenderer();
-        this.cssInstance.setSize(this.sizes.width, this.sizes.height);
-        this.cssInstance.domElement.style.position = 'absolute';
-        this.cssInstance.domElement.style.top = '0px';
-        document.querySelector('#css')?.appendChild(this.cssInstance.domElement);
+        this.cssInstance = new CSS3DRenderer()
+        this.cssInstance.setSize(this.sizes.width, this.sizes.height)
+        this.cssInstance.domElement.style.position = 'absolute'
+        this.cssInstance.domElement.style.top = '0px'
+        document.querySelector('#css')?.appendChild(this.cssInstance.domElement)
 
         this.context = this.instance.getContext()
 
@@ -127,9 +127,7 @@ export default class Renderer {
                         value: this.rt2.texture,
                     },
                     uTime: { value: 0 },
-                    uDateFactorMin: {
-                        value: this.experience.dateFactor?.min(90),
-                    },
+                    uDateFactorMin: { value: 0 },
                 },
                 vertexShader,
                 fragmentShader,
@@ -141,7 +139,7 @@ export default class Renderer {
         // Instance
         this.instance.setPixelRatio(this.config.pixelRatio)
         this.instance.setSize(this.sizes.width, this.sizes.height)
-        this.cssInstance.setSize(this.sizes.width, this.sizes.height);
+        this.cssInstance.setSize(this.sizes.width, this.sizes.height)
     }
 
     renderTargets() {
@@ -187,7 +185,7 @@ export default class Renderer {
         this.camera.instance.layers.disableAll()
         this.camera.instance.layers.enable(LAYERS.GLOBAL)
         this.camera.instance.layers.enable(LAYERS.SCREEN)
-        this.cssInstance.render(this.cssScene, this.camera.instance);
+        this.cssInstance.render(this.cssScene, this.camera.instance)
     }
 
     update() {

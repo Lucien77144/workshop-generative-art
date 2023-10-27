@@ -66,6 +66,8 @@ export default class Experience {
             'setDateFactor',
             (e) => {
                 this.setDateFactor(e.detail)
+                this.renderer.renderMesh.material.uniforms.uDateFactorMin.value =
+                    this.dateFactor.min(90)
             },
             { once: true }
         )
@@ -107,6 +109,7 @@ export default class Experience {
 
         const clampDate = (date) => {
             if (date < MIN_INPUT || !date) {
+                this.screenInterface.toggleInterface()
                 return MIN_INPUT
             } else if (date > MAX_INPUT) {
                 this.eventEmitter.dispatchEvent(new CustomEvent('setError'))
@@ -125,7 +128,8 @@ export default class Experience {
             update: (date) => {
                 date && (this.dateFactor.date = clampDate(date))
 
-                this.dateFactor.value = (this.dateFactor.date - MIN_INPUT) / RANGE
+                this.dateFactor.value =
+                    (this.dateFactor.date - MIN_INPUT) / RANGE
             },
             min: (offset) => {
                 const DATE = this.dateFactor.date

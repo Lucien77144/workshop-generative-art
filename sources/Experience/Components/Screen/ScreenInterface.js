@@ -35,8 +35,6 @@ export default class ScreenInterface {
         this.world = this.experience.world
         this.isOpened = false
 
-        console.log(_options)
-
         // this.position = new Vector3(-0.164, .476, 0);
         this.position = new Vector3(-0.17, 0.64, -0.032)
         // this.position = new Vector3(-0.17, 0.65, 0)
@@ -48,7 +46,6 @@ export default class ScreenInterface {
 
     // toggleInterface(duration = 0.25) {
     toggleInterface(duration = 0.25) {
-        console.log('go!');
         if (this.isOpened) {
             this.isOpened = false
             this.world.terminal.screen.group.visible = true
@@ -108,8 +105,8 @@ export default class ScreenInterface {
             })
 
             this.experience.eventEmitter.addEventListener('setError', () => {
-                console.log('listen error');
                 $$boot.classList.add('-is-hidden')
+                this.world.terminal.screen.group.visible = true
             })
 
             /**
