@@ -16,7 +16,7 @@ export default class Flowers {
     }
 
     init() {
-        const RADIUS = 4
+        const RADIUS = 3.5
         const redFlower = this.resources.items.redFlower.scene
         const blueFlower = this.resources.items.blueFlower.scene
         const pinkFlower = this.resources.items.pinkFlower.scene

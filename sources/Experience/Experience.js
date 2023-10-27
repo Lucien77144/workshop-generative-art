@@ -42,10 +42,6 @@ export default class Experience {
 
         this.eventEmitter = this.renderer.instance.domElement
 
-        this.eventEmitter.addEventListener('playAmbient', () => {
-            this.renderer.clearColor = '#030303'
-        })
-
         this.setResources()
         this.setWorld()
 

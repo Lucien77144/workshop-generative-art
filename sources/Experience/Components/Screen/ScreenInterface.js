@@ -35,7 +35,12 @@ export default class ScreenInterface {
         this.world = this.experience.world
         this.isOpened = false
 
-        this.position = new Vector3(-0.15, 0.624, -0.032)
+        console.log(_options)
+
+        // this.position = new Vector3(-0.164, .476, 0);
+        this.position = new Vector3(-0.17, 0.64, -0.032)
+        // this.position = new Vector3(-0.17, 0.65, 0)
+
         this.rotation = new Euler(-3 * MathUtils.DEG2RAD, 0, 0)
 
         this.init()
