@@ -103,6 +103,9 @@ export default class ScreenInterface {
         const content = document.getElementById('panel')
         container.innerHTML = content.innerHTML
         setTimeout(() => {
+            content.remove()
+
+            const $$boot = document.querySelector('.c-experience-boot')
             const $$bootInput = document.querySelector(
                 '.c-experience-boot-content__input'
             )
@@ -110,7 +113,9 @@ export default class ScreenInterface {
                 '.c-experience-boot-content__button'
             )
 
-            $$bootButton.addEventListener('click', () => {
+            $$bootButton.addEventListener('click', (e) => {
+                console.log('click');
+
                 this.experience.eventEmitter.dispatchEvent(
                     new CustomEvent('setDateFactor', {
                         detail: $$bootInput.value,
@@ -119,7 +124,6 @@ export default class ScreenInterface {
 
                 this.toggleInterface()
             })
-            content.remove()
         })
 
         this.createCssPlane(container)

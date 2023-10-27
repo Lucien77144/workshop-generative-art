@@ -69,6 +69,7 @@ export default class Experience {
         this.eventEmitter.addEventListener(
             'setDateFactor',
             (e) => {
+                console.log('listening');
                 this.setDateFactor(e.detail)
             },
             { once: true }
