@@ -105,26 +105,20 @@ export default class ScreenInterface {
         setTimeout(() => {
             content.remove()
 
-            document.addEventListener('DOMContentLoaded', () => {
-                const $$boot = document.querySelector('.c-experience-boot')
-                const $$bootInput = document.querySelector(
-                    '.c-experience-boot-content__input'
+            const $$bootInput = container.querySelector(
+                '.c-experience-boot-content__input'
+            )
+            const $$bootButton = container.querySelector(
+                '.c-experience-boot-content__button'
+            )
+
+            $$bootButton.addEventListener('click', (e) => {
+                this.experience.eventEmitter.dispatchEvent(
+                    new CustomEvent('setDateFactor', {
+                        detail: $$bootInput.value,
+                    })
                 )
-                const $$bootButton = document.querySelector(
-                    '.c-experience-boot-content__button'
-                )
-    
-                $$bootButton.addEventListener('click', (e) => {
-                    console.log('click');
-    
-                    this.experience.eventEmitter.dispatchEvent(
-                        new CustomEvent('setDateFactor', {
-                            detail: $$bootInput.value,
-                        })
-                    )
-    
-                    this.toggleInterface()
-                })
+                this.toggleInterface()
             })
         })
 
