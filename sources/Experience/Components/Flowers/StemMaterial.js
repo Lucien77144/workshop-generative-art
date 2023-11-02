@@ -1,6 +1,6 @@
-import { MeshPhongMaterial } from 'three'
+import { MeshStandardMaterial, MeshToonMaterial } from 'three'
 
-export default class StemMaterial extends MeshPhongMaterial {
+export default class StemMaterial extends MeshToonMaterial {
     static materials = []
 
     static update() {
@@ -18,6 +18,7 @@ export default class StemMaterial extends MeshPhongMaterial {
             ...params,
         })
         this.time = time
+        this.startTime = this.time
         StemMaterial.materials.push(this)
     }
 
@@ -66,7 +67,7 @@ export default class StemMaterial extends MeshPhongMaterial {
                 'if(isVisible == 1.) {',
                 '     discard;',
                 '};',
-                'diffuseColor.rgb = vec3(0.35, 0.84, 0.6);',
+                'diffuseColor.rgb = vec3(0.376,0.757,0.373) * 0.9;',
             ].join('\n')
         )
 
@@ -75,9 +76,8 @@ export default class StemMaterial extends MeshPhongMaterial {
 
     update() {
         if (this.userData && this.userData.shader) {
-            let progress = this.userData.shader.uniforms.uProgress.value + 0.008
-            progress = Math.min(progress, 1)
-            this.userData.shader.uniforms.uProgress.value = progress
+            const d = Math.max((this.time - this.startTime) * 0.01, 1)
+            this.userData.shader.uniforms.uProgress.value = d
         }
     }
 }

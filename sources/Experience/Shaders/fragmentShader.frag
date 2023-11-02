@@ -61,10 +61,14 @@ void main() {
     applyGlass(screenUv, .005 * uDateFactorMin, 5. * uDateFactorMin);
 
     vec4 base = texture2D(uBase, uv);
-    vec4 screen = applyBlackAndWhite(texture2D(uScreen, screenUv), (noise(vec2(uTime * .01)) * .25 + .75) * (1. - uDateFactorMin));
-    vec4 mask = texture2D(uMask, uv);
+    vec4 screen = texture2D(uScreen, screenUv);
+    float mask = texture2D(uMask, uv).r;
 
-    vec4 col = mix(screen, light, base.r);
+    vec4 bw = applyBlackAndWhite(screen, (noise(vec2(uTime * .01)) * .25 + .75) * (1. - uDateFactorMin));
+    vec4 col = mix(bw, light, base.r);
 
-    gl_FragColor = mix(base, col, mask.r);
+    float css = 1. - (screen.b - screen.r - screen.g);
+
+    gl_FragColor.rgb = vec3(mix(base, col, mask));
+    gl_FragColor.a = css;
 }

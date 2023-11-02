@@ -3,16 +3,18 @@ import Experience from './Experience.js'
 import { LAYERS } from './Const/const.js'
 import vertexShader from './Shaders/vertexShader.vert?raw'
 import fragmentShader from './Shaders/fragmentShader.frag?raw'
+import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
 
 export default class Renderer {
     constructor(_options = {}) {
         this.experience = new Experience()
         this.config = this.experience.config
+        this.sizes = this.experience.sizes
         this.debug = this.experience.debug
         this.stats = this.experience.stats
         this.time = this.experience.time
-        this.sizes = this.experience.sizes
         this.scene = this.experience.scene
+        this.cssScene = this.experience.cssScene
         this.camera = this.experience.camera
 
         // Debug
@@ -25,12 +27,13 @@ export default class Renderer {
     }
 
     setInstance() {
-        this.clearColor = '#030303'
+        this.clearColor = '#000000'
 
         // Renderer
         this.instance = new THREE.WebGLRenderer({
-            alpha: false,
             antialias: true,
+            alpha: true,
+            powerPreference: 'high-performance',
         })
         this.instance.domElement.style.position = 'absolute'
         this.instance.domElement.style.top = 0
@@ -38,8 +41,8 @@ export default class Renderer {
         this.instance.domElement.style.width = '100%'
         this.instance.domElement.style.height = '100%'
 
-        this.instance.setClearColor(this.clearColor, 1)
-        this.instance.setSize(this.config.width, this.config.height)
+        this.instance.setClearColor(this.clearColor, 0)
+        this.instance.setSize(this.sizes.width, this.sizes.height)
         this.instance.setPixelRatio(this.config.pixelRatio)
 
         this.instance.physicallyCorrectLights = true
@@ -49,6 +52,12 @@ export default class Renderer {
         // this.instance.shadowMap.enabled = false
         this.instance.toneMapping = THREE.NoToneMapping
         this.instance.toneMappingExposure = 1
+
+        this.cssInstance = new CSS3DRenderer()
+        this.cssInstance.setSize(this.sizes.width, this.sizes.height)
+        this.cssInstance.domElement.style.position = 'absolute'
+        this.cssInstance.domElement.style.top = '0px'
+        document.querySelector('#css')?.appendChild(this.cssInstance.domElement)
 
         this.context = this.instance.getContext()
 
@@ -118,10 +127,7 @@ export default class Renderer {
                         value: this.rt2.texture,
                     },
                     uTime: { value: 0 },
-                    uDateFactor: { value: this.experience.dateFactor.value },
-                    uDateFactorMin: {
-                        value: this.experience.dateFactor.min(90),
-                    },
+                    uDateFactorMin: { value: 0 },
                 },
                 vertexShader,
                 fragmentShader,
@@ -132,7 +138,8 @@ export default class Renderer {
     resize() {
         // Instance
         this.instance.setPixelRatio(this.config.pixelRatio)
-        this.instance.setSize(this.config.width, this.config.height)
+        this.instance.setSize(this.sizes.width, this.sizes.height)
+        this.cssInstance.setSize(this.sizes.width, this.sizes.height)
     }
 
     renderTargets() {
@@ -174,6 +181,11 @@ export default class Renderer {
         this.camera.instance.layers.set(LAYERS.DEFAULT)
         this.instance.setRenderTarget(null)
         this.instance.render(this.renderMesh, this.camera.instance)
+
+        this.camera.instance.layers.disableAll()
+        this.camera.instance.layers.enable(LAYERS.GLOBAL)
+        this.camera.instance.layers.enable(LAYERS.SCREEN)
+        this.cssInstance.render(this.cssScene, this.camera.instance)
     }
 
     update() {

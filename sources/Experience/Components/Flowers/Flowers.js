@@ -1,7 +1,7 @@
 import Experience from './../../Experience'
 import { Mesh, CatmullRomCurve3, Vector3, TubeGeometry, Group } from 'three'
 import Alea from 'alea'
-import StemMaterial from './shaders/StemMaterial'
+import StemMaterial from './StemMaterial'
 import gsap from 'gsap'
 
 export default class Flowers {
@@ -16,7 +16,7 @@ export default class Flowers {
     }
 
     init() {
-        const RADIUS = 4
+        const RADIUS = 3.5
         const redFlower = this.resources.items.redFlower.scene
         const blueFlower = this.resources.items.blueFlower.scene
         const pinkFlower = this.resources.items.pinkFlower.scene
@@ -30,9 +30,9 @@ export default class Flowers {
         for (let i = 0; i < dateFactor; i++) {
             let flowerToAdd = null
 
-            // Chance factor to have a blue flower
+            // Chance factor to have a blue or pink flower
             if (this.prng() < chanceFactor) {
-                flowerToAdd = this.prng() < 0.1 ? pinkFlower : blueFlower
+                flowerToAdd = this.prng() < 0.05 ? pinkFlower : blueFlower
             } else {
                 flowerToAdd = redFlower
             }
@@ -104,8 +104,8 @@ export default class Flowers {
                 x: stem.random * (0.5 - 0.2) + 0.2,
                 y: stem.random * (0.5 - 0.2) + 0.2,
                 z: stem.random * (0.5 - 0.2) + 0.2,
-                delay: 0.5 + random * 3,
-                duration: 1,
+                delay: 0.15 + random,
+                duration: 1.25,
                 ease: 'ease.inOut',
                 onComplete: () => {
                     // Animate the flower
@@ -136,12 +136,14 @@ export default class Flowers {
             })
         }
 
-        if (this.experience.time.elapsed < 6000) {
+        if (this.experience.dateFactor.value) {
             StemMaterial.update()
-        } else {
-            return
+
+            // TODO - Stop ticking after a render
         }
     }
 
-    destroy() {}
+    destroy() {
+        this.scene.remove(this.flowers)
+    }
 }
