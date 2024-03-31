@@ -1,7 +1,7 @@
 import { EqualStencilFunc, Group } from 'three'
 import Experience from '../../Experience'
 import City from './../City/City'
-import { LAYERS } from '../../Const/const'
+import { LAYERS } from '../../Const/Const'
 import GrassFloor from '../GrassFloor/GrassFloor'
 import ScreenInterface from './ScreenInterface'
 

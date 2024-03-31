@@ -72,9 +72,7 @@ export default class Experience {
             { once: true }
         )
 
-        this.sizes.on('resize', () => {
-            this.resize()
-        })
+        this.sizes.on('resize', this.resize.bind(this))
 
         this.update()
     }
@@ -107,7 +105,9 @@ export default class Experience {
         const MIN_INPUT = 2000
         const MAX_INPUT = 3000
 
-        const clampDate = (date = MIN_INPUT + (MAX_INPUT - MIN_INPUT) * .5) => {
+        const clampDate = (
+            date = MIN_INPUT + (MAX_INPUT - MIN_INPUT) * 0.5
+        ) => {
             if (date < MIN_INPUT) {
                 this.screenInterface.toggleInterface()
                 return MIN_INPUT
@@ -154,7 +154,7 @@ export default class Experience {
     }
 
     setStats() {
-        if (this.config.debug) {
+        if (this.config?.debug) {
             this.stats = new Stats(true)
         }
     }
@@ -192,13 +192,10 @@ export default class Experience {
     }
 
     update() {
-        if (this.stats) this.stats.update()
-
-        this.camera.update()
-
-        if (this.world) this.world.update()
-
-        if (this.renderer) this.renderer.update()
+        this.stats?.update()
+        this.camera?.update()
+        this.world?.update()
+        this.renderer?.update()
 
         window.requestAnimationFrame(() => {
             this.update()
@@ -207,20 +204,11 @@ export default class Experience {
 
     resize() {
         // Config
-        const boundings = this.targetElement.getBoundingClientRect()
-        this.config.width = boundings.width
-        this.config.height = boundings.height
+        this.setConfig()
 
-        this.config.pixelRatio = Math.min(
-            Math.max(window.devicePixelRatio, 1),
-            2
-        )
-
-        if (this.camera) this.camera.resize()
-
-        if (this.renderer) this.renderer.resize()
-
-        if (this.world) this.world.resize()
+        this.camera?.resize()
+        this.renderer?.resize()
+        this.world?.resize()
     }
 
     destroy() {}

@@ -10,7 +10,7 @@ import {
 } from 'three'
 import Experience from '../../Experience'
 import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
-import { LAYERS } from '../../Const/const'
+import { LAYERS } from '../../Const/Const'
 import gsap from 'gsap'
 
 const SCALE = 0.0005

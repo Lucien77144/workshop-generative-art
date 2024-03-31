@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import Experience from './Experience.js'
-import { LAYERS } from './Const/const.js'
+import { LAYERS } from './Const/Const.js'
 import vertexShader from './Shaders/vertexShader.vert?raw'
 import fragmentShader from './Shaders/fragmentShader.frag?raw'
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
