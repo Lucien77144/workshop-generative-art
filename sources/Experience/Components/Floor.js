@@ -5,7 +5,7 @@ import {
     PlaneGeometry,
 } from 'three'
 import Experience from '../Experience'
-import { LAYERS } from '../Const/const'
+import { LAYERS } from '../Const/Const'
 
 export default class Floor {
     constructor(_options) {

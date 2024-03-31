@@ -1,6 +1,6 @@
 import Experience from '../Experience'
 import Stencil from './Stencil'
-import { LAYERS } from '../Const/const'
+import { LAYERS } from '../Const/Const'
 import { MeshBasicMaterial, PointLight } from 'three'
 import Screen from './Screen/Screen'
 

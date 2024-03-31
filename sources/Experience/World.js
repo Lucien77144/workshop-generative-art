@@ -6,7 +6,7 @@ import {
 import Experience from './Experience.js'
 import Terminal from './Components/Terminal.js'
 import Floor from './Components/Floor.js'
-import { LAYERS } from './Const/const.js'
+import { LAYERS } from './Const/Const.js'
 import gsap from 'gsap'
 
 export default class World {
