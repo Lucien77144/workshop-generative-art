@@ -136,10 +136,13 @@ export default class Renderer {
     }
 
     resize() {
-        // Instance
         this.instance.setPixelRatio(this.config.pixelRatio)
-        this.instance.setSize(this.sizes.width, this.sizes.height)
-        this.cssInstance.setSize(this.sizes.width, this.sizes.height)
+        this.instance.setSize(this.config.width, this.config.height)
+        this.cssInstance.setSize(this.config.width, this.config.height)
+
+        this.rt0.setSize(this.config.width, this.config.height)
+        this.rt1.setSize(this.config.width, this.config.height)
+        this.rt2.setSize(this.config.width, this.config.height)
     }
 
     renderTargets() {

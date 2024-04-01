@@ -12,7 +12,6 @@ export default class Camera {
         this.config = this.experience.config
         this.debug = this.experience.debug
         this.time = this.experience.time
-        this.sizes = this.experience.sizes
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
         this.screenInterface = null
@@ -32,8 +31,8 @@ export default class Camera {
         }
 
         window.addEventListener('mousemove', (event) => {
-            this.cursor.x = event.clientX / this.config.width - 0.5
-            this.cursor.y = event.clientY / this.config.height - 0.5
+            this.cursor.x = event.clientX / this.experience.config.width - 0.5
+            this.cursor.y = event.clientY / this.experience.config.height - 0.5
         })
 
         this.setInstance()
@@ -51,7 +50,7 @@ export default class Camera {
         // Set up
         this.instance = new PerspectiveCamera(
             25,
-            this.config.width / this.config.height,
+            this.experience.config.width / this.experience.config.height,
             0.1,
             150
         )
@@ -97,15 +96,15 @@ export default class Camera {
     }
 
     resize() {
-        this.instance.aspect = this.config.width / this.config.height
+        const aspect = this.config.width / this.config.height
+
+        this.instance.aspect = aspect
         this.instance.updateProjectionMatrix()
 
-        this.modes.default.instance.aspect =
-            this.config.width / this.config.height
+        this.modes.default.instance.aspect = aspect
         this.modes.default.instance.updateProjectionMatrix()
 
-        this.modes.debug.instance.aspect =
-            this.config.width / this.config.height
+        this.modes.debug.instance.aspect = aspect
         this.modes.debug.instance.updateProjectionMatrix()
     }
 
@@ -123,7 +122,7 @@ export default class Camera {
                 'goFocusMode',
                 (e) => {
                     this.mode = 'focus'
-                    this.screenInterface ??= this.experience.screenInterface;;
+                    this.screenInterface ??= this.experience.screenInterface
 
                     this.cameraPosition.copy(this.instance.position)
                     this.cameraRotation.copy(this.instance.rotation)
@@ -136,7 +135,7 @@ export default class Camera {
                         ease: 'power3.inOut',
                         onComplete: () => {
                             this.experience.screenInterface.toggleInterface()
-                        }
+                        },
                     })
 
                     gsap.to(this.cameraRotation, {
@@ -156,10 +155,10 @@ export default class Camera {
 
             this.instance.position.copy(this.cameraPosition)
             this.instance.position.x =
-            parallaxX - this.instance.position.x * 0.1
+                parallaxX - this.instance.position.x * 0.1
             this.instance.position.y =
-            parallaxY - this.instance.position.y * 0.1
-            
+                parallaxY - this.instance.position.y * 0.1
+
             this.instance.lookAt(V3.set(0, 0, 0))
         } else {
             this.instance.position.copy(this.cameraPosition)

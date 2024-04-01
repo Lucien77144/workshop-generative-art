@@ -72,13 +72,13 @@ export default class Experience {
             { once: true }
         )
 
-        this.sizes.on('resize', this.resize.bind(this))
+        this.sizes.on('resize', () => this.resize())
 
         this.update()
     }
 
     setConfig() {
-        this.config = {}
+        this.config ??= {}
 
         // Debug
         this.config.debug = window.location.hash === '#debug'
@@ -90,9 +90,8 @@ export default class Experience {
         )
 
         // Width and height
-        const boundings = this.targetElement.getBoundingClientRect()
-        this.config.width = boundings.width
-        this.config.height = boundings.height || window.innerHeight
+        this.config.width = document.documentElement.clientWidth
+        this.config.height = document.documentElement.clientHeight
     }
 
     setDebug() {
@@ -181,6 +180,14 @@ export default class Experience {
 
     setResources() {
         this.resources = new Resources(assets)
+        this.resources.on('progress', (e) => {
+            const prog = Math.round((e.loaded / e.toLoad) * 100 || 0)
+            document.getElementById('loading-counter').innerText = prog + '%'
+
+            if (prog === 100) {
+                document.querySelector('.loading').classList.add('hidden')
+            }
+        })
     }
 
     setWorld() {
@@ -206,9 +213,8 @@ export default class Experience {
         // Config
         this.setConfig()
 
-        this.camera?.resize()
-        this.renderer?.resize()
-        this.world?.resize()
+        this.camera.resize()
+        this.renderer.resize()
     }
 
     destroy() {}
